@@ -1,0 +1,49 @@
+Lets make a project in next.js. I have an idea of how we should implement it, but feel free to improve it if i have missed anything or we could improve it in another way.
+
+Project: Systematic Review Assistant (Next.js + GPT)
+Goal: Build a web-based tool that helps researchers screen large numbers of articles (from systematic review searches) using AI to assist inclusion/exclusion decisions.
+
+Key Features:
+1) File Upload
+- Upload .txt file of articles (e.g., embase.txt), here is an example of how one article will look like in the txt file  
+- Upload a .txt file with inclusion criteria
+
+2) Article Parsing
+- Parse article entries from the file (<1>, <2>, etc.)
+- Extract Title and Abstract for each
+
+3) AI Evaluation (GPT-3.5)
+- Use OpenAI GPT-3.5 to assess each article against the inclusion criteria
+- AI returns a “Yes” or “No” + explanation
+
+4) User Review
+- Display AI results in a list/table
+- Let user accept or override each AI suggestion
+
+5) Store User Decisions
+- Save results (article, AI decision, user response) to Supabase
+
+Tech Stack:
+Frontend	- Next.js (App Router)
+Styling & Components - ShadCN + Tailwind CSS
+AI - OpenAI GPT-3.5
+Hosting - Vercel
+Database & Auth - Supabase
+File Storage (optional) - Supabase Storage or local FS
+Cost Management - GPT-3.5 batching & estimator
+
+Prompt Format example: 
+"You are assisting with a systematic review.
+
+Inclusion criteria:
+[...from criteria.txt...]
+
+Evaluate this article:
+Title: ...
+Abstract: ...
+
+Does this article meet the inclusion criteria? Answer "Yes" or "No" and explain briefly."
+
+API Keys / Env:
+- OPENAI_API_KEY (for GPT access)
+- SUPABASE_URL and SUPABASE_ANON_KEY (for DB access)

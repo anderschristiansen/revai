@@ -1,0 +1,616 @@
+<1>
+Accession Number
+  2037148968
+Title
+  Cerebral Venous Blood Flow Regulates Brain Fluid Clearance via Dural Lymphatics.
+Source
+  bioRxiv.  (no pagination), 2024. Date of Publication: 17 Dec 2024.
+Author
+  El Kamouh M.-R.; Spajer M.; Singhabahu R.; Sailor K.A.; Bourrienne M.-C.; Mouton L.; Koundal S.; Doukhi D.; Grine A.; Ninneman J.; Nasry A.; Marolany A.-L.J.; Akbar D.; Gottschalk J.; Ruze A.; Buscher E.; Langui D.; Van Wassenhove J.; Mazighi M.; Eichmann A.; Lledo P.-M.; Benveniste H.; Santin M.; Lehericy S.; Thomas J.-L.; Lenck S.
+Institution
+  (El Kamouh, Spajer, Singhabahu, Mouton, Grine, Nasry, Marolany, Akbar, Gottschalk, Ruze, Langui, Van Wassenhove, Santin, Lehericy, Thomas, Lenck) Paris Brain Institute, Universite Pierre et Marie Curie Paris 06, UMRS1127, Sorbonne Universite, Paris, France
+  (Sailor, Ninneman, Mazighi, Lledo) Institut Pasteur, Universite de Paris, CNRS UMR 3571, Perception and Action Unit, Paris, France
+  (Bourrienne) Optimisation Therapeutique en Neuropsychopharmacologie, INSERM U1144, Universite Paris Cite, Paris, France
+  (Bourrienne) Laboratoire Hematologie, AP-HP, Hopital Bichat-Claude Bernard, Paris, France
+  (Koundal, Benveniste) Department of Anesthesiology, Yale School of Medicine, New Haven, CT, United States
+  (Doukhi, Mazighi) Department of Neurology, AP-HP, Hopital Lariboisiere, FHU NeuroVasc, Paris, France
+  (Grine, Lehericy, Lenck) Department of Neuroradiology, AP-HP, Pitie-Salpetriere Hospital, Paris, France
+  (Gottschalk) California Polytechnic State University, San Luis Obispo, CA, United States
+  (Buscher) Columbia University Vagelos College of Physicians and Surgeons, New York, United States
+  (Eichmann) Department of Internal Medicine, Cardiovascular Research Center, Yale University School of Medicine, New Haven, CT, United States
+  (Eichmann) Department of Cellular and Molecular Physiology, Yale University School of Medicine, New Haven, CT, United States
+  (Eichmann) Universite de Paris, INSERM, PARCC, Paris, France
+  (Thomas) Department of Neurology, Yale University School of Medicine, New Haven, CT, United States
+Publisher
+  bioRxiv
+Subject Headings
+    animal experiment
+    artery blood flow
+    brain edema
+    *brain vein
+    *cerebrospinal fluid
+    *cerebrospinal fluid drainage
+    controlled study
+    cranial sinus
+    endothelium cell
+    fluid retention
+    human
+    *idiopathic intracranial hypertension
+    intracranial hypertension
+    jugular vein
+    *lymph vessel
+    lymphatic drainage
+    mesenchyme
+    mesenchyme cell
+    mouse
+    mouse model
+    MRI scanner
+    nonhuman
+    nuclear magnetic resonance imaging
+    signal transduction
+    *sinus venosus
+    *vein blood flow
+    vein ligation
+    *colony stimulating factor
+    vasculotropin C
+    preprint
+Candidate Terms
+  preprint [other term]
+Drug Index Terms
+  *colony stimulating factor; vasculotropin C
+Other Index Terms
+  animal experiment; artery blood flow; brain edema; *brain vein; *cerebrospinal fluid; *cerebrospinal fluid drainage; controlled study; cranial sinus; endothelium cell; fluid retention; human; *idiopathic intracranial hypertension; intracranial hypertension; jugular vein; *lymph vessel; lymphatic drainage; mesenchyme; mesenchyme cell; mouse; mouse model; MRI scanner; nonhuman; nuclear magnetic resonance imaging; signal transduction; *sinus venosus; *vein blood flow; vein ligation
+Abstract
+  The vascular system regulates brain clearance through arterial blood flow and lymphatic drainage of cerebrospinal fluid (CSF). Idiopathic intracranial hypertension (IIH), characterized by elevated intracranial pressure and dural venous sinus stenoses, can be treated by restoring venous blood flow via venous stenting, suggesting a role for venous blood flow in brain fluid clearance. Using magnetic resonance imaging (MRI) in IIH patients and healthy controls, we identified that dural venous stenoses in IIH were associated with impaired lymphatic drainage, perivenous fluid retention, and brain fluid accumulation. To investigate this further, we developed a mouse model with bilateral jugular vein ligation (JVL), which recapitulated key human findings, including intracranial hypertension, calvarial lymphatic regression, and brain swelling due to impaired clearance. To further dissect the respective roles of dural lymphatics and venous blood flow in brain clearance, we performed JVL in mice with dural lymphatic depletion. These mice exhibited spontaneous elevated intracranial pressure, but JVL did not further exacerbate this effect. Moreover, the synchronous restoration of brain clearance and dural lymphatics observed in mice after JVL was absent in lymphatic-deficient mice.Transcriptomic analyses revealed that lymphatic remodeling induced by JVL was driven by VEGF-C signaling between dural mesenchymal and lymphatic endothelial cells. These findings establish the dural venous sinuses as a critical platform where venous blood flow interacts with mesenchymal cells to preserve dural lymphatic integrity and function, essential for brain fluid clearance.Copyright The copyright holder for this preprint is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. All rights reserved. No reuse allowed without permission.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=empp&DO=10.1101%2f2024.12.12.628127
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:&id=doi:10.1101%2F2024.12.12.628127&issn=2692-8205&isbn=&volume=&issue=&spage=&pages=&date=2024&title=bioRxiv&atitle=Cerebral+Venous+Blood+Flow+Regulates+Brain+Fluid+Clearance+via+Dural+Lymphatics&aulast=El+Kamouh&pid=%3Cauthor%3EEl+Kamouh+M.-R.%3BSpajer+M.%3BSinghabahu+R.%3BSailor+K.A.%3BBourrienne+M.-C.%3BMouton+L.%3BKoundal+S.%3BDoukhi+D.%3BGrine+A.%3BNinneman+J.%3BNasry+A.%3BMarolany+A.-L.J.%3BAkbar+D.%3BGottschalk+J.%3BRuze+A.%3BBuscher+E.%3BLangui+D.%3BVan+Wassenhove+J.%3BMazighi+M.%3BEichmann+A.%3BLledo+P.-M.%3BBenveniste+H.%3BSantin+M.%3BLehericy+S.%3BThomas+J.-L.%3BLenck+S.%3C%2Fauthor%3E%3CAN%3E2037148968%3C%2FAN%3E%3CDT%3EPreprint%3C%2FDT%3E
+
+<2>
+Accession Number
+  2032807556
+Title
+  Lumped Parameter Simulations of Cervical Lymphatic Vessels: Dynamics of Murine Cerebrospinal Fluid Efflux from the Skull.
+Source
+  bioRxiv.  (no pagination), 2024. Date of Publication: 26 May 2024.
+Author
+  Kim D.; Tithof J.
+Institution
+  (Kim, Tithof) Department of Mechanical Engineering, University of Minnesota, 111 Church St SE, Minneapolis, MN, United States
+Publisher
+  bioRxiv
+Subject Headings
+    blood vessel wall
+    central vein
+    *cerebrospinal fluid
+    cerebrospinal fluid drainage
+    cerebrospinal fluid drainage system
+    experimental study
+    female
+    flow rate
+    human
+    intracranial pressure
+    *lymph vessel
+    *lymphatic system
+    male
+    nasopharynx
+    pressure gradient
+    quantitative study
+    *simulation
+    *skull
+    *traumatic brain injury
+    venous pressure
+    preprint
+Candidate Terms
+  preprint [other term]
+Other Index Terms
+  blood vessel wall; central vein; *cerebrospinal fluid; cerebrospinal fluid drainage; cerebrospinal fluid drainage system; experimental study; female; flow rate; human; intracranial pressure; *lymph vessel; *lymphatic system; male; nasopharynx; pressure gradient; quantitative study; *simulation; *skull; *traumatic brain injury; venous pressure
+Abstract
+  Background: Growing evidence suggests that for rodents, a substantial fraction of cerebrospinal fluid (CSF) drains by crossing the cribriform plate into the nasopharengeal lymphatics, eventually reaching the cervical lymphatic vessels (CLVs). Disruption of this drainage pathway is associated with various neurological disorders. Method(s): We employ a lumped parameter method to numerically model CSF drainage across the cribriform plate to CLVs. Our model uses intracranial pressure as an inlet pressure and central venous blood pressure as an outlet pressure. The model incorporates initial lymphatic vessels (modeling those in the nasal region) that absorb the CSF and collecting lymphatic vessels (modeling CLVs) to transport the CSF against an adverse pressure gradient. To determine unknown parameters such as wall stiffness and valve properties, we utilize a Monte Carlo approach and validate our simulation against recent in vivo experimental measurements. Result(s): Our parameter analysis reveals the physical characteristics of CLVs. Our results suggest that the stiffness of the vessel wall and the closing state of the valve are crucial for maintaining the vessel size and volume flow rate observed in vivo. We find that a decreased contraction amplitude and frequency leads to a reduction in volume flow rate, and we test the effects of varying the different pressures acting on the CLVs. Finally, we provide evidence that branching of initial lymphatic vessels may deviate from Murray's law to reduce sensitivity to elevated intracranial pressure. Conclusion(s): This is the first numerical study of CSF drainage through CLVs. Our comprehensive parameter analysis offers guidance for future numerical modeling of CLVs. This study also provides a foundation for understanding physiology of CSF drainage, helping guide future experimental studies aimed at identifying causal mechanisms of reduction in CLV transport and potential therapeutic approaches to enhance flow.Copyright The copyright holder for this preprint is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made available under a CC-BY-NC 4.0 International license.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=empp&DO=10.1101%2f2024.05.24.595806
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:&id=doi:10.1101%2F2024.05.24.595806&issn=2692-8205&isbn=&volume=&issue=&spage=&pages=&date=2024&title=bioRxiv&atitle=Lumped+Parameter+Simulations+of+Cervical+Lymphatic+Vessels%3A+Dynamics+of+Murine+Cerebrospinal+Fluid+Efflux+from+the+Skull&aulast=Kim&pid=%3Cauthor%3EKim+D.%3BTithof+J.%3C%2Fauthor%3E%3CAN%3E2032807556%3C%2FAN%3E%3CDT%3EPreprint%3C%2FDT%3E
+
+<3>
+Accession Number
+  646809707
+Title
+  Another rare risk factor for cerebral sinus venous thrombosis.
+Source
+  Italian Journal of Medicine. Conference: 22. Congresso Nazionale della Societa Scientifica FADOI. Sorrento Italy. 11(Supplement 1) (pp 101), 2017. Date of Publication: 01 May 2017.
+Author
+  Pizzini A.M.; Galimberti D.; Leone M.C.; Casali A.M.; Arioli D.; Malferrari G.; Ghirarduzzi A.
+Institution
+  (Pizzini, Galimberti, Leone, Casali, Arioli, Ghirarduzzi) Centro Emostasi e Trombosi Medicina II, ASMN, Reggio Emilia, Italy
+  (Malferrari) Stroke Unit, ASMN, Reggio Emilia, Italy
+Publisher
+  Page Press Publications
+Subject Headings
+    adult
+    adverse drug reaction
+    blood flow velocity
+    blood patch
+    blood viscosity
+    carcinomatous meningitis
+    case report
+    *cerebral sinus thrombosis
+    cerebrospinal fluid
+    clinical article
+    computer assisted tomography
+    conference abstract
+    contraceptive behavior
+    diagnosis
+    drug therapy
+    female
+    headache
+    human
+    hyperemia
+    hypotension
+    internal jugular vein
+    intracranial hypotension
+    intracranial pressure
+    liquorrhea
+    lumbar puncture
+    MRI scanner
+    nuclear magnetic resonance imaging
+    oral drug administration
+    peritoneum pseudomyxoma
+    pressure gradient
+    *risk factor
+    sinus venosus
+    subcutaneous tissue
+    therapy
+    thrombophilia
+    vein endothelium
+    venous congestion
+    venous stasis
+    vomiting
+    bevacizumab
+    capecitabine
+    heparin
+Drug Index Terms
+  bevacizumab; capecitabine; heparin
+Other Index Terms
+  adult; adverse drug reaction; blood flow velocity; blood patch; blood viscosity; carcinomatous meningitis; case report; *cerebral sinus thrombosis; cerebrospinal fluid; clinical article; computer assisted tomography; conference abstract; contraceptive behavior; diagnosis; drug therapy; female; headache; human; hyperemia; hypotension; internal jugular vein; intracranial hypotension; intracranial pressure; liquorrhea; lumbar puncture; MRI scanner; nuclear magnetic resonance imaging; oral drug administration; peritoneum pseudomyxoma; pressure gradient; *risk factor; sinus venosus; subcutaneous tissue; therapy; thrombophilia; vein endothelium; venous congestion; venous stasis; vomiting
+Abstract
+  Introduction: Intracranial hypotension (IH) is secondary to cerebrospinal fluid (CSF) leakage, with or without a dural damage. CSVT has occasionally been described in patients with IH and several mechanisms can explain this association: Decreased blood flow velocity by venous engorgement and dilatation; venous endothelium damage induced by negative intracranial pressure gradient; finally increased blood viscosity due to CSF reduced absorption. These can be added to risk factors related to the patient: Hereditary thrombophilia, pregnancy or contraceptive use, prothrombotic drugs and cancer. Case report: A 44-year-old woman was hospitalized for worsening headache. She was affected by peritoneal pseudomyxoma surgically treated and now in chemotherapy (Capecitabine and Bevacizumab). She suffered from headaches and vomiting aggravated by orthostatic position. The cerebral MRI and lumbar puncture excluded meningeal carcinomatosis and a diagnosis of CSF hypotension was made. A blood patch procedure was performed without benefit and a subsequent cerebral CT scan documented a CSVT extended from sagittal upper venous sinus to right internal jugular vein, consistent with the symptoms. She began subcutaneous heparin with improvement of headache. Conclusion(s): The CSVT is a multifactorial condition determined by local and generalizated risk factors: The thrombophilic substrate linked to cancer and the concomitant treatment with prothrombotic drugs, as well as the associated venous stasis induced by IH. IH therefore, spontaneous or acquired, can be considered a risk factor for CSVT.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emedx&AN=646809707
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:&id=doi:&issn=1877-9352&isbn=&volume=11&issue=Supplement+1&spage=101&pages=101&date=2017&title=Italian+Journal+of+Medicine&atitle=Another+rare+risk+factor+for+cerebral+sinus+venous+thrombosis&aulast=Pizzini&pid=%3Cauthor%3EPizzini+A.M.%3BGalimberti+D.%3BLeone+M.C.%3BCasali+A.M.%3BArioli+D.%3BMalferrari+G.%3BGhirarduzzi+A.%3C%2Fauthor%3E%3CAN%3E646809707%3C%2FAN%3E%3CDT%3EConference+Abstract%3C%2FDT%3E
+
+<4>
+Accession Number
+  646808494
+Title
+  Shaken Baby Syndrome - Unravelled.
+Source
+  Canadian Journal of Neurological Sciences. Conference: 55th Annual Canadian Association of Neuropathologists Meeting. Toronto, ON Canada. 42(Supplement 3) (pp S5), 2015. Date of Publication: 01 Dec 2015.
+Author
+  Auer R.N.
+Institution
+  (Auer) University of Saskatchewan, Canada
+Publisher
+  Cambridge University Press
+Subject Headings
+    bleeding
+    brain vein
+    child
+    child abuse
+    clinical article
+    conference abstract
+    controlled study
+    day care
+    diagnosis
+    differential diagnosis
+    female
+    grandparent
+    head injury
+    heart arrest
+    human
+    hypoxia
+    incarceration
+    incidence
+    male
+    meningeal hemorrhage
+    prosecution
+    resuscitation
+    retina hemorrhage
+    *shaken baby syndrome
+    subdural hematoma
+    sudden infant death syndrome
+    venous circulation
+Other Index Terms
+  bleeding; brain vein; child; child abuse; clinical article; conference abstract; controlled study; day care; diagnosis; differential diagnosis; female; grandparent; head injury; heart arrest; human; hypoxia; incarceration; incidence; male; meningeal hemorrhage; prosecution; resuscitation; retina hemorrhage; *shaken baby syndrome; subdural hematoma; sudden infant death syndrome; venous circulation
+Abstract
+  A generation of doctors has been taught that Shaken Baby Syndrome (SBS) can be diagnosed definitively by a triad of [1] retinal hemorrhage, [2] meningeal hemorrhage (subdural or subarachnoid) and [3] encephalopathy. SBS, not really syndromic, is unravelling, and has been supplanted by Abusive Head Trauma (AHT) by its proponents. Yet fundamental problems remain with the idea. The physics of angular acceleration provides only 11-12% of that necessary to cause destructive shear force within the brain. The fulcrum around which the brain would rotate is not the center of the head (as in boxing), but inferiorly in the neck, which has been injured in no case of presumptive SBS/AHT. Commonly, there is little to no differential diagnosis by child abuse specialists in court asserting there is only one possible diagnosis: abuse. There are a multitude of causes of the triad. Reperfusion hemorrhage after resuscitation following cardiac arrest accounts for many cases, due to reperfusion of previously hypoxic or ischemic endothelium. SBS and SIDS show a remarkable graphic superposition in month-over-month incidence plots, suggesting resuscitation in SIDS may turn it into SBS if reperfusion hemorrhage occurs. Another mimic of what passes for SBS/AHT is a short fall. Usually innocuous, short falls have a strike velocity of >5 mph from a 12h fall, and 10 mph from a 44h fall and can give rise to fractures and/or subdural hematomas, if the head strikes first. Lucid intervals can occur in young children, but are discounted in SBS/AHT circles. Retinal hemorrhages result from ICP via the valveless venous system transmitting the pressure from the cerebral venous system to retinal veins. Differential diagnosis in law is termed due process, often lacking in SBS/AT cases at trial. The problem is confounded further by false confessions. Research on normal subjects shows that, if given cogent background data and a medical certainty they were guilty, people will admit to a factitious crime they never committed. These multiple, system-wide errors converge to cause incarceration of parents, day care workers and grandparents, presently numbering over 1000 imprisonments. Prosecutions based on the triad continue.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emedx&DO=10.1017%2fcjn.2015.377
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:&id=doi:10.1017%2Fcjn.2015.377&issn=0317-1671&isbn=&volume=42&issue=Supplement+3&spage=S5&pages=S5&date=2015&title=Canadian+Journal+of+Neurological+Sciences&atitle=Shaken+Baby+Syndrome+-+Unravelled&aulast=Auer&pid=%3Cauthor%3EAuer+R.N.%3C%2Fauthor%3E%3CAN%3E646808494%3C%2FAN%3E%3CDT%3EConference+Abstract%3C%2FDT%3E
+
+<5>
+Accession Number
+  2033665788
+Title
+  VIEshunt: towards a ventricular intelligent and electromechanical shunt for hydrocephalus therapy.
+Source
+  Fluids and Barriers of the CNS. 22(1) (no pagination), 2025. Article Number: 28. Date of Publication: 01 Dec 2025.
+Author
+  Flurenbrock F.; Korn L.; Schulte D.; Podgorsak A.; Chomarat J.; Hug J.; Hungerland T.; Holzer C.; Iselin D.; Krebs L.; Weiss R.; Oertel M.F.; Stieglitz L.; Weisskopf M.; Meboldt M.; Zeilinger M.N.; Schmid Daners M.
+Institution
+  (Flurenbrock, Korn, Schulte, Zeilinger, Schmid Daners) Institute for Dynamic Systems and Control, ETH Zurich, Zurich, Switzerland
+  (Podgorsak, Chomarat, Hug, Hungerland, Holzer, Iselin, Krebs, Weiss, Meboldt) Product Development Group Zurich, ETH Zurich, Zurich, Switzerland
+  (Oertel, Stieglitz) Department of Neurosurgery, University Hospital Zurich, Zurich, Switzerland
+  (Weisskopf) Center for Preclinical Development, University Hospital Zurich and University of Zurich, Zurich, Switzerland
+Publisher
+  BioMed Central Ltd
+Subject Headings
+    abdominal pressure
+    adult
+    animal model
+    article
+    *body position
+    *cerebrospinal fluid
+    cerebrospinal fluid drainage
+    diagnosis
+    female
+    flowmeter
+    human
+    *hydrocephalus
+    hydrostatic pressure
+    in vitro study
+    inertial sensor
+    *intracranial pressure
+    male
+    micropump
+    nonhuman
+    patient monitoring
+    patient simulation
+    pilot study
+    sensor
+    sheep
+    simulation
+    therapy
+    wireless communication
+    sodium chloride
+Drug Index Terms
+  sodium chloride
+Other Index Terms
+  abdominal pressure; adult; animal model; article; *body position; *cerebrospinal fluid; cerebrospinal fluid drainage; diagnosis; female; flowmeter; human; *hydrocephalus; hydrostatic pressure; in vitro study; inertial sensor; *intracranial pressure; male; micropump; nonhuman; patient monitoring; patient simulation; pilot study; sensor; sheep; simulation; therapy; wireless communication
+Abstract
+  Background: Shunt systems for hydrocephalus therapy are commonly based on passive mechanical pressure valves that are driven by the intracranial, intra-abdominal, and hydrostatic pressure. The differential pressure acting on the valve determines the drainage rate of cerebrospinal fluid (CSF) but is not a gauge of the physiological condition of the patient. Internal and external influences can cause over- or underdrainage and lead to pathological levels of intracranial pressure (ICP). Method(s): The first prototype of a ventricular intelligent and electromechanical shunt (VIEshunt) is developed, tested, and compared with previous efforts towards the development of a smart shunt. Its key components are a micro pump, a flow meter, a pressure sensor, an inertial measurement unit, a wireless communication interface, and a microcontroller. The VIEshunt prototype was tested in vitro using a hardware-in-the-loop (HiL) test bench that runs real-time patient simulations involving changes in intracranial and intra-abdominal pressure, as well as changes in posture ranging between supine and upright position. The prototype was subsequently tested in an in vivo pilot study based on an acute ovine animal model (n=1) with infusions of artificial CSF. Result(s): During 24 h in vitro testing, the prototype detected the simulated posture changes of the patient and automatically adapted the controller reference. The posture-specific ICP references of 12 mmHg for supine and -3 mmHg for upright position were tracked without offset, thus preventing adverse over- and underdrainage during the investigated HiL test scenario. During acute in vivo testing, the prototype first regulated the mean ICP of a sheep from 22 mmHg down to 20 mmHg. Each of the three subsequent intraventricular bolus infusions of 1 mL saline solution increased mean ICP by approximately 11 mmHg. While natural absorption alone decreased ICP by only 5 mmHg within 9 min, the prototype was able to regulate ICP back to the pre-bolus pressure value within 5 min. Conclusion(s): The developed VIEshunt prototype is capable of posture-dependent ICP regulation and CSF drainage control. Smart shunt systems based on VIEshunt could improve patient monitoring and enable optimal physiologic therapy by adapting to the individual patient. To derive statistically relevant conclusions for the performance of VIEshunt, future work will focus on the development of a next generation prototype for use in pre-clinical studies.Copyright © The Author(s) 2025.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emedx&DO=10.1186%2fs12987-025-00629-w
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:&id=doi:10.1186%2Fs12987-025-00629-w&issn=2045-8118&isbn=&volume=22&issue=1&spage=28&pages=&date=2025&title=Fluids+and+Barriers+of+the+CNS&atitle=VIEshunt%3A+towards+a+ventricular+intelligent+and+electromechanical+shunt+for+hydrocephalus+therapy&aulast=Flurenbrock&pid=%3Cauthor%3EFlurenbrock+F.%3BKorn+L.%3BSchulte+D.%3BPodgorsak+A.%3BChomarat+J.%3BHug+J.%3BHungerland+T.%3BHolzer+C.%3BIselin+D.%3BKrebs+L.%3BWeiss+R.%3BOertel+M.F.%3BStieglitz+L.%3BWeisskopf+M.%3BMeboldt+M.%3BZeilinger+M.N.%3BSchmid+Daners+M.%3C%2Fauthor%3E%3CAN%3E2033665788%3C%2FAN%3E%3CDT%3EArticle%3C%2FDT%3E
+
+<6>
+Accession Number
+  2033671985
+Title
+  Post-traumatic cerebral venous sinus thrombosis complicated with syndrome of inappropriate antidiuretic hormone secretion: a case report.
+Source
+  Journal of Medical Case Reports. 19(1) (no pagination), 2025. Article Number: 115. Date of Publication: 01 Dec 2025.
+Author
+  Rupasinghe S.; Lemoh C.
+Institution
+  (Rupasinghe, Lemoh) Footscray Hospital, Western Health, Melbourne, Australia
+Publisher
+  BioMed Central Ltd
+Subject Headings
+    adult
+    anticoagulant therapy
+    *anticoagulation
+    article
+    blurred vision
+    brain hemorrhage
+    case report
+    *cerebral sinus thrombosis
+    clinical article
+    complication
+    computer assisted tomography
+    diagnosis
+    differential diagnosis
+    dizziness
+    drug therapy
+    female
+    head injury
+    headache
+    human
+    *inappropriate vasopressin secretion
+    influenza A
+    internal jugular vein
+    intracranial hypertension
+    intravenous drug administration
+    male
+    middle aged
+    neuroimaging
+    nuclear magnetic resonance imaging
+    oral drug administration
+    phlebography
+    seizure
+    sigmoid sinus
+    *sinus venosus
+    surgery
+    transverse sinus
+    unconsciousness
+    *vasopressin release
+    vomiting
+    young adult
+    anticoagulant agent
+Drug Index Terms
+  anticoagulant agent
+Other Index Terms
+  adult; anticoagulant therapy; *anticoagulation; article; blurred vision; brain hemorrhage; case report; *cerebral sinus thrombosis; clinical article; complication; computer assisted tomography; diagnosis; differential diagnosis; dizziness; drug therapy; female; head injury; headache; human; *inappropriate vasopressin secretion; influenza A; internal jugular vein; intracranial hypertension; intravenous drug administration; male; middle aged; neuroimaging; nuclear magnetic resonance imaging; oral drug administration; phlebography; seizure; sigmoid sinus; *sinus venosus; surgery; transverse sinus; unconsciousness; *vasopressin release; vomiting; young adult
+Abstract
+  Background: Cerebral venous sinus thrombosis is a rare but potentially life-threatening condition resulting from the formation of a thrombus in the venous sinuses in the brain, resulting in impaired venous drainage, increased intracranial pressure, and severe neurological deficits. Traumatic cerebral venous sinus thrombosis is a rare but potentially devastating complication of head trauma. Cerebral venous sinus thrombosis can present with a variety of symptoms including headache, vomiting, blurred vision, loss of consciousness, seizures, and coma. Syndrome of inappropriate antidiuretic hormone secretion is a complication of cerebral venous sinus thrombosis that occurs due to raised intracranial pressure, which in turn stimulates antidiuretic hormone release. The diagnosis of cerebral venous sinus thrombosis is confirmed through neuroimaging. Anticoagulation remains the mainstay of treatment. The prognosis is variable and depends on several factors including the extent of thrombosis, presence of cerebral hemorrhage, and timing of diagnosis and treatment. Case presentation: We report a case of a 45-year-old Albanian female who presented with headache and dizziness following a fall and head strike in the context of influenza A. Computed tomography of the brain revealed a stable minimally displaced oblique fracture of the left petrous bone and new dural venous sinus thrombosis of the left transverse sinus, left sigmoid sinus, and cranial aspect of the left internal jugular vein. Thrombotic, malignancy, and infectious screens were negative. Our case was successfully managed with anticoagulants. Additionally, the patient developed syndrome of inappropriate antidiuretic hormone secretion, which was managed with fluid restriction. Conclusion(s): Our case highlights the importance of considering cerebral venous sinus thrombosis as a differential diagnosis in patients presenting with dizziness following trauma. Early identification with computed tomography or magnetic resonance imaging venography and appropriate treatment with anticoagulation therapy are essential to reduce morbidity and mortality.Copyright © The Author(s) 2025.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emedx&DO=10.1186%2fs13256-025-05163-9
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:&id=doi:10.1186%2Fs13256-025-05163-9&issn=1752-1947&isbn=&volume=19&issue=1&spage=115&pages=&date=2025&title=Journal+of+Medical+Case+Reports&atitle=Post-traumatic+cerebral+venous+sinus+thrombosis+complicated+with+syndrome+of+inappropriate+antidiuretic+hormone+secretion%3A+a+case+report&aulast=Rupasinghe&pid=%3Cauthor%3ERupasinghe+S.%3BLemoh+C.%3C%2Fauthor%3E%3CAN%3E2033671985%3C%2FAN%3E%3CDT%3EArticle%3C%2FDT%3E
+
+<7>
+Accession Number
+  2037764500
+Title
+  Congenital external hydrocephalus: A rare presentation of lobar holoprosencephaly in a neonate.
+Source
+  Radiology Case Reports. 20(5) (pp 2323-2327), 2025. Date of Publication: 01 May 2025.
+Author
+  Agrawal R.; Raj N.; Dhawan V.; Parihar P.; Bora N.
+Institution
+  (Agrawal, Raj, Dhawan, Parihar, Bora) Department of Radiology, Jawaharlal Nehru Medical College, Datta Meghe Institute of Higher Education & Research, Wardha, India
+Publisher
+  Elsevier Inc.
+Subject Headings
+    article
+    brain cortex
+    brain lateral ventricle
+    brain third ventricle
+    brain vein
+    brain ventricle peritoneum shunt
+    case report
+    cerebrospinal fluid
+    cesarean section
+    clinical article
+    clinical outcome
+    *congenital hydrocephalus/di [Diagnosis]
+    *congenital hydrocephalus/su [Surgery]
+    congenital malformation
+    developmental disorder
+    early diagnosis
+    feeding disorder
+    female
+    fetus distress
+    fetus echography
+    fluid-attenuated inversion recovery imaging
+    follow up
+    frontal bossing
+    frontal lobe
+    gaze
+    genetic counseling
+    genetic screening
+    gestational age
+    head circumference
+    *holoprosencephaly/di [Diagnosis]
+    *holoprosencephaly/su [Surgery]
+    human
+    hypoplasia
+    image analysis
+    infant
+    intracranial pressure
+    irritability
+    macrocephaly
+    neuroimaging
+    newborn
+    nuclear magnetic resonance imaging
+    occipital lobe
+    parenchyma
+    parent counseling
+    parietal lobe
+    physical examination
+    postoperative period
+    prognosis
+    rare disease
+    sensory dysfunction
+    somnolence
+    subarachnoid space
+    T2 weighted imaging
+    temporal lobe
+    *congenital external hydrocephalus/di [Diagnosis]
+    *congenital external hydrocephalus/su [Surgery]
+    *lobar holoprosencephaly/di [Diagnosis]
+    *lobar holoprosencephaly/su [Surgery]
+Candidate Terms
+  *congenital external hydrocephalus / *diagnosis / *surgery [other term]
+  *lobar holoprosencephaly / *diagnosis / *surgery [other term]
+Other Index Terms
+  article; brain cortex; brain lateral ventricle; brain third ventricle; brain vein; brain ventricle peritoneum shunt; case report; cerebrospinal fluid; cesarean section; clinical article; clinical outcome; *congenital hydrocephalus / *diagnosis / *surgery; congenital malformation; developmental disorder; early diagnosis; feeding disorder; female; fetus distress; fetus echography; fluid-attenuated inversion recovery imaging; follow up; frontal bossing; frontal lobe; gaze; genetic counseling; genetic screening; gestational age; head circumference; *holoprosencephaly / *diagnosis / *surgery; human; hypoplasia; image analysis; infant; intracranial pressure; irritability; macrocephaly; neuroimaging; newborn; nuclear magnetic resonance imaging; occipital lobe; parenchyma; parent counseling; parietal lobe; physical examination; postoperative period; prognosis; rare disease; sensory dysfunction; somnolence; subarachnoid space; T2 weighted imaging; temporal lobe
+Abstract
+  External hydrocephalus is a rare condition characterized by abnormal cerebrospinal fluid (CSF) accumulation in the subarachnoid space, often associated with developmental anomalies. Lobar holoprosencephaly, a milder form of holoprosencephaly, can manifest with hydrocephalus due to its impact on brain development and CSF dynamics. This case report describes a neonate with congenital external hydrocephalus secondary to lobar holoprosencephaly, highlighting the diagnostic imaging findings and management approach. A neonate presented with progressive macrocephaly, irritability, altered sensorium, and poor feeding. Antenatal ultrasound at 32 weeks of gestation revealed macrocephaly and hydrocephalus, leading to a cesarean delivery at 38 weeks. Physical examination showed an occipitofrontal circumference of 45 cm, exceeding the 97th percentile for age. Magnetic resonance imaging (MRI) revealed fused frontal horns of the lateral ventricles, hypoplasia of the posterior corpus callosum, and extensive extra-axial CSF accumulation compressing the brain parenchyma. The CSF collection showed complete suppression on FLAIR imaging, confirming its nature, and a cortical vein sign indicated an enlarged subarachnoid space rather than a subdural hygroma. A diagnosis of lobar holoprosencephaly with congenital external hydrocephalus was made. The patient underwent peritoneal shunting to alleviate intracranial pressure, significantly reducing head circumference to 38 cm. Postoperative recovery was uneventful, and the parents were counseled on genetic testing and long-term follow-up. This case underscores the importance of detailed neuroimaging in differentiating external hydrocephalus from other pathologies and highlights the role of surgical intervention in improving outcomes. Early diagnosis and a multidisciplinary approach are vital for managing complex congenital anomalies such as lobar holoprosencephaly.Copyright © 2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emexb&DO=10.1016%2fj.radcr.2025.01.080
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:&id=doi:10.1016%2Fj.radcr.2025.01.080&issn=1930-0433&isbn=&volume=20&issue=5&spage=2323&pages=2323-2327&date=2025&title=Radiology+Case+Reports&atitle=Congenital+external+hydrocephalus%3A+A+rare+presentation+of+lobar+holoprosencephaly+in+a+neonate&aulast=Agrawal&pid=%3Cauthor%3EAgrawal+R.%3BRaj+N.%3BDhawan+V.%3BParihar+P.%3BBora+N.%3C%2Fauthor%3E%3CAN%3E2037764500%3C%2FAN%3E%3CDT%3EArticle%3C%2FDT%3E
+
+<8>
+Accession Number
+  2033508394
+PMID
+  40025371
+PMID URL
+  https://www.ncbi.nlm.nih.gov/pubmed/?term=40025371
+Title
+  Complications after resection of parasagittal and superior sagittal sinus meningiomas.
+Source
+  Neurosurgical Review. 48(1) (no pagination), 2025. Article Number: 278. Date of Publication: 01 Dec 2025.
+Author
+  Peto I.; Pressman E.; Piper K.; Flores-Milan G.; Ryan C.A.; Lockard G.; Gordon J.; Alayli A.; van Loveren H.; Agazzi S.
+Institution
+  (Peto, Pressman, Piper, Flores-Milan, Ryan, Lockard, Gordon, Alayli, van Loveren, Agazzi) Department of Neurosurgery and Brain Repair, University of South Florida, 2 Tampa General Circle, Tampa, FL, United States
+Publisher
+  Springer Science and Business Media Deutschland GmbH
+Subject Headings
+    adult
+    article
+    bleeding
+    cancer grading
+    *cancer surgery
+    computed tomographic angiography
+    female
+    follow up
+    headache
+    histology
+    human
+    human tissue
+    intracranial hypertension
+    intracranial meningioma
+    major clinical study
+    male
+    *meningioma
+    middle aged
+    nuclear magnetic resonance
+    *parasagittal meningioma
+    patient history of surgery
+    *postoperative complication
+    retrospective study
+    superior sagittal sinus
+    data analysis software
+    *superior sagittal sinus meningioma
+    IBM SPSS Statistics Version 29
+Candidate Terms
+  *superior sagittal sinus meningioma [other term]
+  IBM SPSS Statistics Version 29 [device term]
+Device Index Terms
+  data analysis software
+Other Index Terms
+  adult; article; bleeding; cancer grading; *cancer surgery; computed tomographic angiography; female; follow up; headache; histology; human; human tissue; intracranial hypertension; intracranial meningioma; major clinical study; male; *meningioma; middle aged; nuclear magnetic resonance; *parasagittal meningioma; patient history of surgery; *postoperative complication; retrospective study; superior sagittal sinus
+Abstract
+  Parasagittal meningiomas (PSM) represent one of the most frequently encountered intracranial meningiomas and pose unique challenges given their intimate relationship with parasagittal bridging veins and superior sagittal sinus (SSS). Compromise of venous drainage during resection might be a source of significant postoperative complications including catastrophic intraparenchymal hemorrhage. Objective of this study was to identify postoperative complications and associated factors predisposing to their development. A retrospective review of histologically confirmed parasagittal meningiomas (Sindou grade 1-6) resected between 2011 and 2020 was performed. A total of 62 patients (35 females (56.45%); mean age 55.72) years were included. The mean follow-up was 40.84 months. Forty-two patients (67.74%) were treatment naive. Complete SSS occlusion was noted in 23 (37.1%). WHO grade 1 tumor was diagnosed in 32 (51.61%), WHO 2 in 23 (37.1%) and WHO 3 in 7 cases (11.29%). The SSS was resected in 24 (38.71%) patients. Intraparenchymal hemorrhage (ICH) was noted after 8 (12.90%) surgeries. Prior surgery (p = 0.006, OR = 22.1; 95% CI = 2.48-196.5) and higher tumor grade (OR = 4.64, 95% CI = 1.45-14.79, p = 0.01) were independently associated with greater risk of ICH. Resection of the SSS was not associated with postoperative ICH (p = 0.1388). A procedure-related mortality was noted in 2 patients (3.2%). Long term postoperative headaches were reported in 14 (22.58%) patients, associated with the resection of the SSS (p = 0.0003). Four (6.56%) patients had a CSF diversion procedure noted at the last follow up, correlated with ICH (p = 0.0124). History of prior surgery and higher WHO grade seem to be correlated with a significantly elevated risk of hemorrhage. Increased intracranial pressure, requiring CSF diversion is relatively infrequent occurring only in 6% patients, however awareness is important as prevention of its sequela is straightforward, preventing debilitating morbidity.Copyright © The Author(s), under exclusive licence to Springer-Verlag GmbH Germany, part of Springer Nature 2025.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emexb&DO=10.1007%2fs10143-025-03430-3
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:40025371&id=doi:10.1007%2Fs10143-025-03430-3&issn=0344-5607&isbn=&volume=48&issue=1&spage=278&pages=&date=2025&title=Neurosurgical+Review&atitle=Complications+after+resection+of+parasagittal+and+superior+sagittal+sinus+meningiomas&aulast=Peto&pid=%3Cauthor%3EPeto+I.%3BPressman+E.%3BPiper+K.%3BFlores-Milan+G.%3BRyan+C.A.%3BLockard+G.%3BGordon+J.%3BAlayli+A.%3Bvan+Loveren+H.%3BAgazzi+S.%3C%2Fauthor%3E%3CAN%3E2033508394%3C%2FAN%3E%3CDT%3EArticle%3C%2FDT%3E
+
+<9>
+Accession Number
+  2037745049
+PMID
+  40033789
+PMID URL
+  https://www.ncbi.nlm.nih.gov/pubmed/?term=40033789
+Title
+  Steroids combined with anticoagulant in acute/subacute severe cerebral venous thrombosis.
+Source
+  Chinese Medical Journal.  (no pagination), 2025. Article Number: 10.1097/CM9.0000000000003502. Date of Publication: 2025.
+Author
+  Hu S.; Gu Y.; Zhao T.; Zhang K.; Li J.; Zhou C.; Song H.; Liu Z.; Ji X.; Duan J.
+Institution
+  (Hu, Song) Department of Neurology, Xuanwu Hospital, Capital Medical University, Beijing, China
+  (Hu, Gu, Zhao, Liu, Duan) Department of Emergency, Xuanwu Hospital, Capital Medical University, Beijing, China
+  (Gu, Zhao, Ji, Duan) Intracranial Hypertension & Cerebral Venous Disease Center, National Health Commission of China, Xuanwu Hospital, Capital Medical University, Beijing, China
+  (Zhang, Li) Department of Radiology & Nuclear Medicine, Xuanwu Hospital, Capital Medical University, Beijing, China
+  (Zhou, Ji) Collaborative Innovation Center for Brain Disorders, Beijing Institute of Brain Disorders, Capital Medical University, Beijing, China
+  (Ji) Department of Neurosurgery, Xuanwu Hospital, Capital Medical University, Beijing, China
+Publisher
+  Lippincott Williams and Wilkins
+Subject Headings
+    adjuvant therapy
+    adult
+    aged
+    anticoagulant therapy
+    anticoagulation
+    article
+    *brain vein
+    *cerebral sinus thrombosis
+    cerebrospinal fluid
+    cohort analysis
+    complication
+    controlled study
+    drug combination
+    drug therapy
+    female
+    follow up
+    hospitalization
+    human
+    *inflammation
+    intracranial pressure
+    major clinical study
+    male
+    prognosis
+    randomized controlled trial
+    Rankin scale
+    special situation for pharmacovigilance
+    *steroid therapy
+    *anticoagulant agent
+    C reactive protein
+    interleukin 6
+    *steroid
+Drug Index Terms
+  *anticoagulant agent; C reactive protein; interleukin 6; *steroid
+Other Index Terms
+  adjuvant therapy; adult; aged; anticoagulant therapy; anticoagulation; article; *brain vein; *cerebral sinus thrombosis; cerebrospinal fluid; cohort analysis; complication; controlled study; drug combination; drug therapy; female; follow up; hospitalization; human; *inflammation; intracranial pressure; major clinical study; male; prognosis; randomized controlled trial; Rankin scale; special situation for pharmacovigilance; *steroid therapy
+Abstract
+  Background: Inflammation plays a critical role in severe cerebral venous thrombosis (CVT) pathogenesis, but the benefits of anti-inflammatory therapies remain unclear. This study aimed to investigate the association between steroid therapy combined with anticoagulation and the prognosis of acute/subacute severe CVT patients. Method(s): A prospective cohort study enrolled patients with acute/subacute severe CVT at Xuanwu Hospital (July 2020-January 2024). Patients were allocated into steroid and non-steroid groups based on the treatment they received. Functional outcomes (modified Rankin scale [mRS]) were evaluated at admission, discharge, and 6 months after discharge. Serum high-sensitivity C-reactive protein (hs-CRP), interleukin-6 (IL-6), cerebrospinal fluid (CSF) IL-6, and intracranial pressure were measured at admission and discharge in the steroid group. Fundoscopic Frisen grades were assessed at admission and 6 months after discharge. Univariate and multivariate logistic regression were used to analyses were used to evaluated associations between steroid use and favorable outcomes (mRS <=2) at the 6-month follow-up. Paired tests assessed changes in hs-CRP and other variables before and after treatment, and Spearman's correlations were used to analyzed relationships between these changes and functional improvements. Result(s): A total of 107 and 58 patients in the steroid and non-steroid groups, respectively, were included in the analysis. Compared with the non-steroid group, the steroid group had a higher likelihood of achieving an mRS score of 0-2 (93.5% vs. 82.5%, OR = 2.98, P = 0.037) at the 6-month follow-up. After adjusting for confounding factors, the result remained consistent. Pulsed steroid therapy did not increase mortality during hospitalization or follow-up, nor did it lead to severe steroid-related complications (all P >0.05). Patients in the steroid group showed a significant reduction in serum hs-CRP, IL-6, CSF IL-6, and intracranial pressure at discharge compared to at admission, as well as a significant reduction in the fundoscopic Frisen grade at the 6-month follow-up compare to at admission (all P <0.001). A reduction in serum inflammatory marker levels during hospitalization positively correlated with improvements in functional outcomes (P <0.05). Conclusion(s): Short-term steroid use may be an effective and safe adjuvant therapy for acute/subacute severe CVT when used alongside standard anticoagulant treatments, which are likely due to suppression of the inflammatory response. However, these findings require further validation in randomized controlled trials.Copyright © 2025 The Chinese Medical Association, produced by Wolters Kluwer, Inc.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emexb&DO=10.1097%2fCM9.0000000000003502
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:40033789&id=doi:10.1097%2FCM9.0000000000003502&issn=0366-6999&isbn=&volume=&issue=&spage=10.1097%2FCM9.0000000000003502&pages=&date=2025&title=Chinese+Medical+Journal&atitle=Steroids+combined+with+anticoagulant+in+acute%2Fsubacute+severe+cerebral+venous+thrombosis&aulast=Hu&pid=%3Cauthor%3EHu+S.%3BGu+Y.%3BZhao+T.%3BZhang+K.%3BLi+J.%3BZhou+C.%3BSong+H.%3BLiu+Z.%3BJi+X.%3BDuan+J.%3C%2Fauthor%3E%3CAN%3E2037745049%3C%2FAN%3E%3CDT%3EArticle+In+Press%3C%2FDT%3E
+
+<10>
+Accession Number
+  646761357
+PMID
+  40053928
+PMID URL
+  https://www.ncbi.nlm.nih.gov/pubmed/?term=40053928
+Title
+  Predictors of dural venous sinus pressure gradient in patients with idiopathic intracranial hypertension.
+Source
+  Journal of neurosurgery.  (pp 1-7), 2025. Date of Publication: 07 Mar 2025.
+Author
+  Momin A.A.; Musmar B.; El Naamani K.; Mouchtouris N.; Self D.M.; Lan M.; Piper K.; Ritz C.; Tjoumakaris S.I.; Jabbour P.M.; Gooch M.R.
+Subject Headings
+    adult
+    African American
+    article
+    brain vein
+    clinical article
+    complication
+    *cranial sinus
+    diagnosis
+    female
+    human
+    human tissue
+    *idiopathic intracranial hypertension
+    intracranial hypertension
+    lumbar puncture
+    magnetic resonance venography
+    male
+    *manometry
+    obesity
+    papilledema
+    pregnancy
+    *pressure gradient
+    school child
+    sensitivity and specificity
+    *sinus venosus
+    surgery
+    therapy
+    tinnitus
+    *vascular disease
+    vein blood flow
+    venous pressure
+    Youden index
+    young adult
+Other Index Terms
+  adult; African American; article; brain vein; clinical article; complication; *cranial sinus; diagnosis; female; human; human tissue; *idiopathic intracranial hypertension; intracranial hypertension; lumbar puncture; magnetic resonance venography; male; *manometry; obesity; papilledema; pregnancy; *pressure gradient; school child; sensitivity and specificity; *sinus venosus; surgery; therapy; tinnitus; *vascular disease; vein blood flow; venous pressure; Youden index; young adult
+Abstract
+  OBJECTIVE: Growing evidence suggests that venous outflow obstruction from venous sinus stenosis (VSS) may lead to increased intracranial pressure (ICP) in patients with idiopathic intracranial hypertension (IIH). There is a paucity of evidence examining clinical predictors of elevated cerebral venous pressure gradient (CVPG) from VSS in patients with IIH. In this study, the authors examined predictors of elevated CVPG, determined the sensitivity and specificity of common presenting symptoms of IIH, and identified the optimal opening pressure threshold on lumbar puncture (LP) to determine which patients should undergo venous manometry (VM). METHOD(S): Patient demographics, presenting symptoms, complications, and opening pressure on LP were collected. Venous pressure gradient across a stenotic dural venous sinus and maximum venous pressure values were recorded from cerebral venograms. VM was considered positive when the CVPG was >= 8 mm Hg between two contiguous segments of a dural venous sinus. Sensitivity, specificity, and multivariable logistic regression analysis was performed. RESULT(S): The predominant patient population was young (mean age 38.9 years), obese (BMI >= 30; 83.8%), and female (95.0%). Sensitivity and specificity for papilledema were 74% and 70% (area under the curve [AUC] 0.71, 95% CI 0.63-0.80), and 70% and 63% (AUC 0.66, 95% CI 0.57-0.75) for pulsatile tinnitus. Vision changes demonstrated a sensitivity of 80% and specificity of 50% (AUC 0.63, 95% CI 0.54-0.72). VSS seen on magnetic resonance venography (MRV) demonstrated a sensitivity of 90% and specificity of 53% (AUC 0.71, 95% CI 0.63-0.79). Youden's index analysis identified an opening pressure >= 25 cm H2O on LP (AUC 0.72, 95% CI 0.60-0.83) as an optimal threshold for predicting elevated CVPG. CONCLUSION(S): Predictors of elevated CVPG on VM include childbearing age, African American race, papilledema, pulsatile tinnitus, obesity (BMI >= 30), focal VSS with unilateral dominance in venous drainage seen on MRV, or an opening pressure on LP >= 25 cm H2O.
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=emexb&DO=10.3171%2f2024.10.JNS241749
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:embase&id=pmid:40053928&id=doi:10.3171%2F2024.10.JNS241749&issn=1933-0693&isbn=&volume=&issue=&spage=1&pages=1-7&date=2025&title=Journal+of+neurosurgery&atitle=Predictors+of+dural+venous+sinus+pressure+gradient+in+patients+with+idiopathic+intracranial+hypertension&aulast=Momin&pid=%3Cauthor%3EMomin+A.A.%3BMusmar+B.%3BEl+Naamani+K.%3BMouchtouris+N.%3BSelf+D.M.%3BLan+M.%3BPiper+K.%3BRitz+C.%3BTjoumakaris+S.I.%3BJabbour+P.M.%3BGooch+M.R.%3C%2Fauthor%3E%3CAN%3E646761357%3C%2FAN%3E%3CDT%3EArticle+In+Press%3C%2FDT%3E
