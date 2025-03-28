@@ -18,7 +18,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section with Video Background - Full width */}
-      <section className="w-full relative overflow-hidden min-h-[600px] flex items-center">
+      <section className="w-full relative overflow-hidden min-h-[700px] md:min-h-[80vh] flex items-center">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full bg-black/60 z-10"></div>
         <video 
@@ -34,25 +34,25 @@ export default function HomePage() {
         
         {/* Content Overlay */}
         <div className="container relative z-20 px-4 md:px-6 mx-auto">
-          <div className="max-w-3xl text-white">
-            <div className="inline-block rounded-lg bg-primary/20 backdrop-blur-sm px-3 py-1 text-sm mb-4">
+          <div className="max-w-3xl text-white py-12 md:py-16">
+            <div className="inline-block rounded-lg bg-primary/20 backdrop-blur-sm px-3 py-1 text-sm mb-5">
               AI-powered Literature Review
             </div>
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl mb-6">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-8">
               Systematic Reviews with Artificial Intelligence
             </h1>
-            <p className="max-w-[600px] text-white/80 md:text-xl mb-8">
+            <p className="max-w-[600px] text-white/80 text-lg md:text-2xl mb-10">
               Streamline your research process with our AI-assisted platform for screening and reviewing scientific articles.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href={user ? "/sessions" : "/login"}>
-                <Button size="lg" className="font-medium w-full sm:w-auto">
+                <Button size="lg" className="font-medium w-full sm:w-auto text-md py-5 px-7">
                   Start your reviews
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/about">
-                <Button variant="outline" size="lg" className="font-medium w-full sm:w-auto bg-white/10 backdrop-blur-sm hover:bg-white/20 border-white/20">
+                <Button variant="outline" size="lg" className="font-medium w-full sm:w-auto bg-white/10 backdrop-blur-sm hover:bg-white/20 border-white/20 text-md py-5 px-7">
                   Learn more
                 </Button>
               </Link>
