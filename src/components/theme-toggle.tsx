@@ -13,7 +13,6 @@ type ThemeToggleProps = {
 export function ThemeToggle({ size = "icon", showLabel = false }: ThemeToggleProps) {
   const { resolvedTheme, setTheme } = useTheme()
   const iconSize = size === "sm" ? 16 : size === "lg" ? 20 : 18
-  const isDark = resolvedTheme === "dark"
   const [mounted, setMounted] = React.useState(false)
 
   // Only render the toggle on the client to avoid hydration issues
@@ -21,8 +20,22 @@ export function ThemeToggle({ size = "icon", showLabel = false }: ThemeTogglePro
     setMounted(true)
   }, [])
 
-  // Button to be rendered only on client side after mounting
-  const button = (
+  // If not mounted yet, return a placeholder with same dimensions
+  if (!mounted) {
+    return (
+      <div 
+        className="inline-flex h-10 w-10 items-center justify-center rounded-md"
+        aria-hidden="true"
+        suppressHydrationWarning
+      ></div>
+    )
+  }
+
+  // Only determine if dark after mounting to avoid hydration issues
+  const isDark = resolvedTheme === "dark"
+
+  // Button only rendered client-side after mounting
+  return (
     <Button
       variant="ghost"
       size={size}
@@ -42,16 +55,4 @@ export function ThemeToggle({ size = "icon", showLabel = false }: ThemeTogglePro
       <span className="sr-only">Toggle theme</span>
     </Button>
   )
-
-  // Render a placeholder with same dimensions during SSR to avoid layout shift
-  if (!mounted) {
-    return (
-      <div 
-        className={`inline-flex h-10 w-10 items-center justify-center rounded-md ${size === "sm" ? "px-3" : ""}`} 
-        aria-hidden="true"
-      ></div>
-    )
-  }
-
-  return button
 } 
