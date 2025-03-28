@@ -121,9 +121,9 @@ export default function Settings() {
             <div className="w-full md:w-48 shrink-0">
               <nav className="flex flex-col rounded-md overflow-hidden">
                 <Button
-                  variant="ghost"
+                  variant="link"
                   className={cn(
-                    "justify-start rounded-none h-14 px-6 text-base",
+                    "justify-start h-10 px-6 text-base text-black",
                     activeTab === 'profile' && "bg-muted"
                   )}
                   onClick={() => setActiveTab('profile')}
@@ -131,9 +131,9 @@ export default function Settings() {
                   Profile
                 </Button>
                 <Button
-                  variant="ghost"
+                  variant="link"
                   className={cn(
-                    "justify-start rounded-none h-14 px-6 text-base",
+                    "justify-start h-10 px-6 text-base text-black",
                     activeTab === 'ai' && "bg-muted"
                   )}
                   onClick={() => setActiveTab('ai')}
