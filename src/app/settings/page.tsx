@@ -59,7 +59,7 @@ export default function Settings() {
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <div className="flex items-center space-x-4">
-            <Avatar className="h-16 w-16">
+            <Avatar size="xl">
               <AvatarImage src="https://github.com/shadcn.png" alt={user?.email || ''} />
               <AvatarFallback>{getUserInitials(user?.email)}</AvatarFallback>
             </Avatar>
