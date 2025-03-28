@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Coffee, ChevronDown, RefreshCw, X, Bell, Wrench } from "lucide-react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/components/hooks/use-toast";
 import { LottieCoffeeLoader } from "@/components/ui/lottie-coffee-loader";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
 import {
@@ -14,23 +14,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { ToastDemo } from "@/components/ui/toast-demo";
 
 // Coffee loader messages by variant
 const COFFEE_MESSAGES = [
   [
-    "Brygger dine evalueringer...", 
-    "Kaffen er klar, evalueringer kommer nu!",
-    "Brygger den perfekte evaluering..."
+    "Brewing your evaluations...", 
+    "Coffee is ready, evaluations coming up!",
+    "Brewing the perfect evaluation..."
   ],
   [
-    "Tager en kaffepause mens vi arbejder...", 
-    "Nipper til kaffen mens vi gennemgår artikler...",
-    "Kaffepause i gang..."
+    "Taking a coffee break while we work...", 
+    "Sipping coffee while reviewing articles...",
+    "Coffee break in progress..."
   ],
   [
-    "Maler disse artikler...", 
-    "Ligesom kaffebønner, maler vi artikler til perfektion...",
-    "Kaffemaskinen arbejder hårdt..."
+    "Grinding these articles...", 
+    "Like coffee beans, we're grinding articles to perfection...",
+    "Coffee machine working hard..."
   ]
 ];
 
@@ -59,17 +60,15 @@ export default function Settings() {
     
     setLoaderVariant(Math.floor(Math.random() * 3));
     setLoaderMessageIndex(0); // Reset message index when opening
-    setShowCoffeeLoader(true);
     
-    // Use our custom coffee toast
-    toast.coffee(`Tester kaffe-loader i ${loaderDuration} sekunder...`);
+    // Use our new toast format
+    toast({
+      title: "Coffee Loader",
+      description: `Testing coffee loader for ${loaderDuration} seconds...`,
+    });
     
-    timerRef.current = setTimeout(() => {
-      setShowCoffeeLoader(false);
-      timerRef.current = null;
-      // Show a success toast when finished
-      toast.success("Kaffe-loader test gennemført!");
-    }, loaderDuration * 1000);
+    // Start the loader
+    showLoaderWithTimeout();
   }
   
   // Close the loader manually
@@ -79,7 +78,10 @@ export default function Settings() {
       timerRef.current = null;
     }
     setShowCoffeeLoader(false);
-    toast.info("Loader lukket manuelt");
+    toast({
+      title: "Loader Closed",
+      description: "The loader was closed manually",
+    });
   }
   
   // Cycle to next loader variant and message
@@ -94,77 +96,77 @@ export default function Settings() {
         setLoaderMessageIndex(0);
       }
       
-      toast.info("Ændret loader variant/besked");
+      toast({
+        title: "Loader Updated",
+        description: "Changed loader variant/message",
+      });
     }
   }
   
-  // Demonstrate different toast types
-  function showToastDemo() {
-    toast.info("Dette er en informativ besked");
+  // Set a timeout to show the loader for the specified duration
+  function showLoaderWithTimeout() {
+    setShowCoffeeLoader(true);
     
-    setTimeout(() => {
-      toast.success("Handlingen blev gennemført med succes!");
-    }, 1500);
-    
-    setTimeout(() => {
-      toast.error("Noget gik galt!");
-    }, 3000);
-    
-    setTimeout(() => {
-      toast.coffee("Kaffen brygger! Tid til en pause.");
-    }, 4500);
+    // Schedule to close the loader after the specified duration
+    timerRef.current = setTimeout(() => {
+      setShowCoffeeLoader(false);
+      timerRef.current = null;
+      
+      // Show a success toast when finished
+      toast({
+        title: "Success",
+        description: "Coffee loader test completed!",
+        variant: "default",
+      });
+    }, loaderDuration * 1000);
   }
 
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center mb-8">
         <Wrench className="h-6 w-6 mr-2" />
-        <h1 className="text-3xl font-bold">Indstillinger</h1>
+        <h1 className="text-3xl font-bold">Settings</h1>
       </div>
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>UI Test Værktøjer</CardTitle>
-          <CardDescription>Værktøjer til at teste UI-komponenter og funktionalitet</CardDescription>
+          <CardTitle>UI Test Tools</CardTitle>
+          <CardDescription>Tools for testing UI components and functionality</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <h3 className="text-lg font-medium mb-2">Toast Notifikationer</h3>
+            <h3 className="text-lg font-medium mb-2">Toast Notifications</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Test forskellige typer af toast notifikationer
+              Test different types of toast notifications
             </p>
-            <Button onClick={showToastDemo} className="mr-2">
+            <Button 
+              onClick={() => {
+                toast({
+                  title: "Test Notification",
+                  description: "This is a test toast with a close button that appears on hover.",
+                  duration: 5000,
+                })
+              }} 
+              className="mr-2"
+            >
               <Bell className="mr-2 h-4 w-4" />
-              Test Alle Toast Typer
+              Test Toast
             </Button>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
-              <Button onClick={() => toast.info("Info toast eksempel")} variant="outline" size="sm">
-                Info Toast
-              </Button>
-              <Button onClick={() => toast.success("Success toast eksempel")} variant="outline" size="sm">
-                Success Toast
-              </Button>
-              <Button onClick={() => toast.error("Error toast eksempel")} variant="outline" size="sm">
-                Error Toast
-              </Button>
-              <Button onClick={() => toast.coffee("Coffee toast eksempel")} variant="outline" size="sm">
-                Coffee Toast
-              </Button>
-            </div>
+            <ToastDemo />
           </div>
           
           <Separator />
           
           <div>
-            <h3 className="text-lg font-medium mb-2">Kaffe Loader</h3>
+            <h3 className="text-lg font-medium mb-2">Coffee Loader</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Test kaffe-loader overlay med forskellige varigheder og beskeder
+              Test coffee loader overlay with different durations and messages
             </p>
             
             <div className="flex items-center gap-2">
               <Button onClick={toggleCoffeeLoader}>
                 <Coffee className="mr-2 h-4 w-4" />
-                Test Kaffe Loader
+                Test Coffee Loader
               </Button>
               
               <DropdownMenu>
@@ -175,16 +177,16 @@ export default function Settings() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => setLoaderDuration(5)}>
-                    5 sekunder
+                    5 seconds
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setLoaderDuration(10)}>
-                    10 sekunder
+                    10 seconds
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setLoaderDuration(30)}>
-                    30 sekunder
+                    30 seconds
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setLoaderDuration(60)}>
-                    1 minut
+                    1 minute
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -199,56 +201,95 @@ export default function Settings() {
           {/* Dimming backdrop */}
           <div className="absolute inset-0 bg-black/50 backdrop-blur-md" />
           
-          <div className="bg-background/90 backdrop-blur-sm rounded-lg shadow-xl p-6 max-w-md relative z-10">
-            <div className="absolute top-2 right-2 flex gap-1">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={cycleLoader}
-                title="Skift variant/besked"
-              >
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={closeLoader}
-                title="Luk loader"
-              >
+          {/* Centered loader content */}
+          <div className="relative z-10 bg-card rounded-xl shadow-lg p-8 max-w-md w-full mx-4">
+            <div className="flex justify-between items-start mb-4">
+              <h2 className="text-xl font-bold">Coffee Loader</h2>
+              <Button variant="ghost" size="sm" className="rounded-full" onClick={closeLoader}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
             
-            <LottieCoffeeLoader 
-              animationData={coffeeAnimation} 
-              message={COFFEE_MESSAGES[loaderVariant][loaderMessageIndex]}
-            />
-            
-            <div className="mt-2 text-center text-sm text-muted-foreground">
-              <div>Tester loader - lukker om {loaderDuration} sekunder</div>
-              <div className="mt-1">
-                <span className="text-xs">Variant: {loaderVariant + 1}/3, Besked: {loaderMessageIndex + 1}/{COFFEE_MESSAGES[loaderVariant].length}</span>
+            <div className="flex flex-col items-center mb-4">
+              <div className="w-40 h-40 mb-6">
+                <LottieCoffeeLoader animationData={coffeeAnimation} />
               </div>
               
-              <div className="mt-4 flex flex-col gap-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <Button onClick={() => toast.info("Info toast eksempel")} variant="outline" size="sm">
-                    Info Toast
-                  </Button>
-                  <Button onClick={() => toast.success("Success toast eksempel")} variant="outline" size="sm">
-                    Success Toast
-                  </Button>
-                  <Button onClick={() => toast.error("Error toast eksempel")} variant="outline" size="sm">
-                    Error Toast
-                  </Button>
-                  <Button onClick={() => toast.coffee("Coffee toast eksempel")} variant="outline" size="sm">
-                    Coffee Toast
-                  </Button>
-                </div>
-                
-                <Button onClick={closeLoader} variant="outline" size="sm" className="mt-2">
-                  Luk Loader
+              <p className="text-lg font-medium mb-2">
+                {COFFEE_MESSAGES[loaderVariant][loaderMessageIndex]}
+              </p>
+              
+              <p className="text-sm text-muted-foreground">
+                Testing loader - will close in {loaderDuration} seconds
+              </p>
+            </div>
+            
+            <div className="flex justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-muted-foreground">
+                  Variant: {loaderVariant + 1}/{COFFEE_MESSAGES.length}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Message: {loaderMessageIndex + 1}/{COFFEE_MESSAGES[loaderVariant].length}
+                </span>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={cycleLoader}>
+                  <RefreshCw className="h-3 w-3 mr-1" />
+                  Change variant/message
+                </Button>
+                <Button size="sm" variant="outline" onClick={closeLoader}>
+                  Close loader
+                </Button>
+              </div>
+            </div>
+            
+            {/* Toast test buttons */}
+            <div className="mt-6 pt-4 border-t">
+              <p className="text-sm mb-2">Test toast notifications from here:</p>
+              <div className="grid grid-cols-2 gap-2">
+                <Button 
+                  onClick={() => toast({
+                    title: "Info",
+                    description: "Info toast example"
+                  })} 
+                  variant="outline" 
+                  size="sm"
+                >
+                  Info Toast
+                </Button>
+                <Button 
+                  onClick={() => toast({
+                    title: "Success",
+                    description: "Success toast example",
+                    variant: "default"
+                  })} 
+                  variant="outline" 
+                  size="sm"
+                >
+                  Success Toast
+                </Button>
+                <Button 
+                  onClick={() => toast({
+                    title: "Error",
+                    description: "Error toast example",
+                    variant: "destructive"
+                  })} 
+                  variant="outline" 
+                  size="sm"
+                >
+                  Error Toast
+                </Button>
+                <Button 
+                  onClick={() => toast({
+                    title: "Coffee",
+                    description: "Coffee toast example"
+                  })} 
+                  variant="outline" 
+                  size="sm"
+                >
+                  Coffee Toast
                 </Button>
               </div>
             </div>
