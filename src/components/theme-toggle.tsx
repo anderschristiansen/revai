@@ -1,58 +1,39 @@
 "use client"
 
 import * as React from "react"
-import { useTheme } from "next-themes"
+import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
-import { Moon, Sun } from "lucide-react"
 
 type ThemeToggleProps = {
   size?: "default" | "sm" | "lg" | "icon"
   showLabel?: boolean
 }
 
-export function ThemeToggle({ size = "icon", showLabel = false }: ThemeToggleProps) {
-  const { resolvedTheme, setTheme } = useTheme()
-  const iconSize = size === "sm" ? 16 : size === "lg" ? 20 : 18
-  const [mounted, setMounted] = React.useState(false)
+// Simple placeholder button for SSR
+const ThemeButtonPlaceholder = ({ size = "icon" }: { size?: string }) => (
+  <Button
+    variant="ghost"
+    size={size as any}
+    className={size === "sm" ? "px-3" : ""}
+  >
+    <span className="w-4 h-4"></span>
+  </Button>
+)
 
-  // Only render the toggle on the client to avoid hydration issues
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  // If not mounted yet, return a placeholder with same dimensions
-  if (!mounted) {
-    return (
-      <div 
-        className="inline-flex h-10 w-10 items-center justify-center rounded-md"
-        aria-hidden="true"
-        suppressHydrationWarning
-      ></div>
-    )
+// Create a completely client-side only component with dynamic import
+const ClientThemeToggle = dynamic(
+  () => import('./theme-toggle-client').then(mod => mod.ClientThemeToggle),
+  { 
+    ssr: false, // This is crucial - it prevents the component from rendering during SSR
+    loading: ({ size }) => <ThemeButtonPlaceholder size={size as string} />
   }
+)
 
-  // Only determine if dark after mounting to avoid hydration issues
-  const isDark = resolvedTheme === "dark"
-
-  // Button only rendered client-side after mounting
+// Export a simple wrapper that just renders a placeholder during SSR
+export function ThemeToggle(props: ThemeToggleProps) {
   return (
-    <Button
-      variant="ghost"
-      size={size}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      className={size === "sm" ? "px-3" : ""}
-      aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
-    >
-      <Sun 
-        size={iconSize} 
-        className={`${showLabel ? 'mr-1' : ''} rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0`} 
-      />
-      <Moon 
-        size={iconSize} 
-        className={`absolute ${showLabel ? 'mr-1' : ''} rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100`} 
-      />
-      {showLabel && <span>{isDark ? "Lys tema" : "Mørk tema"}</span>}
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <div suppressHydrationWarning>
+      <ClientThemeToggle {...props} />
+    </div>
   )
 } 
