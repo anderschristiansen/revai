@@ -115,7 +115,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Titel
+          Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -132,7 +132,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          AI-vurdering
+          AI Assessment
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -164,11 +164,10 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       ),
       cell: ({ row }) => {
         const decision = row.getValue("user_decision") as string
-        if (!decision) return <div className="text-muted-foreground italic">Afventer</div>
+        if (!decision) return <div className="text-muted-foreground italic">Pending</div>
         
         return (
           <div className="flex items-center gap-2">
-            <span>Your previous decision:</span>
             {decision === "Yes" ? (
               <ThumbsUp className="h-5 w-5 text-[#00b380]" />
             ) : (

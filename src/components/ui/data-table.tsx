@@ -92,12 +92,12 @@ export function DataTable<TData, TValue>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="ml-auto">
-                <Settings className="h-4 w-4 mr-2" /> Vis
+                <Settings className="h-4 w-4 mr-2" /> Columns
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Skift kolonner</DropdownMenuLabel>
+              <DropdownMenuLabel>Change columns</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {table
                 .getAllColumns()
@@ -178,8 +178,8 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-between">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} af{" "}
-          {table.getFilteredRowModel().rows.length} række(r) valgt.
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} rows selected.
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -188,7 +188,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Forrige
+            Previous
           </Button>
           <Button
             variant="outline"
@@ -196,7 +196,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Næste
+            Next
           </Button>
         </div>
       </div>
