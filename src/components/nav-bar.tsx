@@ -1,18 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Home, FileText, Settings, Folders } from "lucide-react";
+import { Home, FileText, Folders, LogIn } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useAuth } from "@/contexts/auth-context";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const getUserInitials = (email: string | undefined) => {
+  if (!email) return '';
+  return email
+    .split('@')[0]
+    .split('.')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase();
+};
 
 export function NavBar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, signOut } = useAuth();
   
-  const isActive = (path: string) => {
-    if (path === "/" && pathname === "/") return true;
-    if (path !== "/" && pathname.startsWith(path)) return true;
-    return false;
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
   
   return (
@@ -25,49 +49,74 @@ export function NavBar() {
         <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
           <Link
             href="/"
-            className={`text-sm font-medium transition-colors hover:text-primary flex items-center ${
-              isActive("/") && !isActive("/sessions")
-                ? "text-primary"
-                : "text-muted-foreground"
-            }`}
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-primary flex items-center",
+              pathname === "/" ? "text-primary" : "text-muted-foreground"
+            )}
           >
             <Home className="h-4 w-4 mr-1" />
-            <span>Hjem</span>
+            <span>Home</span>
           </Link>
           
-          <Link
-            href="/sessions"
-            className={`text-sm font-medium transition-colors hover:text-primary flex items-center ${
-              isActive("/sessions") 
-                ? "text-primary"
-                : "text-muted-foreground"
-            }`}
-          >
-            <Folders className="h-4 w-4 mr-1" />
-            <span>Sessioner</span>
-          </Link>
+          {user && (
+            <Link
+              href="/sessions"
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-primary flex items-center",
+                pathname.startsWith("/sessions") ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              <Folders className="h-4 w-4 mr-1" />
+              <span>Sessions</span>
+            </Link>
+          )}
           
           <Link
             href="/about"
-            className={`text-sm font-medium transition-colors hover:text-primary flex items-center ${
-              isActive("/about") 
-                ? "text-primary"
-                : "text-muted-foreground"
-            }`}
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-primary flex items-center",
+              pathname === "/about" ? "text-primary" : "text-muted-foreground"
+            )}
           >
             <FileText className="h-4 w-4 mr-1" />
-            <span>Om</span>
+            <span>About</span>
           </Link>
         </nav>
         
         <div className="ml-auto flex items-center space-x-2">
           <ThemeToggle size="sm" showLabel={false} />
-          <Link href="/settings">
-            <Button variant="outline" size="sm">
-              <Settings className="h-4 w-4 mr-1" />
-              <span>Indstillinger</span>
-            </Button>
-          </Link>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={`https://avatar.vercel.sh/${user.email}`} alt={user.email} />
+                    <AvatarFallback>{getUserInitials(user.email)}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    <p className="font-medium">{user.email}</p>
+                  </div>
+                </div>
+                <DropdownMenuItem asChild>
+                  <Link href="/settings">Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link href="/login">
+              <Button variant="ghost" size="sm">
+                <LogIn className="h-4 w-4 mr-1" />
+                <span>Sign in</span>
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

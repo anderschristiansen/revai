@@ -10,8 +10,11 @@ import {
   Coffee, 
   ArrowRight 
 } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function HomePage() {
+  const { user } = useAuth();
+  
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section with Video Background */}
@@ -33,24 +36,24 @@ export default function HomePage() {
         <div className="container relative z-20 px-4 md:px-6 mx-auto">
           <div className="max-w-3xl text-white">
             <div className="inline-block rounded-lg bg-primary/20 backdrop-blur-sm px-3 py-1 text-sm mb-4">
-              AI-drevet litteraturgennemgang
+              AI-powered Literature Review
             </div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl mb-6">
-              Systematiske reviews med kunstig intelligens
+              Systematic Reviews with Artificial Intelligence
             </h1>
             <p className="max-w-[600px] text-white/80 md:text-xl mb-8">
-              Effektiviser din forskningsproces med vores AI-assisteret platform til screening og gennemgang af videnskabelige artikler.
+              Streamline your research process with our AI-assisted platform for screening and reviewing scientific articles.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/sessions">
+              <Link href={user ? "/sessions" : "/login"}>
                 <Button size="lg" className="font-medium w-full sm:w-auto">
-                  Start dine reviews
+                  Start your reviews
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/about">
                 <Button variant="outline" size="lg" className="font-medium w-full sm:w-auto bg-white/10 backdrop-blur-sm hover:bg-white/20 border-white/20">
-                  Lær mere
+                  Learn more
                 </Button>
               </Link>
             </div>
@@ -64,13 +67,13 @@ export default function HomePage() {
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
               <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
-                Funktioner
+                Features
               </div>
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-                Alt hvad du har brug for til systematiske reviews
+                Everything you need for systematic reviews
               </h2>
               <p className="max-w-[900px] text-muted-foreground md:text-xl">
-                Vores platform er designet til at gøre dit systematiske review hurtigere, mere præcist og mindre tidskrævende.
+                Our platform is designed to make your systematic review faster, more accurate, and less time-consuming.
               </p>
             </div>
           </div>
@@ -79,54 +82,54 @@ export default function HomePage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Brain className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-xl font-bold">AI-screening</h3>
+              <h3 className="text-xl font-bold">AI Screening</h3>
               <p className="text-muted-foreground">
-                Kunstig intelligens hjælper med at screene artikler baseret på dine inklusionskriterier.
+                Artificial intelligence helps screen articles based on your inclusion criteria.
               </p>
             </div>
             <div className="flex flex-col gap-2 p-6 bg-muted/50 rounded-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <FileSearch className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-xl font-bold">Nem tekstanalyse</h3>
+              <h3 className="text-xl font-bold">Easy Text Analysis</h3>
               <p className="text-muted-foreground">
-                Gennemgå abstracts og fuldtekst-artikler i en struktureret og brugervenlig grænseflade.
+                Review abstracts and full-text articles in a structured and user-friendly interface.
               </p>
             </div>
             <div className="flex flex-col gap-2 p-6 bg-muted/50 rounded-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Clock className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-xl font-bold">Tidsbesparende</h3>
+              <h3 className="text-xl font-bold">Time-saving</h3>
               <p className="text-muted-foreground">
-                Reducer den tid, du bruger på manuel screening af artikler med op til 50%.
+                Reduce the time you spend on manual article screening by up to 50%.
               </p>
             </div>
             <div className="flex flex-col gap-2 p-6 bg-muted/50 rounded-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <PieChart className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-xl font-bold">Datadrevet indsigt</h3>
+              <h3 className="text-xl font-bold">Data-driven Insights</h3>
               <p className="text-muted-foreground">
-                Få visuel indsigt i dit review-fremskridt og beslutninger undervejs.
+                Get visual insights into your review progress and decisions along the way.
               </p>
             </div>
             <div className="flex flex-col gap-2 p-6 bg-muted/50 rounded-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Coffee className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-xl font-bold">Brugervenlig</h3>
+              <h3 className="text-xl font-bold">User-friendly</h3>
               <p className="text-muted-foreground">
-                Fokuser på dit forskningsindhold, ikke på at lære kompliceret software.
+                Focus on your research content, not on learning complicated software.
               </p>
             </div>
             <div className="flex flex-col gap-2 p-6 bg-muted/50 rounded-lg border border-primary/20">
-              <h3 className="text-xl font-bold">Og meget mere</h3>
+              <h3 className="text-xl font-bold">And much more</h3>
               <p className="text-muted-foreground">
-                Dedikerede reviewsessioner, tekstbaseret søgning, samarbejdsværktøjer og robust dataorganisering.
+                Dedicated review sessions, text-based search, collaboration tools, and robust data organization.
               </p>
               <Link href="/about" className="text-primary mt-2 inline-flex items-center">
-                Se alle funktioner
+                See all features
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
@@ -140,16 +143,16 @@ export default function HomePage() {
           <div className="flex flex-col items-center justify-center space-y-4 mx-auto">
             <div className="space-y-2 max-w-[800px]">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-                Klar til at optimere din forskningsproces?
+                Ready to optimize your research process?
               </h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl">
-                Start dit systematiske review i dag og oplev fordelene ved AI-assisteret artikelscreening.
+                Start your systematic review today and experience the benefits of AI-assisted article screening.
               </p>
             </div>
-            <div className="w-full max-w-sm space-y-2">
-              <Link href="/sessions">
+            <div className="w-full max-w-md space-y-2 flex flex-col sm:flex-row sm:space-y-0 sm:space-x-2 justify-center">
+              <Link href={user ? "/sessions" : "/login"}>
                 <Button size="lg" className="w-full font-medium">
-                  Gå til dine sessioner
+                  Go to your sessions
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
