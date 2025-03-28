@@ -14,14 +14,25 @@ export function ThemeToggle({ size = "icon", showLabel = false }: ThemeTogglePro
   const { theme, setTheme } = useTheme()
   const iconSize = size === "sm" ? 16 : size === "lg" ? 20 : 18
   const isDark = theme === "dark"
+  
+  // Button ref for setting the title attribute safely on the client
+  const buttonRef = React.useRef<HTMLButtonElement>(null)
+  
+  // Update title attribute only on the client side after hydration
+  React.useEffect(() => {
+    if (buttonRef.current) {
+      buttonRef.current.title = isDark ? "Switch to light theme" : "Switch to dark theme"
+    }
+  }, [isDark])
 
   return (
     <Button
       variant="ghost"
       size={size}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      // Remove title from initial rendering to prevent hydration mismatch
       className={size === "sm" ? "px-3" : ""}
+      ref={buttonRef}
     >
       <Sun 
         size={iconSize} 
