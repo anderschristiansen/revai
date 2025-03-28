@@ -2,15 +2,27 @@
 
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, toast as sonnerToast, ToasterProps } from "sonner"
-import { Coffee, Info, CheckCircle, XCircle } from "lucide-react"
+import { Coffee, Info, CheckCircle, XCircle, X } from "lucide-react"
 
 // Enhanced toast with icons and animations
 export const toast = {
   info: (message: string, options = {}) => {
     return sonnerToast(
-      <div className="flex items-center gap-3">
-        <Info className="h-5 w-5 text-blue-500 animate-pulse" />
-        <p>{message}</p>
+      <div className="flex items-center gap-3 w-full justify-between">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <Info className="h-5 w-5 text-blue-500 animate-pulse flex-shrink-0" />
+          <p className="flex-1 truncate">{message}</p>
+        </div>
+        <button 
+          className="text-foreground/70 hover:text-foreground transition-colors p-1 rounded-full hover:bg-muted flex-shrink-0 ml-2" 
+          onClick={(e) => {
+            e.stopPropagation();
+            sonnerToast.dismiss();
+          }}
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>,
       {
         className: "info-toast",
@@ -32,9 +44,21 @@ export const toast = {
   // },
   success: (message: string, options = {}) => {
     return sonnerToast(
-      <div className="flex items-center gap-3">
-        <CheckCircle className="h-5 w-5 text-green-500 animate-bounce" />
-        <p>{message}</p>
+      <div className="flex items-center gap-3 w-full justify-between">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <CheckCircle className="h-5 w-5 text-green-500 animate-bounce flex-shrink-0" />
+          <p className="flex-1 truncate">{message}</p>
+        </div>
+        <button 
+          className="text-foreground/70 hover:text-foreground transition-colors p-1 rounded-full hover:bg-muted flex-shrink-0 ml-2" 
+          onClick={(e) => {
+            e.stopPropagation();
+            sonnerToast.dismiss();
+          }}
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>,
       {
         className: "success-toast",
@@ -45,9 +69,21 @@ export const toast = {
   },
   error: (message: string, options = {}) => {
     return sonnerToast(
-      <div className="flex items-center gap-3">
-        <XCircle className="h-5 w-5 text-destructive animate-shake" />
-        <p>{message}</p>
+      <div className="flex items-center gap-3 w-full justify-between">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <XCircle className="h-5 w-5 text-destructive animate-shake flex-shrink-0" />
+          <p className="flex-1 truncate">{message}</p>
+        </div>
+        <button 
+          className="text-foreground/70 hover:text-foreground transition-colors p-1 rounded-full hover:bg-muted flex-shrink-0 ml-2" 
+          onClick={(e) => {
+            e.stopPropagation();
+            sonnerToast.dismiss();
+          }}
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>,
       {
         className: "error-toast",
@@ -70,9 +106,21 @@ export const toast = {
   // },
   coffee: (message: string, options = {}) => {
     return sonnerToast(
-      <div className="flex items-center gap-3">
-        <Coffee className="h-5 w-5 text-amber-700 animate-bounce" />
-        <p>{message}</p>
+      <div className="flex items-center gap-3 w-full justify-between">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <Coffee className="h-5 w-5 text-amber-700 animate-bounce flex-shrink-0" />
+          <p className="flex-1 truncate">{message}</p>
+        </div>
+        <button 
+          className="text-foreground/70 hover:text-foreground transition-colors p-1 rounded-full hover:bg-muted flex-shrink-0 ml-2" 
+          onClick={(e) => {
+            e.stopPropagation();
+            sonnerToast.dismiss();
+          }}
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>,
       {
         className: "coffee-toast",
@@ -97,6 +145,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           description: "group-[.toast]:text-muted-foreground",
           actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+          closeButton: "group-[.toast]:bg-background group-[.toast]:border-border group-[.toast]:text-foreground group-[.toast]:hover:bg-muted",
           error: "group-[.toaster]:bg-destructive/15 group-[.toaster]:text-destructive group-[.toaster]:border-destructive/30",
           success: "group-[.toaster]:bg-green-500/15 group-[.toaster]:text-green-600 group-[.toaster]:border-green-500/30",
           info: "group-[.toaster]:bg-blue-500/15 group-[.toaster]:text-blue-600 group-[.toaster]:border-blue-500/30",

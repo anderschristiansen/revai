@@ -123,7 +123,7 @@ export default function ReviewPage() {
       
     } catch (error) {
       console.error("Error loading session data:", error);
-      toast.error("Kunne ikke indlæse sessionsdata");
+      toast.error("Could not load session data");
     } finally {
       setLoading(false);
     }
@@ -144,13 +144,13 @@ export default function ReviewPage() {
       setArticles(data || []);
     } catch (error) {
       console.error("Error loading articles:", error);
-      toast.error("Kunne ikke indlæse artikler");
+      toast.error("Could not load articles");
     }
   }
 
   async function updateSessionTitle() {
     if (!newTitle.trim()) {
-      toast.error("Titel kan ikke være tom");
+      toast.error("Title cannot be empty");
       return;
     }
 
@@ -170,10 +170,10 @@ export default function ReviewPage() {
       // Update local state
       setSession(prev => prev ? {...prev, title: newTitle} : null);
       setIsEditingTitle(false);
-      toast.success("Titel opdateret");
+      toast.success("Title updated");
     } catch (error) {
       console.error("Error updating title:", error);
-      toast.error("Kunne ikke opdatere titel");
+      toast.error("Could not update title");
     }
   }
 
@@ -204,10 +204,10 @@ export default function ReviewPage() {
         
       if (error) throw error;
       
-      toast.success("Beslutning gemt");
+      toast.success("Decision saved");
     } catch (error) {
       console.error("Error saving decision:", error);
-      toast.error("Kunne ikke gemme beslutning");
+      toast.error("Could not save decision");
       // Reload articles to ensure consistency
       loadArticles();
     }
@@ -227,12 +227,12 @@ export default function ReviewPage() {
       );
       
       if (articlesToEvaluate.length === 0) {
-        toast.info("Alle artikler er allerede blevet evalueret");
+        toast.info("All articles have already been evaluated");
         setEvaluating(false);
         return;
       }
       
-      toast.info(`Evaluerer ${articlesToEvaluate.length} artikler...`);
+      toast.info(`Evaluating ${articlesToEvaluate.length} articles...`);
       
       // Call the API to evaluate articles
       const response = await fetch("/api/evaluate", {
@@ -254,10 +254,10 @@ export default function ReviewPage() {
       
       // Refresh articles
       await loadArticles();
-      toast.success(`${result.count} artikler blev evalueret med succes`);
+      toast.success(`${result.count} articles were successfully evaluated`);
     } catch (error) {
       console.error("Error evaluating articles:", error);
-      toast.error("Kunne ikke evaluere artikler");
+      toast.error("Could not evaluate articles");
     } finally {
       setEvaluating(false);
     }
@@ -266,7 +266,7 @@ export default function ReviewPage() {
   if (loading) {
     return (
       <div className="container mx-auto py-10 text-center">
-        <p>Indlæser sessionsdata...</p>
+        <p>Loading session data...</p>
       </div>
     );
   }
@@ -296,7 +296,7 @@ export default function ReviewPage() {
                 size="icon" 
                 variant="ghost" 
                 onClick={updateSessionTitle}
-                title="Gem"
+                title="Save"
               >
                 <CheckIcon className="h-4 w-4" />
               </Button>
@@ -304,19 +304,19 @@ export default function ReviewPage() {
                 size="icon" 
                 variant="ghost" 
                 onClick={cancelTitleEdit}
-                title="Annuller"
+                title="Cancel"
               >
                 <XIcon className="h-4 w-4" />
               </Button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <h1 className="text-3xl font-bold">{session.title || "Systematisk Review"}</h1>
+              <h1 className="text-3xl font-bold">{session.title || "Systematic Review"}</h1>
               <Button 
                 size="icon" 
                 variant="ghost" 
                 onClick={() => setIsEditingTitle(true)}
-                title="Rediger titel"
+                title="Edit title"
               >
                 <PencilIcon className="h-4 w-4" />
               </Button>
@@ -326,12 +326,12 @@ export default function ReviewPage() {
             Session ID: {sessionId}
           </p>
           <p>
-            <span className="font-medium">Artikler:</span> {session.articles_count} | 
-            <span className="font-medium"> Kriterier:</span> {criteriaLines.length}
+            <span className="font-medium">Articles:</span> {session.articles_count} | 
+            <span className="font-medium"> Criteria:</span> {criteriaLines.length}
           </p>
         </div>
         <Link href="/sessions">
-          <Button variant="outline">Tilbage til sessioner</Button>
+          <Button variant="outline">Back to sessions</Button>
         </Link>
       </header>
 
@@ -339,7 +339,7 @@ export default function ReviewPage() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-500">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-4">
-              <h2 className="text-xl font-semibold">Artikler ({articles.length})</h2>
+              <h2 className="text-xl font-semibold">Articles ({articles.length})</h2>
               <Button 
                 variant="outline" 
                 size="sm"
@@ -347,7 +347,7 @@ export default function ReviewPage() {
                 className="flex items-center gap-2"
               >
                 <ListChecks className="h-4 w-4" />
-                Vis inklusionskriterier
+                Show inclusion criteria
               </Button>
             </div>
             <Button 
@@ -357,7 +357,7 @@ export default function ReviewPage() {
               }} 
               disabled={evaluating}
             >
-              {evaluating ? "Evaluerer..." : "Evaluer alle"}
+              {evaluating ? "Evaluating..." : "Evaluate all"}
             </Button>
           </div>
 
@@ -369,9 +369,9 @@ export default function ReviewPage() {
           <Dialog open={showCriteria} onOpenChange={setShowCriteria}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Inklusionskriterier</DialogTitle>
+                <DialogTitle>Inclusion Criteria</DialogTitle>
                 <DialogDescription>
-                  Kriterierne anvendt til at evaluere artikler i dette review
+                  Criteria used to evaluate articles in this review
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-2">
@@ -413,10 +413,10 @@ export default function ReviewPage() {
               animationData={coffeeAnimation} 
               message={
                 loaderVariant === 0 
-                  ? "Brygger dine evalueringer..." 
+                  ? "Brewing your evaluations..." 
                   : loaderVariant === 1 
-                    ? "Tager en kaffepause mens vi arbejder..." 
-                    : "Maler artikler som kaffebønner..."
+                    ? "Taking a coffee break while we work..." 
+                    : "Grinding these articles..."
               }
             />
           </div>

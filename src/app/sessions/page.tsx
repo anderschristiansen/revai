@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, FolderOpen, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -78,7 +78,7 @@ export default function SessionsPage() {
       setSessions(processedSessions || []);
     } catch (error) {
       console.error("Error loading sessions:", error);
-      toast.error("Kunne ikke indlæse sessioner");
+      toast.error("Could not load sessions");
     } finally {
       setLoading(false);
     }
@@ -89,7 +89,7 @@ export default function SessionsPage() {
       const { data, error } = await supabase
         .from("review_sessions")
         .insert({
-          title: "Ny Review Session",
+          title: "New Review Session",
           articles_count: 0,
           criteria: "",
           created_at: new Date().toISOString(),
@@ -107,15 +107,15 @@ export default function SessionsPage() {
       }
     } catch (error) {
       console.error("Error creating session:", error);
-      toast.error("Kunne ikke oprette ny session");
+      toast.error("Could not create new session");
     }
   }
 
   function getChartData(session: Session) {
     return [
-      { name: 'Inkluderet', value: session.reviewed_count || 0, color: COLORS[0] },
-      { name: 'Ekskluderet', value: session.excluded_count || 0, color: COLORS[1] },
-      { name: 'Afventer', value: session.pending_count || 0, color: COLORS[2] }
+      { name: 'Included', value: session.reviewed_count || 0, color: COLORS[0] },
+      { name: 'Excluded', value: session.excluded_count || 0, color: COLORS[1] },
+      { name: 'Pending', value: session.pending_count || 0, color: COLORS[2] }
     ];
   }
 
@@ -137,11 +137,11 @@ export default function SessionsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Dine Review Sessioner</h1>
+        <h1 className="text-4xl font-bold">Your Review Sessions</h1>
         <div className="flex gap-2">
           <Button onClick={createNewSession} size="lg">
             <PlusCircle className="mr-2 h-4 w-4" />
-            Opret Ny Session
+            Create New Session
           </Button>
         </div>
       </div>
@@ -166,13 +166,13 @@ export default function SessionsPage() {
                       </h3>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Oprettet den {format(new Date(session.created_at), "PP")}
+                      Created on {format(new Date(session.created_at), "PP")}
                     </p>
                     {hasAiEvaluations(session) && (
                       <p className="text-xs text-muted-foreground mt-1">
                         <span className="inline-flex items-center">
                           <span className="h-2 w-2 rounded-full bg-blue-400 mr-1.5"></span>
-                          AI-evalueret
+                          AI-evaluated
                         </span>
                       </p>
                     )}
@@ -215,22 +215,16 @@ export default function SessionsPage() {
             </Link>
           ))
         ) : (
-          <Card className="h-[140px] hover:bg-accent/50 transition-colors cursor-pointer">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FolderOpen className="h-6 w-6" />
-                Ingen eksisterende sessioner
-              </CardTitle>
-              <CardDescription>
-                Start din første review session
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Opret en ny session for at begynde dit systematiske review.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-medium mb-4">No review sessions yet</h3>
+            <p className="text-muted-foreground mb-6">
+              Create a new session to begin your systematic review.
+            </p>
+            <Button onClick={createNewSession} size="lg">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Create Your First Session
+            </Button>
+          </div>
         )}
       </div>
     </div>

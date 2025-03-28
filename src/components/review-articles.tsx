@@ -77,7 +77,7 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
         setFilteredArticles(data || []);
       } catch (error) {
         console.error("Error loading articles:", error);
-        toast.error("Kunne ikke indlæse artikler");
+        toast.error("Could not load articles");
       } finally {
         setLoading(false);
       }
@@ -158,12 +158,12 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
       );
       
       if (articlesToEvaluate.length === 0) {
-        toast.info("Alle artikler er allerede blevet evalueret");
+        toast.info("All articles have already been evaluated");
         setEvaluating(false);
         return;
       }
       
-      toast.info(`Evaluerer ${articlesToEvaluate.length} artikler...`);
+      toast.info(`Evaluating ${articlesToEvaluate.length} articles...`);
       
       // Call the API to evaluate articles
       const response = await fetch("/api/evaluate", {
@@ -195,10 +195,10 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
       }
       
       setArticles(updatedArticles || []);
-      toast.success(`${result.count} artikler blev evalueret med succes`);
+      toast.success(`${result.count} articles were successfully evaluated`);
     } catch (error) {
       console.error("Error evaluating articles:", error);
-      toast.error("Kunne ikke evaluere artikler");
+      toast.error("Could not evaluate articles");
     } finally {
       setEvaluating(false);
     }
@@ -228,10 +228,10 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
       );
       
       closeDialog();
-      toast.success("Beslutning gemt");
+      toast.success("Decision saved");
     } catch (error) {
       console.error("Error saving decision:", error);
-      toast.error("Kunne ikke gemme beslutning");
+      toast.error("Could not save decision");
     }
   }
 
@@ -246,11 +246,11 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
   }
   
   if (loading) {
-    return <div>Indlæser artikler...</div>;
+    return <div>Loading articles...</div>;
   }
   
   if (articles.length === 0) {
-    return <div>Ingen artikler fundet for denne gennemgangssession.</div>;
+    return <div>No articles found for this review session.</div>;
   }
   
   // Instead of replacing the entire content with a loader, we'll render our main UI
@@ -258,28 +258,28 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
   const mainContent = (
     <div className="space-y-6">
       <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
-        <h2 className="text-xl font-semibold">Artikler ({filteredArticles.length} af {articles.length})</h2>
+        <h2 className="text-xl font-semibold">Articles ({filteredArticles.length} of {articles.length})</h2>
         <div className="flex gap-2 w-full sm:w-auto">
           <div className="relative w-full sm:w-[300px]">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Søg i artikler..."
+              placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8"
             />
           </div>
           <Button onClick={evaluateArticles} disabled={evaluating}>
-            {evaluating ? "Evaluerer..." : "Evaluer alle"}
+            {evaluating ? "Evaluating..." : "Evaluate all"}
           </Button>
         </div>
       </div>
       
       <Card>
         <CardHeader>
-          <CardTitle>Gennemgangsliste</CardTitle>
+          <CardTitle>Review Session List</CardTitle>
           <CardDescription>
-            {articles.filter(a => !a.needs_review).length} af {articles.length} artikler gennemgået
+            {articles.filter(a => !a.needs_review).length} of {articles.length} articles reviewed
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -297,28 +297,30 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
                     className="w-full cursor-pointer" 
                     onClick={() => requestSort('title')}
                   >
-                    Titel {getSortIcon('title')}
+                    Title {getSortIcon('title')}
                   </TableHead>
                   <TableHead 
                     className="w-auto whitespace-nowrap cursor-pointer" 
                     onClick={() => requestSort('ai_decision')}
                   >
-                    AI-vurdering {getSortIcon('ai_decision')}
+                    AI assessment {getSortIcon('ai_decision')}
                   </TableHead>
                   <TableHead 
                     className="w-auto whitespace-nowrap cursor-pointer" 
                     onClick={() => requestSort('user_decision')}
                   >
-                    Din beslutning {getSortIcon('user_decision')}
+                    Your decision {getSortIcon('user_decision')}
                   </TableHead>
-                  <TableHead className="w-auto">Handling</TableHead>
+                  <TableHead className="w-auto">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredArticles.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                      Ingen artikler matcher din søgning
+                      <p className="text-center text-muted-foreground py-10">
+                        No articles match your search
+                      </p>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -338,7 +340,7 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
                             )}
                           </span>
                         ) : (
-                          "Ikke evalueret"
+                          "Not evaluated"
                         )}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
@@ -351,7 +353,7 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
                             )}
                           </span>
                         ) : (
-                          "Afventer"
+                          "Pending"
                         )}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
@@ -360,7 +362,7 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
                           size="sm"
                           onClick={() => openArticleDialog(article)}
                         >
-                          Gennemgå
+                          Review
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -379,14 +381,14 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
             <>
               <DialogHeader className="flex-shrink-0">
                 <DialogTitle>{selectedArticle.title}</DialogTitle>
-                <DialogDescription>Gennemgå denne artikel i forhold til inklusionskriterierne</DialogDescription>
+                <DialogDescription>Review this article against the inclusion criteria</DialogDescription>
               </DialogHeader>
               
               {/* Scrollable content area */}
               <div className="flex-1 overflow-y-auto min-h-0 py-4">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-medium mb-2">Resumé</h3>
+                    <h3 className="text-lg font-medium mb-2">Summary</h3>
                     <div className="border rounded-md p-3 bg-muted/10">
                       <p className="text-sm leading-relaxed">{selectedArticle.abstract}</p>
                     </div>
@@ -394,7 +396,7 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
                   
                   {selectedArticle.full_text && (
                     <div>
-                      <h3 className="text-lg font-medium mb-2">Fuld tekst</h3>
+                      <h3 className="text-lg font-medium mb-2">Full text</h3>
                       <div className="border rounded-md p-3 bg-muted/10">
                         <p className="text-sm leading-relaxed whitespace-pre-line">{selectedArticle.full_text}</p>
                       </div>
@@ -410,7 +412,7 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
                     <AccordionItem value="ai-assessment" className="border-0">
                       <AccordionTrigger className="py-2">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-medium">AI-vurdering</h3>
+                          <h3 className="text-lg font-medium">AI assessment</h3>
                           <span className="text-muted-foreground">
                             {selectedArticle.ai_decision === "Yes" ? (
                               <ThumbsUp className="h-5 w-5" />
@@ -438,20 +440,20 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
                   className="bg-[#00b380] hover:bg-[#00b380]/90 text-white" 
                   onClick={() => updateUserDecision(selectedArticle.id, "Yes")}
                 >
-                  Inkluder
+                  Include
                 </Button>
                 <Button 
                   variant="default" 
                   className="bg-[#ff1d42] hover:bg-[#ff1d42]/90 text-white" 
                   onClick={() => updateUserDecision(selectedArticle.id, "No")}
                 >
-                  Ekskluder
+                  Exclude
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={closeDialog}
                 >
-                  Annuller
+                  Cancel
                 </Button>
               </DialogFooter>
             </>
@@ -478,10 +480,10 @@ export function ReviewArticles({ sessionId }: { sessionId: string }) {
               animationData={coffeeAnimation} 
               message={
                 loaderVariant === 0 
-                  ? "Brygger dine evalueringer..." 
+                  ? "Brewing your evaluations..." 
                   : loaderVariant === 1 
-                    ? "Tager en kaffepause mens vi arbejder..." 
-                    : "Maler artikler som kaffebønner..."
+                    ? "Taking a coffee break while we work..." 
+                    : "Grinding these articles..."
               }
             />
           </div>

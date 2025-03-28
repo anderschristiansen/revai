@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 const formSchema = z.object({
-  criteriaText: z.string().min(1, "Angiv venligst inklusionskriterier"),
+  criteriaText: z.string().min(1, "Please provide inclusion criteria"),
 });
 
 type FileFormValues = z.infer<typeof formSchema>;
@@ -34,25 +34,25 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
   const form = useForm<FileFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      criteriaText: "Studier skal indeholde direkte eller indirekte målinger af enten ICP eller CSF åbningstryk.\nKun studier udført på mennesker vil blive inkluderet; studier baseret på dyremodeller vil blive ekskluderet.\nStudier skal inkludere interventioner specifikt rettet mod det systemiske venesystem til ICP-håndtering.\nStudier skal være publiceret på engelsk og have gennemgået peer review.\nStudier med fokus på patienter behandlet for specifikke intrakranielle venøse patologier eller obstruktioner ved hjælp af veletablerede metoder (fx kirurgiske shunts, stents eller trombektomi) vil blive ekskluderet.",
+      criteriaText: "Studies must contain direct or indirect measurements of either ICP or CSF opening pressure.\nOnly studies performed on humans will be included; studies based on animal models will be excluded.\nStudies must include interventions specifically targeting the systemic venous system for ICP management.\nStudies must be published in English and have undergone peer review.\nStudies focusing on patients treated for specific intracranial venous pathologies or obstructions using well-established methods (e.g., surgical shunts, stents, or thrombectomy) will be excluded.",
     },
   });
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!articlesFile || !form.getValues().criteriaText) {
-      toast.error("Angiv venligst både en fil og inklusionskriterier");
+      toast.error("Please provide both a file and inclusion criteria");
       return;
     }
 
     // Validate articles file
     if (!articlesFile.name.endsWith('.txt')) {
-      toast.error("Artikelfilen skal være en .txt fil");
+      toast.error("The article file must be a .txt file");
       return;
     }
     
     if (articlesFile.size > 10 * 1024 * 1024) {
-      toast.error("Artikelfilen skal være mindre end 10MB");
+      toast.error("The article file must be less than 10MB");
       return;
     }
 
@@ -78,7 +78,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
           .insert([
             {
               id: sessionId,
-              title: 'Systematisk Review',
+              title: 'Systematic Review',
               criteria: form.getValues().criteriaText,
               articles_count: 0,
               created_at: new Date().toISOString(),
@@ -143,7 +143,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
       if (updateError) throw updateError;
 
       setUploadSuccess(true);
-      toast.success(`Uploadede ${result.articleCount} artikler med succes`);
+      toast.success(`Successfully uploaded ${result.articleCount} articles`);
 
       // Call onUploadComplete to trigger a refresh of the parent component
       if (onUploadComplete) {
@@ -160,7 +160,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
       
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Kunne ikke uploade fil');
+      toast.error('Could not upload file');
     } finally {
       setIsUploading(false);
     }
@@ -169,7 +169,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upload Artikler</CardTitle>
+        <CardTitle>Upload Articles</CardTitle>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={handleSubmit}>
@@ -183,8 +183,8 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-lg font-medium mb-2">Upload Gennemført!</h3>
-                <p className="text-muted-foreground">Dine artikler bliver behandlet...</p>
+                <h3 className="text-lg font-medium mb-2">Upload Completed!</h3>
+                <p className="text-muted-foreground">Your articles are being processed...</p>
               </div>
             ) : (
               <>
@@ -193,12 +193,13 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
                   name="criteriaText"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Inklusionskriterier</FormLabel>
+                      <FormLabel>Inclusion Criteria</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Indtast dine inklusionskriterier, en per linje..."
-                          className="min-h-[100px]"
-                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Enter your inclusion criteria, one per line..."
+                          className="min-h-[120px] font-mono text-sm"
                         />
                       </FormControl>
                       <FormMessage />
@@ -207,7 +208,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
                 />
 
                 <div className="space-y-2">
-                  <FormLabel>Artikelfil (.txt)</FormLabel>
+                  <FormLabel>Article File (.txt)</FormLabel>
                   <Input
                     type="file"
                     accept=".txt"
@@ -217,7 +218,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
                 </div>
 
                 <Button type="submit" disabled={isUploading}>
-                  {isUploading ? "Uploader..." : "Upload"}
+                  {isUploading ? "Uploading..." : "Upload"}
                 </Button>
               </>
             )}

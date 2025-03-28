@@ -138,7 +138,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       ),
       cell: ({ row }) => {
         const decision = row.getValue("ai_decision") as string
-        if (!decision) return <div className="text-muted-foreground italic">Ikke evalueret</div>
+        if (!decision) return <div className="text-muted-foreground italic">Not evaluated</div>
         
         return (
           <span className="text-muted-foreground">
@@ -158,7 +158,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Din beslutning
+          Your decision
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -167,13 +167,14 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         if (!decision) return <div className="text-muted-foreground italic">Afventer</div>
         
         return (
-          <span>
+          <div className="flex items-center gap-2">
+            <span>Your previous decision:</span>
             {decision === "Yes" ? (
               <ThumbsUp className="h-5 w-5 text-[#00b380]" />
             ) : (
               <ThumbsDown className="h-5 w-5 text-[#ff1d42]" />
             )}
-          </span>
+          </div>
         )
       },
     },
@@ -189,7 +190,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
             openArticleDialog(row.original);
           }}
         >
-          {row.original.user_decision ? "Gennemgå igen" : "Gennemgå"}
+          {row.original.user_decision ? "Review again" : "Review"}
         </Button>
       ),
     },
@@ -201,7 +202,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         columns={columns} 
         data={articles} 
         filterColumn="title"
-        filterPlaceholder="Søg i artikler..."
+        filterPlaceholder="Search articles..."
         initialColumnVisibility={{ id: false }}
         initialSorting={[{ id: "status", desc: false }]}
       />
@@ -232,7 +233,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                   {selectedArticle.user_decision ? (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <CheckCircle2 className="h-4 w-4 text-primary" />
-                      <span>Tidligere gennemgået</span>
+                      <span>Previously reviewed</span>
                     </div>
                   ) : null}
                   <DialogTitle className="text-xl font-semibold leading-tight">
@@ -242,7 +243,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     {selectedArticle.user_decision 
                       ? (
                         <>
-                          <span>Din tidligere beslutning:</span>
+                          <span>Your previous decision:</span>
                           <span>
                             {selectedArticle.user_decision === "Yes" ? (
                               <ThumbsUp className="h-5 w-5 text-[#00b380]" />
@@ -252,7 +253,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                           </span>
                         </>
                       )
-                      : "Gennemgå denne artikel i forhold til inklusionskriterierne"
+                      : "Review this article based on inclusion criteria"
                     }
                   </DialogDescription>
                 </div>
@@ -262,7 +263,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
               <div className="flex-1 overflow-y-auto min-h-0 py-4">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-medium mb-2">Resumé</h3>
+                    <h3 className="text-lg font-medium mb-2">Abstract</h3>
                     <div className="border rounded-md p-4 bg-muted/10">
                       <p className="text-sm leading-relaxed">{selectedArticle.abstract}</p>
                     </div>
@@ -270,7 +271,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                   
                   {selectedArticle.full_text && (
                     <div>
-                      <h3 className="text-lg font-medium mb-2">Fuld tekst</h3>
+                      <h3 className="text-lg font-medium mb-2">Full text</h3>
                       <div className="border rounded-md p-4 bg-muted/10">
                         <p className="text-sm leading-relaxed whitespace-pre-line break-words">
                           <TextWithLinks text={selectedArticle.full_text} />
@@ -288,7 +289,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     <AccordionItem value="ai-assessment" className="border-0">
                       <AccordionTrigger className="py-2">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-medium">AI-vurdering</h3>
+                          <h3 className="text-lg font-medium">AI assessment</h3>
                           <span className="text-muted-foreground">
                             {selectedArticle.ai_decision === "Yes" ? (
                               <ThumbsUp className="h-5 w-5" />
@@ -348,7 +349,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     return false;
                   }}
                 >
-                  Inkluder
+                  Include
                 </Button>
                 <Button 
                   type="button"
@@ -387,7 +388,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     return false;
                   }}
                 >
-                  Ekskluder
+                  Exclude
                 </Button>
                 <Button 
                   type="button"
@@ -399,7 +400,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     return false;
                   }}
                 >
-                  Annuller
+                  Cancel
                 </Button>
               </DialogFooter>
             </>

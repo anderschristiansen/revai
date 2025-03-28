@@ -5,7 +5,7 @@ interface CoffeeBeanLoaderProps {
 }
 
 export function CoffeeBeanLoader({
-  message = "Friske reviews brygger..."
+  message = "Our AI is carefully working through your articles. Perfect time for a coffee break!"
 }: CoffeeBeanLoaderProps) {
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-6 text-center">
