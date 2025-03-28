@@ -11,10 +11,13 @@ import { LottieCoffeeLoader } from "./lottie-coffee-loader";
 // Export individual components
 export { CoffeeLoader, CoffeeBeanLoader, CoffeeProgress, LottieCoffeeLoader };
 
-// Default export as a bundle
-export default {
+// Create a named bundle object
+const CoffeeLoaders = {
   CoffeeLoader,
   CoffeeBeanLoader,
   CoffeeProgress,
   LottieCoffeeLoader
-}; 
+};
+
+// Default export as a bundle
+export default CoffeeLoaders; 

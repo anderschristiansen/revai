@@ -50,52 +50,9 @@ export default function ReviewPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [evaluating, setEvaluating] = useState(false);
   const [showCriteria, setShowCriteria] = useState(false);
-  const [loaderVariant, setLoaderVariant] = useState<number>(0);
+  const [loaderVariant, setLoaderVariant] = useState(0);
 
-  useEffect(() => {
-    loadSessionData();
-    loadArticles();
-    
-    // Set up real-time subscriptions
-    const articlesSubscription = supabase
-      .channel('articles-changes')
-      .on('postgres_changes', {
-        event: '*', 
-        schema: 'public',
-        table: 'articles',
-        filter: `session_id=eq.${sessionId}`
-      }, (payload) => {
-        // When an article is updated, update the specific article immediately
-        if (payload.eventType === 'UPDATE') {
-          const updatedArticle = payload.new as Article;
-          setArticles(prevArticles => 
-            prevArticles.map(article => 
-              article.id === updatedArticle.id ? updatedArticle : article
-            )
-          );
-        }
-      })
-      .subscribe();
-    
-    const sessionSubscription = supabase
-      .channel('session-changes')
-      .on('postgres_changes', {
-        event: 'UPDATE', 
-        schema: 'public',
-        table: 'review_sessions',
-        filter: `id=eq.${sessionId}`
-      }, (payload) => {
-        setSession(payload.new as SessionData);
-      })
-      .subscribe();
-    
-    return () => {
-      articlesSubscription.unsubscribe();
-      sessionSubscription.unsubscribe();
-    };
-  }, [sessionId]);
-
-  async function loadSessionData() {
+  const loadSessionData = React.useCallback(async () => {
     try {
       setLoading(true);
       
@@ -122,9 +79,9 @@ export default function ReviewPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [sessionId]);
 
-  async function loadArticles() {
+  const loadArticles = React.useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("articles")
@@ -141,7 +98,41 @@ export default function ReviewPage() {
       console.error("Error loading articles:", error);
       toast.error("Could not load articles");
     }
-  }
+  }, [sessionId]);
+
+  useEffect(() => {
+    loadSessionData();
+    loadArticles();
+    
+    const articlesSubscription = supabase
+      .channel('articles_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'articles',
+        filter: `session_id=eq.${sessionId}` 
+      }, () => {
+        loadArticles();
+      })
+      .subscribe();
+    
+    const sessionSubscription = supabase
+      .channel('session_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'review_sessions',
+        filter: `id=eq.${sessionId}` 
+      }, () => {
+        loadSessionData();
+      })
+      .subscribe();
+    
+    return () => {
+      articlesSubscription.unsubscribe();
+      sessionSubscription.unsubscribe();
+    };
+  }, [sessionId, loadSessionData, loadArticles]);
 
   async function updateSessionTitle() {
     if (!newTitle.trim()) {
@@ -206,7 +197,7 @@ export default function ReviewPage() {
       // Reload articles to ensure consistency
       loadArticles();
     }
-  }, [sessionId]);
+  }, [loadArticles]);
 
   async function evaluateArticles() {
     if (evaluating) return;

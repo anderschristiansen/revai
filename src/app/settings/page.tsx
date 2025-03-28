@@ -15,6 +15,7 @@ import { supabase } from '@/lib/supabase';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import React from 'react';
 
 type TabType = 'profile' | 'ai';
 
@@ -41,11 +42,7 @@ export default function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    loadAiSettings();
-  }, []);
-
-  const loadAiSettings = async () => {
+  const loadAiSettings = React.useCallback(async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
@@ -78,7 +75,11 @@ export default function Settings() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadAiSettings();
+  }, [loadAiSettings]);
 
   const saveAiSettings = async () => {
     setIsSaving(true);
@@ -175,10 +176,6 @@ export default function Settings() {
       case 'ai':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">AI Settings</h3>
-            <p className="text-sm text-muted-foreground">
-              Customize the AI evaluation instructions and parameters used when reviewing articles.
-            </p>
             {isLoading ? (
               <div className="border rounded-md p-4 mt-4 flex justify-center items-center h-[300px]">
                 <p className="text-sm text-muted-foreground">Loading AI settings...</p>
