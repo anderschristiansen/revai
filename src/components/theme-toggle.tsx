@@ -1,14 +1,9 @@
 "use client"
 
-/// <reference types="@/components/theme-toggle-client" />
 import * as React from "react"
 import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
-
-type ThemeToggleProps = {
-  size?: "default" | "sm" | "lg" | "icon"
-  showLabel?: boolean
-}
+import type { ThemeToggleProps } from "@/components/theme-toggle-client"
 
 // Simple placeholder button for SSR
 const ThemeButtonPlaceholder = ({ size = "icon" }: { size?: ThemeToggleProps['size'] }) => (
@@ -23,10 +18,7 @@ const ThemeButtonPlaceholder = ({ size = "icon" }: { size?: ThemeToggleProps['si
 
 // Create a completely client-side only component with dynamic import
 const ClientThemeToggle = dynamic(
-  () => import('@/components/theme-toggle-client').then((mod) => {
-    const { ClientThemeToggle } = mod as { ClientThemeToggle: React.ComponentType<ThemeToggleProps> }
-    return ClientThemeToggle
-  }),
+  () => import('@/components/theme-toggle-client'),
   { 
     ssr: false, // This is crucial - it prevents the component from rendering during SSR
     loading: () => <ThemeButtonPlaceholder />

@@ -5,12 +5,13 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Moon, Sun } from "lucide-react"
 
-type ThemeToggleProps = {
+export type ThemeToggleProps = {
   size?: "default" | "sm" | "lg" | "icon"
   showLabel?: boolean
 }
 
-export function ClientThemeToggle({ size = "icon", showLabel = false }: ThemeToggleProps) {
+// Export as default component
+export default function ThemeToggleClient({ size = "icon", showLabel = false }: ThemeToggleProps) {
   const [mounted, setMounted] = React.useState(false)
   const { theme, setTheme } = useTheme()
   const iconSize = size === "sm" ? 16 : size === "lg" ? 20 : 18
