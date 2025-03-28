@@ -11,28 +11,24 @@ type ThemeToggleProps = {
 }
 
 export function ThemeToggle({ size = "icon", showLabel = false }: ThemeToggleProps) {
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const iconSize = size === "sm" ? 16 : size === "lg" ? 20 : 18
-  const isDark = theme === "dark"
-  
-  // Button ref for setting the title attribute safely on the client
-  const buttonRef = React.useRef<HTMLButtonElement>(null)
-  
-  // Update title attribute only on the client side after hydration
-  React.useEffect(() => {
-    if (buttonRef.current) {
-      buttonRef.current.title = isDark ? "Switch to light theme" : "Switch to dark theme"
-    }
-  }, [isDark])
+  const isDark = resolvedTheme === "dark"
+  const [mounted, setMounted] = React.useState(false)
 
-  return (
+  // Only render the toggle on the client to avoid hydration issues
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Button to be rendered only on client side after mounting
+  const button = (
     <Button
       variant="ghost"
       size={size}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      // Remove title from initial rendering to prevent hydration mismatch
       className={size === "sm" ? "px-3" : ""}
-      ref={buttonRef}
+      aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
     >
       <Sun 
         size={iconSize} 
@@ -46,4 +42,16 @@ export function ThemeToggle({ size = "icon", showLabel = false }: ThemeTogglePro
       <span className="sr-only">Toggle theme</span>
     </Button>
   )
+
+  // Render a placeholder with same dimensions during SSR to avoid layout shift
+  if (!mounted) {
+    return (
+      <div 
+        className={`inline-flex h-10 w-10 items-center justify-center rounded-md ${size === "sm" ? "px-3" : ""}`} 
+        aria-hidden="true"
+      ></div>
+    )
+  }
+
+  return button
 } 
