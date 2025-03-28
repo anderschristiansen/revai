@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { notFound, useParams } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
 import { ArticlesTable } from "@/components/articles-table";
 import { UploadForm } from "@/components/upload-form";
 import { toast } from "@/components/ui/sonner";
@@ -20,16 +19,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { LottieCoffeeLoader } from "@/components/ui/lottie-coffee-loader";
+import { supabase } from "@/lib/supabase";
 
 // Import the Lottie animation data
 // Note: You need to place your Lottie JSON file in the public/lottie directory
 // and update the path/filename below
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 type Article = {
   id: string;
