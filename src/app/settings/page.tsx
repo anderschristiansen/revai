@@ -7,7 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Mail, LogOut } from 'lucide-react';
+import { User, Mail, LogOut, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
@@ -274,7 +274,15 @@ export default function Settings() {
                     size="lg"
                     className="px-6"
                   >
-                    {isSaving ? 'Saving...' : 'Save Changes'}
+                    {/* {isSaving ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Save
+                      </>
+                    ) : (
+                      'Save'
+                    )} */}
+                    Save
                   </Button>
                 </div>
               </div>
