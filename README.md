@@ -1,51 +1,107 @@
-# RevAI
+# Systematic Review Assistant
 
-RevAI er et AI-drevet værktøj til systematiske reviews, der hjælper forskere med at effektivisere artikelscreeningsprocessen.
+A web-based tool that helps researchers screen large numbers of articles for systematic reviews using AI to assist with inclusion/exclusion decisions.
 
-## Funktioner
+## Features
 
-- **AI-screening**: Kunstig intelligens hjælper med at screene artikler baseret på dine inklusionskriterier
-- **Nem tekstanalyse**: Gennemgå abstracts og fuldtekst-artikler i en struktureret og brugervenlig grænseflade
-- **Tidsbesparende**: Reducer den tid, du bruger på manuel screening af artikler med op til 50%
-- **Datadrevet indsigt**: Få visuel indsigt i dit review-fremskridt og beslutninger undervejs
-- **Brugervenlig**: Fokuser på dit forskningsindhold, ikke på at lære kompliceret software
+- Upload articles and inclusion criteria as text files
+- Parse article entries from formatted text files
+- AI evaluation using OpenAI GPT-3.5
+- User review interface to accept or override AI suggestions
+- Store results in Supabase database
 
-## Teknologier
+## Tech Stack
 
-Dette projekt er bygget med:
+- **Frontend**: Next.js (App Router)
+- **Styling & Components**: ShadCN + Tailwind CSS
+- **AI**: OpenAI GPT-3.5
+- **Database**: Supabase
+- **Hosting**: Vercel (recommended)
 
-- [Next.js](https://nextjs.org/) - React framework
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Shadcn/UI](https://ui.shadcn.com/) - UI komponentbibliotek
-- [Supabase](https://supabase.com/) - Backend og database
+## Getting Started
 
-## Installation
+### Prerequisites
+
+- Node.js (LTS version)
+- OpenAI API key
+- Supabase account and project
+
+### Environment Setup
+
+1. Copy `.env.local.example` to `.env.local` and fill in:
+   ```
+   OPENAI_API_KEY=your_openai_api_key
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+### Supabase Setup
+
+1. Create a new Supabase project
+2. Create the following tables:
+
+**review_sessions**
+```sql
+create table review_sessions (
+  id uuid primary key,
+  criteria text not null,
+  articles_count integer not null,
+  created_at timestamp with time zone default now()
+);
+```
+
+**articles**
+```sql
+create table articles (
+  id uuid primary key default uuid_generate_v4(),
+  session_id uuid references review_sessions(id),
+  title text not null,
+  abstract text,
+  full_text text,
+  ai_decision text,
+  ai_explanation text,
+  user_decision text,
+  needs_review boolean default true,
+  created_at timestamp with time zone default now()
+);
+```
+
+### Installation
 
 ```bash
-# Klon projektet
-git clone https://github.com/anderschristiansen/revai.git
-cd revai
-
-# Installer dependencies
+# Install dependencies
 npm install
 
-# Konfigurer miljøvariabler
-cp .env.local.example .env.local
-# Udfyld .env.local med dine egne værdier
-
-# Start udviklings-serveren
+# Run development server
 npm run dev
 ```
 
-## Brug
+## Usage
 
-1. Opret en ny review-session
-2. Upload artikler i .txt format
-3. Definer inklusionskriterier
-4. Brug AI til at screene artikler
-5. Gennemgå artikler og tag beslutninger
-6. Spor dit fremskridt gennem visualiseringer
+1. Upload a .txt file containing articles (formatted with `<1>`, `<2>` markers)
+2. Upload a .txt file with your inclusion criteria
+3. Review AI decisions and make your own selections
+4. Results are stored in your Supabase database
 
-## Licens
+## Article File Format
 
-Dette projekt er udgivet under MIT-licensen.
+The application expects articles in this format:
+
+```
+<1>
+Accession Number
+  12345
+Title
+  Example article title
+Abstract
+  This is the abstract of the article...
+
+<2>
+Accession Number
+  67890
+...
+```
+
+## License
+
+MIT
