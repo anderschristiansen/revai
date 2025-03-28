@@ -66,18 +66,6 @@ export default function Settings() {
                 </div>
               </div>
             </div>
-
-            <div className="flex justify-end items-center pt-4">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={handleSignOut}
-                className="flex items-center text-muted-foreground"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign out
-              </Button>
-            </div>
           </div>
         );
       case 'ai':
@@ -103,28 +91,39 @@ export default function Settings() {
     <div className="container py-8 flex justify-center">
       <Card className="w-full max-w-4xl">
         <CardHeader>
-          <div className="flex items-center space-x-4">
-            <Avatar className="size-16">
-              <AvatarImage src="https://github.com/shadcn.png" alt={user?.email || ''} />
-              <AvatarFallback>{getUserInitials(user?.email)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <CardTitle>Settings</CardTitle>
-              <CardDescription>
-                Manage your account settings and set e-mail preferences.
-              </CardDescription>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Avatar className="size-16">
+                <AvatarImage src="https://github.com/shadcn.png" alt={user?.email || ''} />
+                <AvatarFallback>{getUserInitials(user?.email)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>
+                  Manage your account settings and set e-mail preferences.
+                </CardDescription>
+              </div>
             </div>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleSignOut}
+              className="flex items-center text-muted-foreground"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
+            </Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-6">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar Navigation */}
             <div className="w-full md:w-48 shrink-0">
-              <nav className="flex flex-col space-y-1 rounded-md overflow-hidden">
+              <nav className="flex flex-col rounded-md overflow-hidden">
                 <Button
                   variant="ghost"
                   className={cn(
-                    "justify-start rounded-none h-12 px-4",
+                    "justify-start rounded-none h-14 px-6 text-base",
                     activeTab === 'profile' && "bg-muted"
                   )}
                   onClick={() => setActiveTab('profile')}
@@ -134,7 +133,7 @@ export default function Settings() {
                 <Button
                   variant="ghost"
                   className={cn(
-                    "justify-start rounded-none h-12 px-4",
+                    "justify-start rounded-none h-14 px-6 text-base",
                     activeTab === 'ai' && "bg-muted"
                   )}
                   onClick={() => setActiveTab('ai')}
@@ -145,12 +144,12 @@ export default function Settings() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1">
+            <div className="flex-1 p-2">
               <div>
-                <h2 className="text-xl font-semibold mb-1">
+                <h2 className="text-xl font-semibold mb-3">
                   {activeTab === 'profile' ? 'Profile' : 'AI Settings'}
                 </h2>
-                <p className="text-sm text-muted-foreground mb-6">
+                <p className="text-sm text-muted-foreground mb-8">
                   {activeTab === 'profile' 
                     ? 'This is how others will see you on the site.' 
                     : 'Configure your AI preferences.'}
