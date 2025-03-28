@@ -295,7 +295,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="container py-8 flex justify-center">
+    <div className="container mx-auto py-8 flex justify-center">
       <Card className="w-full max-w-6xl">
         <CardHeader>
           <div className="flex items-center justify-between">

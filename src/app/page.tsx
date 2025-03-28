@@ -16,8 +16,8 @@ export default function HomePage() {
   const { user } = useAuth();
   
   return (
-    <div className="flex flex-col items-center">
-      {/* Hero Section with Video Background */}
+    <>
+      {/* Hero Section with Video Background - Full width */}
       <section className="w-full relative overflow-hidden min-h-[600px] flex items-center">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full bg-black/60 z-10"></div>
@@ -61,7 +61,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - With container */}
       <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -137,7 +137,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - With container */}
       <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
         <div className="container px-4 md:px-6 mx-auto text-center">
           <div className="flex flex-col items-center justify-center space-y-4 mx-auto">
@@ -160,6 +160,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }

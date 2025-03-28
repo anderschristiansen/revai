@@ -30,7 +30,7 @@ export default function RootLayout({
           <AuthProvider>
             <div className="relative min-h-screen bg-background">
               <NavBar />
-              <main className="container mx-auto px-4 py-8">
+              <main>
                 {children}
               </main>
             </div>
