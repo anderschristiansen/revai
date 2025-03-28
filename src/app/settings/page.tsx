@@ -60,7 +60,7 @@ export default function Settings() {
         <CardHeader>
           <div className="flex items-center space-x-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={`https://avatar.vercel.sh/${user?.email}`} alt={user?.email || ''} />
+              <AvatarImage src="https://github.com/shadcn.png" alt={user?.email || ''} />
               <AvatarFallback>{getUserInitials(user?.email)}</AvatarFallback>
             </Avatar>
             <div>

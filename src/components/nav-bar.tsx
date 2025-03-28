@@ -90,7 +90,7 @@ export function NavBar() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={`https://avatar.vercel.sh/${user.email}`} alt={user.email} />
+                    <AvatarImage src="https://github.com/shadcn.png" alt={user.email} />
                     <AvatarFallback>{getUserInitials(user.email)}</AvatarFallback>
                   </Avatar>
                 </Button>
