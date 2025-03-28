@@ -84,12 +84,12 @@ export function NavBar() {
         </nav>
         
         <div className="ml-auto flex items-center space-x-2">
-          <ThemeToggle size="lg" showLabel={false} />
+          <ThemeToggle showLabel={false} />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar size="md">
+                  <Avatar className="size-8">
                     <AvatarImage src="https://github.com/shadcn.png" alt={user.email} />
                     <AvatarFallback>{getUserInitials(user.email)}</AvatarFallback>
                   </Avatar>

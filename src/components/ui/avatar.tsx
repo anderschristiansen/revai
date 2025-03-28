@@ -5,28 +5,15 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
 import { cn } from "@/lib/utils"
 
-interface AvatarProps extends React.ComponentProps<typeof AvatarPrimitive.Root> {
-  size?: "sm" | "md" | "lg" | "xl"
-}
-
 function Avatar({
   className,
-  size = "md",
   ...props
-}: AvatarProps) {
-  const sizeClasses = {
-    sm: "size-6",
-    md: "size-8",
-    lg: "size-12",
-    xl: "size-16"
-  }
-
+}: React.ComponentProps<typeof AvatarPrimitive.Root>) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
       className={cn(
         "relative flex shrink-0 overflow-hidden rounded-full",
-        sizeClasses[size],
         className
       )}
       {...props}
