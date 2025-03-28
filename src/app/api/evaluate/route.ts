@@ -48,6 +48,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get AI instructions from settings
+    const { data: aiSettings, error: aiSettingsError } = await supabase
+      .from("ai_settings")
+      .select("instructions, temperature, max_tokens, seed, model")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (aiSettingsError) {
+      console.error("Error retrieving AI settings:", aiSettingsError);
+      // We'll continue with default settings
+    }
+
     let evaluatedCount = 0;
 
     // Evaluate each article
@@ -57,7 +70,8 @@ export async function POST(request: NextRequest) {
         const result = await evaluateArticle(
           article.title,
           article.abstract,
-          session.criteria
+          session.criteria,
+          aiSettings || undefined
         );
 
         // Update the article with AI evaluation
