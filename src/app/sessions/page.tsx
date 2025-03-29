@@ -3,12 +3,10 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, FolderOpen, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { PlusCircle, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { SessionCard } from "@/components/session-card";
 import { supabase } from "@/lib/supabase";
 
 type Article = {
@@ -30,8 +28,6 @@ type Session = {
   articles: Article[];
   ai_evaluated_count?: number;
 };
-
-const COLORS = ['#00b380', '#ff1d42', '#94a3b8'];
 
 export default function SessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -106,29 +102,6 @@ export default function SessionsPage() {
     }
   }
 
-  function getChartData(session: Session) {
-    return [
-      { name: 'Included', value: session.reviewed_count || 0, color: COLORS[0] },
-      { name: 'Excluded', value: session.excluded_count || 0, color: COLORS[1] },
-      { name: 'Pending', value: session.pending_count || 0, color: COLORS[2] }
-    ];
-  }
-
-  function getProgressPercentage(session: Session) {
-    const total = (session.reviewed_count || 0) + (session.excluded_count || 0) + (session.pending_count || 0);
-    if (total === 0) return 0;
-    const completed = (session.reviewed_count || 0) + (session.excluded_count || 0);
-    return Math.round((completed / total) * 100);
-  }
-
-  function hasDecisions(session: Session) {
-    return (session.reviewed_count || 0) > 0 || (session.excluded_count || 0) > 0;
-  }
-
-  function hasAiEvaluations(session: Session) {
-    return (session.ai_evaluated_count || 0) > 0;
-  }
-
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
@@ -150,64 +123,17 @@ export default function SessionsPage() {
           </Card>
         ) : sessions.length > 0 ? (
           sessions.map((session) => (
-            <Link key={session.id} href={`/review/${session.id}`}>
-              <Card className="h-[140px] hover:shadow-lg transition-all duration-300">
-                <CardContent className="flex items-center justify-between h-full p-6">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <FolderOpen className="h-5 w-5" />
-                      <h3 className="font-semibold">
-                        {session.title || "Review Session"}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Created on {format(new Date(session.created_at), "PP")}
-                    </p>
-                    {hasAiEvaluations(session) && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        <span className="inline-flex items-center">
-                          <span className="h-2 w-2 rounded-full bg-blue-400 mr-1.5"></span>
-                          AI-evaluated
-                        </span>
-                      </p>
-                    )}
-                  </div>
-                  {hasDecisions(session) ? (
-                    <div className="w-24 h-24">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={getChartData(session)}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={25}
-                            outerRadius={35}
-                            paddingAngle={2}
-                            dataKey="value"
-                          >
-                            {getChartData(session).map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <text
-                            x="50%"
-                            y="50%"
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                            className="text-sm font-medium fill-foreground"
-                          >
-                            {getProgressPercentage(session)}%
-                          </text>
-                          <Tooltip />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                  ) : (
-                    <div className="w-24 h-24" />
-                  )}
-                </CardContent>
-              </Card>
-            </Link>
+            <SessionCard
+              key={session.id}
+              id={session.id}
+              title={session.title}
+              created_at={session.created_at}
+              articles_count={session.articles_count}
+              reviewed_count={session.reviewed_count}
+              excluded_count={session.excluded_count}
+              pending_count={session.pending_count}
+              ai_evaluated_count={session.ai_evaluated_count}
+            />
           ))
         ) : (
           <div className="text-center py-12">
