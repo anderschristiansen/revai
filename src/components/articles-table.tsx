@@ -9,9 +9,7 @@ import {
   ArrowUpDown, 
   CheckCircle, 
   CheckCircle2, 
-  Circle, 
   Eye, 
-  ListFilter,
   Bot,
   Terminal,
   AlertCircle,
@@ -131,61 +129,12 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
 
   const columns: ColumnDef<Article>[] = [
     {
-      id: "status",
-      header: ({ column }) => (
-        <div className="flex justify-center w-full">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 w-8 p-0"
-            title="Toggle review status sort"
-          >
-            <ListFilter className="h-4 w-4" />
-          </Button>
-        </div>
-      ),
-      cell: ({ row }) => {
-        const reviewed = !!row.original.user_decision;
-        const decision = row.original.user_decision;
-        
-        return (
-          <div className="flex justify-center">
-            {reviewed ? (
-              <Tooltip content={`${decision === "Yes" ? "Included" : "Excluded"}`}>
-                <div className={cn(
-                  "h-7 w-7 rounded-md flex items-center justify-center border",
-                  decision === "Yes" 
-                    ? "bg-[#00b380]/5 text-[#00b380] border-[#00b380]/20" 
-                    : "bg-[#ff1d42]/5 text-[#ff1d42] border-[#ff1d42]/20"
-                )}>
-                  {decision === "Yes" ? (
-                    <CheckCircle className="h-4 w-4" />
-                  ) : (
-                    <AlertCircle className="h-4 w-4" />
-                  )}
-                </div>
-              </Tooltip>
-            ) : (
-              <Tooltip content="Pending review">
-                <div className="h-7 w-7 rounded-md flex items-center justify-center border border-muted/30 bg-muted/5">
-                  <Circle className="h-4 w-4 text-muted-foreground/70" />
-                </div>
-              </Tooltip>
-            )}
-          </div>
-        );
-      },
-      enableSorting: true,
-      accessorFn: (row) => row.user_decision ? 1 : 0,
-    },
-    {
       accessorKey: "title",
       header: ({ column }) => (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="whitespace-nowrap"
+          className="whitespace-nowrap font-medium"
         >
           Article Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -196,26 +145,36 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         const title = row.getValue("title") as string;
         const displayTitle = title.length > 60 ? title.substring(0, 60) + "..." : title;
         const aiDecision = row.original.ai_decision;
+        const userDecision = row.original.user_decision;
         
         return (
-          <div className="font-medium flex items-center gap-2">
-            <div className="flex-1">{displayTitle}</div>
+          <div className="flex items-center gap-3">
+            {/* Status dot - now shown for all articles */}
+            <div 
+              className={cn(
+                "w-2 h-2 rounded-full flex-shrink-0",
+                userDecision === "Yes" 
+                  ? "bg-[#00b380]" 
+                  : userDecision === "No"
+                    ? "bg-[#ff1d42]"
+                    : "bg-gray-300 dark:bg-gray-600" // Neutral dot for pending articles
+              )}
+            />
             
-            {/* AI badge when available - more subtle */}
+            {/* Title with 14px font */}
+            <div className="text-[14px] flex-1">{displayTitle}</div>
+            
+            {/* AI badge */}
             {aiDecision && (
-              <Tooltip content={`AI: ${aiDecision === "Yes" ? "Include" : "Exclude"}`}>
-                <Badge 
-                  variant="outline"
-                  className={cn(
-                    "h-5 px-1.5 flex items-center gap-0.5 whitespace-nowrap text-xs border-muted-foreground/20 bg-background",
-                    aiDecision === "Yes" 
-                      ? "text-[#00b380]/80" 
-                      : "text-[#ff1d42]/80"
-                  )}
-                >
-                  <Bot className="h-2.5 w-2.5 mr-0.5" /> 
+              <Tooltip content={`AI recommendation: ${aiDecision === "Yes" ? "Include" : "Exclude"}`}>
+                <div className={cn(
+                  "text-[11px] px-1.5 py-0.5 rounded border-[0.5px] flex items-center",
+                  aiDecision === "Yes"
+                    ? "border-[#00b380]/30 text-[#00b380]"
+                    : "border-[#ff1d42]/30 text-[#ff1d42]"
+                )}>
                   AI
-                </Badge>
+                </div>
               </Tooltip>
             )}
           </div>
@@ -224,7 +183,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
     },
     {
       id: "abstract",
-      header: "Abstract",
+      header: () => <span className="font-medium">Abstract</span>,
       cell: ({ row }) => {
         const abstract = row.original.abstract;
         const previewLength = 120;
@@ -241,54 +200,50 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
     },
     {
       id: "actions",
+      header: () => <div className="text-right font-medium">Actions</div>,
       cell: ({ row }) => {
         const article = row.original;
-        const hasUserDecision = !!article.user_decision;
         
         return (
-          <div className="flex items-center justify-end gap-2">
-            {/* View details button */}
+          <div className="flex items-center justify-end space-x-1">
             <Button 
               type="button"
               variant="ghost"
-              size="icon" 
-              className="h-8 w-8"
+              size="sm"
+              className="h-8 px-2.5"
               onClick={() => openArticleDialog(article)}
             >
-              <Eye className="h-4 w-4 text-muted-foreground" />
+              <Eye className="h-3.5 w-3.5 mr-1.5" />
+              View
             </Button>
             
-            {/* Include button */}
-            <Tooltip content="Include">
-              <Button 
-                type="button"
-                variant="ghost"
-                size="icon" 
-                className={cn(
-                  "h-8 w-8",
-                  hasUserDecision && article.user_decision === "Yes" && "bg-[#00b380]/5 text-[#00b380] ring-1 ring-[#00b380]/20"
-                )}
-                onClick={() => handleArticleDecision("Yes", article.id)}
-              >
-                <CheckCircle className="h-4 w-4" />
-              </Button>
-            </Tooltip>
+            <Button 
+              type="button"
+              variant={article.user_decision === "Yes" ? "secondary" : "ghost"}
+              size="sm" 
+              className={cn(
+                "h-8 px-2.5",
+                article.user_decision === "Yes" && "text-[#00b380]"
+              )}
+              onClick={() => handleArticleDecision("Yes", article.id)}
+            >
+              <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
+              Include
+            </Button>
             
-            {/* Exclude button */}
-            <Tooltip content="Exclude">
-              <Button 
-                type="button"
-                variant="ghost"
-                size="icon" 
-                className={cn(
-                  "h-8 w-8",
-                  hasUserDecision && article.user_decision === "No" && "bg-[#ff1d42]/5 text-[#ff1d42] ring-1 ring-[#ff1d42]/20"
-                )}
-                onClick={() => handleArticleDecision("No", article.id)}
-              >
-                <AlertCircle className="h-4 w-4" />
-              </Button>
-            </Tooltip>
+            <Button 
+              type="button"
+              variant={article.user_decision === "No" ? "secondary" : "ghost"}
+              size="sm" 
+              className={cn(
+                "h-8 px-2.5",
+                article.user_decision === "No" && "text-[#ff1d42]"
+              )}
+              onClick={() => handleArticleDecision("No", article.id)}
+            >
+              <AlertCircle className="h-3.5 w-3.5 mr-1.5" />
+              Exclude
+            </Button>
           </div>
         );
       },
@@ -302,9 +257,12 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         data={articles} 
         filterColumn="title"
         filterPlaceholder="Search articles by title..."
-        initialSorting={[{ id: "status", desc: false }]}
+        initialSorting={[{ id: "user_decision", desc: true }]}
         pageSize={10}
         pageSizeOptions={[5, 10, 25, 50, 100]}
+        getRowClassName={() => {
+          return "hover:bg-muted/5 transition-colors";
+        }}
       />
 
       {/* Article Details Dialog */}

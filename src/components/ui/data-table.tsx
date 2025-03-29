@@ -51,6 +51,7 @@ interface DataTableProps<TData, TValue> {
   initialSorting?: SortingState
   pageSize?: number
   pageSizeOptions?: number[]
+  getRowClassName?: (row: TData) => string
 }
 
 export function DataTable<TData, TValue>({
@@ -62,6 +63,7 @@ export function DataTable<TData, TValue>({
   initialSorting = [],
   pageSize = 10,
   pageSizeOptions = [5, 10, 20, 50, 100],
+  getRowClassName,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>(initialSorting)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -180,6 +182,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  className={getRowClassName ? getRowClassName(row.original as TData) : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
