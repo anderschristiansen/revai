@@ -637,21 +637,11 @@ export default function ReviewPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Card className="border-dashed">
-              <CardHeader>
-                <CardTitle>Upload Articles</CardTitle>
-                <CardDescription>
-                  Start your systematic review by uploading articles
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <UploadForm 
-                  sessionId={sessionId} 
-                  onUploadComplete={loadSessionData} 
-                  onArticlesRefresh={loadArticles}
-                />
-              </CardContent>
-            </Card>
+            <UploadForm 
+              sessionId={sessionId} 
+              onUploadComplete={loadSessionData} 
+              onArticlesRefresh={loadArticles}
+            />
           </motion.div>
         </AnimatePresence>
       )}
