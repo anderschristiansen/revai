@@ -7,10 +7,10 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
-// Colors for the visualization
+// Colors for the visualization - using the site's red/green color scheme
 const COLORS = {
-  included: '#00b380',
-  excluded: '#ff1d42',
+  included: '#00b380', // Green
+  excluded: '#ff1d42', // Red
   pending: '#94a3b8',
   aiEvaluated: '#3b82f6',
   notEvaluated: '#6b7280',
@@ -51,9 +51,15 @@ export function SessionCard({
   function hasAiEvaluations() {
     return ai_evaluated_count > 0;
   }
+  
+  function isCompleted() {
+    // Session is completed when all articles have been reviewed
+    return articles_count > 0 && pending_count === 0;
+  }
 
   // Calculate the progress percentage
   const progressPercentage = getProgressPercentage();
+  const completed = isCompleted();
 
   return (
     <motion.div
@@ -62,12 +68,18 @@ export function SessionCard({
     >
       <Link href={`/review/${id}`} className="block">
         <Card className={cn(
-          "h-auto overflow-hidden border hover:border-primary/50 hover:shadow-lg transition-all group relative", 
+          "h-auto overflow-hidden border hover:shadow-lg transition-all group relative", 
+          completed ? "border-[#00b380]/30 hover:border-[#00b380]/70" : "hover:border-primary/50",
           className
         )}>
           {/* Hover gradient effect */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-transparent" />
+            <div className={cn(
+              "absolute inset-0 bg-gradient-to-br",
+              completed 
+                ? "from-[#00b380]/5 to-transparent" 
+                : "from-primary/3 to-transparent"
+            )} />
           </div>
 
           <CardContent className="px-5 pt-4 pb-4 relative">
@@ -75,10 +87,25 @@ export function SessionCard({
             <div className="flex justify-between items-start mb-3">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-1.5 rounded-md group-hover:bg-primary/15 transition-colors">
-                    <FolderOpen className="h-4 w-4 text-primary/80 group-hover:text-primary transition-colors" />
+                  <div className={cn(
+                    "p-1.5 rounded-md transition-colors", 
+                    completed 
+                      ? "bg-[#00b380]/10 group-hover:bg-[#00b380]/20" 
+                      : "bg-primary/10 group-hover:bg-primary/15"
+                  )}>
+                    <FolderOpen className={cn(
+                      "h-4 w-4 transition-colors",
+                      completed 
+                        ? "text-[#00b380]/80 group-hover:text-[#00b380]" 
+                        : "text-primary/80 group-hover:text-primary"
+                    )} />
                   </div>
-                  <h3 className="font-semibold text-lg group-hover:text-primary transition-colors line-clamp-1">
+                  <h3 className={cn(
+                    "font-semibold text-lg transition-colors line-clamp-1",
+                    completed 
+                      ? "group-hover:text-[#00b380]" 
+                      : "group-hover:text-primary"
+                  )}>
                     {title || "Review Session"}
                   </h3>
                 </div>
@@ -98,7 +125,12 @@ export function SessionCard({
                   <span className="text-xs text-muted-foreground">Articles</span>
                 </div>
                 
-                {hasAiEvaluations() ? (
+                {completed ? (
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <div className="h-2 w-2 rounded-full bg-[#00b380]"></div>
+                    <span className="text-[#00b380]">All reviewed</span>
+                  </div>
+                ) : hasAiEvaluations() ? (
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <div className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></div>
                     <span>{ai_evaluated_count} AI evaluated</span>
@@ -148,19 +180,31 @@ export function SessionCard({
               )}
             </div>
             
-            {/* Progress indicator */}
+            {/* Improved progress indicator */}
             {articles_count > 0 && (
               <div className="mt-4">
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-muted-foreground flex items-center gap-1">
-                    <span className="inline-block h-1 w-1 rounded-full bg-primary"></span>
-                    Progress
+                  <span className={cn(
+                    "flex items-center gap-1",
+                    completed ? "text-[#00b380]" : "text-muted-foreground"
+                  )}>
+                    <span className={cn(
+                      "inline-block h-1 w-1 rounded-full",
+                      completed ? "bg-[#00b380]" : "bg-primary"
+                    )}></span>
+                    {completed ? "Completed" : "Progress"}
                   </span>
-                  <span className="font-semibold">{progressPercentage}%</span>
+                  <span className={cn(
+                    "font-semibold",
+                    completed ? "text-[#00b380]" : ""
+                  )}>{progressPercentage}%</span>
                 </div>
-                <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                   <motion.div 
-                    className="h-full bg-primary rounded-full group-hover:brightness-110 transition-all"
+                    className={cn(
+                      "h-full rounded-full transition-all",
+                      completed ? "bg-[#00b380]" : "bg-primary group-hover:brightness-110"
+                    )}
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPercentage}%` }}
                     transition={{ duration: 1, ease: "easeOut" }}
