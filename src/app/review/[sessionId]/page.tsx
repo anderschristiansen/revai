@@ -491,32 +491,6 @@ export default function ReviewPage() {
                     </div>
                   </div>
                 </div>
-                
-                {/* Progress bar */}
-                {articles.length > 0 && (
-                  <div className="mt-4 pt-3 border-t">
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-muted-foreground">Review progress</span>
-                      <span className={cn(
-                        "font-medium",
-                        percentageComplete === 100 ? "text-[#00b380]" : "text-primary"
-                      )}>
-                        {percentageComplete}% complete
-                      </span>
-                    </div>
-                    <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                      <motion.div 
-                        className={cn(
-                          "h-full rounded-full",
-                          percentageComplete === 100 ? "bg-[#00b380]" : "bg-primary"
-                        )}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${percentageComplete}%` }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                      />
-                    </div>
-                  </div>
-                )}
               </CardContent>
             </Card>
           </motion.div>
