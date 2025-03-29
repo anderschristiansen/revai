@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { LottieCoffeeLoader } from "@/components/ui/lottie-coffee-loader";
 import { supabase } from "@/lib/supabase";
+import { Tooltip } from "@/components/ui/tooltip";
 
 // Import the Lottie animation data
 // Note: You need to place your Lottie JSON file in the public/lottie directory
@@ -202,6 +203,11 @@ export default function ReviewPage() {
   async function evaluateArticles() {
     if (evaluating) return;
     
+    // Check if all articles have already been evaluated
+    if (articles.every(article => article.ai_decision !== undefined)) {
+      return;
+    }
+    
     setEvaluating(true);
     // Randomly select a loader variant
     setLoaderVariant(Math.floor(Math.random() * 3));
@@ -213,7 +219,6 @@ export default function ReviewPage() {
       );
       
       if (articlesToEvaluate.length === 0) {
-        toast.info("All articles have already been evaluated");
         setEvaluating(false);
         return;
       }
@@ -232,18 +237,25 @@ export default function ReviewPage() {
         }),
       });
       
-      if (!response.ok) {
-        throw new Error("Failed to evaluate articles");
-      }
-      
       const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to evaluate articles");
+      }
       
       // Refresh articles
       await loadArticles();
       toast.success(`${result.count} articles were successfully evaluated`);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error evaluating articles:", error);
-      toast.error("Could not evaluate articles");
+      
+      // Show a more specific error message
+      if (error instanceof Error && error.message?.includes("API key")) {
+        toast.error("OpenAI API key is missing or invalid. Please check your environment variables.");
+      } else {
+        const errorMessage = error instanceof Error ? error.message : "Could not evaluate articles";
+        toast.error(errorMessage);
+      }
     } finally {
       setEvaluating(false);
     }
@@ -336,15 +348,23 @@ export default function ReviewPage() {
                 Show inclusion criteria
               </Button>
             </div>
-            <Button 
-              onClick={(e) => {
-                e.preventDefault();
-                evaluateArticles();
-              }} 
-              disabled={evaluating}
-            >
-              {evaluating ? "Evaluating..." : "Evaluate all"}
-            </Button>
+            <Tooltip content={
+              articles.every(article => article.ai_decision !== undefined)
+                ? "All articles have already been evaluated by AI"
+                : "Evaluate all articles using AI"
+            }>
+              <span>
+                <Button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    evaluateArticles();
+                  }} 
+                  disabled={evaluating || articles.every(article => article.ai_decision !== undefined)}
+                >
+                  {evaluating ? "Evaluating..." : "Evaluate all"}
+                </Button>
+              </span>
+            </Tooltip>
           </div>
 
           <ArticlesTable 

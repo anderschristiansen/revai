@@ -1,6 +1,11 @@
 import OpenAI from "openai";
 import { supabase } from "./supabase";
 
+// Check for API key
+if (!process.env.OPENAI_API_KEY) {
+  console.error('Missing OpenAI API key in environment variables');
+}
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -90,6 +95,10 @@ ${criteria}
 Article to evaluate:
 Title: ${title}
 Abstract: ${abstract}`;
+
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OpenAI API key is missing. Please set the OPENAI_API_KEY environment variable.");
+    }
 
     const completion = await openai.chat.completions.create({
       model: settings.model,

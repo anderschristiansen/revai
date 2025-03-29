@@ -4,6 +4,14 @@ import { supabase } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
+    // Check for OpenAI API key
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "OpenAI API key is missing. Please set the OPENAI_API_KEY environment variable." },
+        { status: 500 }
+      );
+    }
+
     const { sessionId, articleIds } = await request.json();
 
     if (!sessionId || !articleIds || !Array.isArray(articleIds) || articleIds.length === 0) {
