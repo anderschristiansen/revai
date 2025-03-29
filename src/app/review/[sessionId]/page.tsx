@@ -9,23 +9,72 @@ import { UploadForm } from "@/components/upload-form";
 import { toast } from "@/components/ui/sonner";
 import { SessionData } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { PencilIcon, CheckIcon, XIcon, ListChecks } from "lucide-react";
+import { 
+  PencilIcon, 
+  CheckIcon, 
+  XIcon, 
+  ListChecks, 
+  ArrowLeftIcon, 
+  FileTextIcon, 
+  BarChart4Icon,
+  BookOpenIcon, 
+  BotIcon
+} from "lucide-react";
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { LottieCoffeeLoader } from "@/components/ui/lottie-coffee-loader";
 import { supabase } from "@/lib/supabase";
 import { Tooltip } from "@/components/ui/tooltip";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 // Import the Lottie animation data
 // Note: You need to place your Lottie JSON file in the public/lottie directory
 // and update the path/filename below
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
+
+// Animation variants
+const pageTransition = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  },
+  exit: { 
+    opacity: 0,
+    transition: { 
+      duration: 0.2
+    }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut"
+    }
+  }
+};
 
 type Article = {
   id: string;
@@ -50,8 +99,8 @@ export default function ReviewPage() {
   const [newTitle, setNewTitle] = useState("");
   const [articles, setArticles] = useState<Article[]>([]);
   const [evaluating, setEvaluating] = useState(false);
-  const [showCriteria, setShowCriteria] = useState(false);
   const [loaderVariant, setLoaderVariant] = useState(0);
+  const [activeTab, setActiveTab] = useState("articles");
 
   const loadSessionData = React.useCallback(async () => {
     try {
@@ -261,11 +310,25 @@ export default function ReviewPage() {
     }
   }
 
+  // Calculate some stats
+  const articlesReviewed = articles.filter(a => a.user_decision).length;
+  const articlesIncluded = articles.filter(a => a.user_decision === "Yes").length;
+  const articlesExcluded = articles.filter(a => a.user_decision === "No").length;
+  const percentageComplete = articles.length > 0 
+    ? Math.round((articlesReviewed / articles.length) * 100) 
+    : 0;
+
   if (loading) {
     return (
-      <div className="container mx-auto py-10 text-center">
-        <p>Loading session data...</p>
-      </div>
+      <motion.div 
+        className="container mx-auto py-10 flex flex-col items-center justify-center min-h-[70vh]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4" />
+        <p className="text-muted-foreground">Loading session data...</p>
+      </motion.div>
     );
   }
 
@@ -274,160 +337,349 @@ export default function ReviewPage() {
   }
 
   const mainContent = (
-    <div 
-      className="container mx-auto py-8 space-y-6" 
-      onSubmit={(e) => {
-        e.preventDefault();
-        return false;
-      }}
+    <motion.div
+      variants={pageTransition}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="container mx-auto py-8 space-y-8"
     >
-      <header className="flex justify-between items-start">
-        <div>
+      {/* Back button and header */}
+      <div className="flex justify-between items-start">
+        <div className="space-y-4">
+          <Link href="/sessions" className="inline-flex">
+            <Button variant="ghost" size="sm" className="pl-0 gap-1 text-muted-foreground hover:text-foreground">
+              <ArrowLeftIcon className="h-4 w-4" />
+              <span>Back to sessions</span>
+            </Button>
+          </Link>
+
           {isEditingTitle ? (
             <div className="flex items-center gap-2">
               <Input 
                 value={newTitle} 
                 onChange={(e) => setNewTitle(e.target.value)}
-                className="text-xl font-bold w-auto min-w-[300px]"
+                className="text-2xl font-bold h-12 w-auto min-w-[300px]"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') updateSessionTitle();
+                  if (e.key === 'Escape') cancelTitleEdit();
+                }}
               />
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                onClick={updateSessionTitle}
-                title="Save"
-              >
-                <CheckIcon className="h-4 w-4" />
-              </Button>
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                onClick={cancelTitleEdit}
-                title="Cancel"
-              >
-                <XIcon className="h-4 w-4" />
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  onClick={updateSessionTitle}
+                  title="Save"
+                >
+                  <CheckIcon className="h-4 w-4" />
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  onClick={cancelTitleEdit}
+                  title="Cancel"
+                >
+                  <XIcon className="h-4 w-4" />
+                </Button>
+              </motion.div>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <h1 className="text-3xl font-bold">{session.title || "Systematic Review"}</h1>
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                onClick={() => setIsEditingTitle(true)}
-                title="Edit title"
-              >
-                <PencilIcon className="h-4 w-4" />
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  onClick={() => setIsEditingTitle(true)}
+                  title="Edit title"
+                  className="opacity-60 hover:opacity-100"
+                >
+                  <PencilIcon className="h-4 w-4" />
+                </Button>
+              </motion.div>
             </div>
           )}
-          <p className="text-muted-foreground">
-            Session ID: {sessionId}
-          </p>
-          <p>
-            <span className="font-medium">Articles:</span> {session.articles_count} | 
-            <span className="font-medium"> Criteria:</span> {criteriaLines.length}
-          </p>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="bg-muted/60 px-2 py-1 rounded text-muted-foreground font-mono text-xs">
+                {sessionId}
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <FileTextIcon className="h-4 w-4 text-muted-foreground/70" />
+              <span>{articles.length} article{articles.length !== 1 ? 's' : ''}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <ListChecks className="h-4 w-4 text-muted-foreground/70" />
+              <span>{criteriaLines.length} criteria</span>
+            </div>
+            {articles.length > 0 && (
+              <div className="flex items-center gap-1 font-medium">
+                <span className="text-muted-foreground/70">Progress:</span>
+                <Badge 
+                  variant="outline" 
+                  className={cn(
+                    percentageComplete === 100 
+                      ? "border-[#00b380]/40 bg-[#00b380]/10 text-[#00b380] hover:bg-[#00b380]/20" 
+                      : "border-primary/40 bg-primary/5 text-primary hover:bg-primary/10"
+                  )}
+                >
+                  {percentageComplete}%
+                </Badge>
+              </div>
+            )}
+          </div>
         </div>
-        <Link href="/sessions">
-          <Button variant="outline">Back to sessions</Button>
-        </Link>
-      </header>
+      </div>
 
       {session.articles_count > 0 ? (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-500">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-4">
-              <h2 className="text-xl font-semibold">Articles ({articles.length})</h2>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowCriteria(true)}
-                className="flex items-center gap-2"
-              >
-                <ListChecks className="h-4 w-4" />
-                Show inclusion criteria
-              </Button>
-            </div>
-            <Tooltip content={
-              articles.every(article => article.ai_decision !== undefined)
-                ? "All articles have already been evaluated by AI"
-                : "Evaluate all articles using AI"
-            }>
-              <span>
-                <Button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    evaluateArticles();
-                  }} 
-                  disabled={evaluating || articles.every(article => article.ai_decision !== undefined)}
-                >
-                  {evaluating ? "Evaluating..." : "Evaluate all"}
-                </Button>
-              </span>
-            </Tooltip>
-          </div>
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="space-y-6"
+        >
+          {/* Stats cards */}
+          <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card>
+              <CardHeader className="py-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Articles</CardTitle>
+              </CardHeader>
+              <CardContent className="py-0">
+                <div className="flex items-center">
+                  <BookOpenIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <span className="text-2xl font-bold">{articles.length}</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="py-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Reviewed</CardTitle>
+              </CardHeader>
+              <CardContent className="py-0">
+                <div className="flex items-center">
+                  <BarChart4Icon className="mr-2 h-4 w-4 text-primary" />
+                  <span className="text-2xl font-bold">{articlesReviewed}</span>
+                  <span className="text-xs ml-2 text-muted-foreground">
+                    ({percentageComplete}%)
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="py-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Included</CardTitle>
+              </CardHeader>
+              <CardContent className="py-0">
+                <div className="flex items-center">
+                  <span className="w-4 h-4 mr-2 rounded-full bg-[#00b380]/20">
+                    <CheckIcon className="h-4 w-4 text-[#00b380]" />
+                  </span>
+                  <span className="text-2xl font-bold">{articlesIncluded}</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="py-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Excluded</CardTitle>
+              </CardHeader>
+              <CardContent className="py-0">
+                <div className="flex items-center">
+                  <span className="w-4 h-4 mr-2 rounded-full bg-[#ff1d42]/20">
+                    <XIcon className="h-4 w-4 text-[#ff1d42]" />
+                  </span>
+                  <span className="text-2xl font-bold">{articlesExcluded}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          <ArticlesTable 
-            articles={articles}
-            onReviewArticle={updateUserDecision}
-          />
+          {/* Tabs for different views */}
+          <motion.div variants={fadeInUp}>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="flex items-center justify-between mb-4">
+                <TabsList>
+                  <TabsTrigger value="articles" className="gap-2">
+                    <FileTextIcon className="h-4 w-4" />
+                    <span>Articles</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="criteria" className="gap-2">
+                    <ListChecks className="h-4 w-4" />
+                    <span>Criteria</span>
+                  </TabsTrigger>
+                </TabsList>
 
-          <Dialog open={showCriteria} onOpenChange={setShowCriteria}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Inclusion Criteria</DialogTitle>
-                <DialogDescription>
-                  Criteria used to evaluate articles in this review
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-2">
-                {criteriaLines.map((criterion, index) => (
-                  <div key={index} className="flex items-start gap-2">
-                    <span className="font-medium">{index + 1}.</span>
-                    <p>{criterion}</p>
-                  </div>
-                ))}
+                <Tooltip content={
+                  articles.every(article => article.ai_decision !== undefined)
+                    ? "All articles have already been evaluated by AI"
+                    : "Evaluate all articles using AI"
+                }>
+                  <span>
+                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                      <Button 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          evaluateArticles();
+                        }} 
+                        disabled={evaluating || articles.every(article => article.ai_decision !== undefined)}
+                        className="gap-2"
+                      >
+                        <BotIcon className="h-4 w-4" />
+                        {evaluating ? "Evaluating..." : "Evaluate all"}
+                      </Button>
+                    </motion.div>
+                  </span>
+                </Tooltip>
               </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+
+              <TabsContent value="articles" className="mt-0">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key="articles-table"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Card>
+                      <CardContent className="p-0 sm:p-6">
+                        <ArticlesTable 
+                          articles={articles}
+                          onReviewArticle={updateUserDecision}
+                        />
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </AnimatePresence>
+              </TabsContent>
+
+              <TabsContent value="criteria" className="mt-0">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key="criteria-list"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Inclusion Criteria</CardTitle>
+                        <CardDescription>
+                          Criteria used to evaluate articles in this review
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {criteriaLines.length > 0 ? (
+                          criteriaLines.map((criterion, index) => (
+                            <motion.div 
+                              key={index} 
+                              className="flex items-start gap-3 p-3 border rounded-md bg-card"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                            >
+                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0">
+                                {index + 1}
+                              </div>
+                              <p className="text-sm">{criterion}</p>
+                            </motion.div>
+                          ))
+                        ) : (
+                          <div className="text-center py-12">
+                            <p className="text-muted-foreground">No criteria defined for this review.</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </AnimatePresence>
+              </TabsContent>
+            </Tabs>
+          </motion.div>
+        </motion.div>
       ) : (
-        <div className="animate-in fade-in slide-in-from-bottom-5 duration-500">
-          <UploadForm 
-            sessionId={sessionId} 
-            onUploadComplete={loadSessionData} 
-            onArticlesRefresh={loadArticles}
-          />
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div 
+            className="animate-in fade-in slide-in-from-bottom-5 duration-500 pt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Card className="border-dashed">
+              <CardHeader>
+                <CardTitle>Upload Articles</CardTitle>
+                <CardDescription>
+                  Start your systematic review by uploading articles
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <UploadForm 
+                  sessionId={sessionId} 
+                  onUploadComplete={loadSessionData} 
+                  onArticlesRefresh={loadArticles}
+                />
+              </CardContent>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
       )}
-    </div>
+    </motion.div>
   );
 
   return (
-    <div className="relative">
+    <div className="relative min-h-screen bg-background">
       {/* Main content */}
-      {mainContent}
+      <AnimatePresence mode="wait">
+        {mainContent}
+      </AnimatePresence>
       
       {/* Coffee loader overlay */}
-      {evaluating && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          {/* Dimming backdrop */}
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-md" />
-          
-          <div className="bg-background/90 backdrop-blur-sm rounded-lg shadow-xl p-6 max-w-md relative z-10">
-            <LottieCoffeeLoader 
-              animationData={coffeeAnimation} 
-              message={
-                loaderVariant === 0 
-                  ? "Brewing your evaluations..." 
-                  : loaderVariant === 1 
-                    ? "Taking a coffee break while we work..." 
-                    : "Grinding these articles..."
-              }
+      <AnimatePresence>
+        {evaluating && (
+          <motion.div 
+            className="fixed inset-0 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {/* Dimming backdrop */}
+            <motion.div 
+              className="absolute inset-0 bg-black/50 backdrop-blur-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             />
-          </div>
-        </div>
-      )}
+            
+            <motion.div 
+              className="bg-background/90 backdrop-blur-sm rounded-lg shadow-xl p-6 max-w-md relative z-10"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            >
+              <LottieCoffeeLoader 
+                animationData={coffeeAnimation} 
+                message={
+                  loaderVariant === 0 
+                    ? "Brewing your evaluations..." 
+                    : loaderVariant === 1 
+                      ? "Taking a coffee break while we work..." 
+                      : "Grinding these articles..."
+                }
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 } 
