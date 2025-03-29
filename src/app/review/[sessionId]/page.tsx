@@ -18,7 +18,9 @@ import {
   FileTextIcon, 
   BarChart4Icon,
   BookOpenIcon, 
-  BotIcon
+  BotIcon,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 import React from "react";
 import { LottieCoffeeLoader } from "@/components/ui/lottie-coffee-loader";
@@ -34,6 +36,16 @@ import { cn } from "@/lib/utils";
 // Note: You need to place your Lottie JSON file in the public/lottie directory
 // and update the path/filename below
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
+
+// Colors for the visualization - using the same colors as session-card.tsx
+const COLORS = {
+  included: '#00b380', // Green
+  excluded: '#ff1d42', // Red
+  pending: '#94a3b8',
+  aiEvaluated: '#3b82f6',
+  notEvaluated: '#6b7280',
+  cardHover: 'rgba(0,0,0,0.05)'
+};
 
 // Animation variants
 const pageTransition = {
@@ -440,59 +452,122 @@ export default function ReviewPage() {
           className="space-y-6"
         >
           {/* Stats cards */}
-          <motion.div variants={fadeInUp}>
-            <Card>
-              <CardContent className="p-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-6">
-                  {/* Total Articles */}
+          <motion.div variants={fadeInUp} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Total Articles Card */}
+            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+              <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
+                <CardContent className="p-4 relative">
+                  {/* Hover gradient effect */}
+                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
+                  </div>
+                  
                   <div className="flex items-center space-x-3">
-                    <div className="h-9 w-9 rounded-md bg-muted/50 flex items-center justify-center">
+                    <div className="p-2 rounded-md bg-muted/40">
                       <BookOpenIcon className="h-5 w-5 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Total</p>
-                      <p className="text-xl font-bold">{articles.length}</p>
+                      <p className="text-sm font-medium text-muted-foreground">Total Articles</p>
+                      <p className="text-2xl font-bold">{articles.length}</p>
                     </div>
                   </div>
-                  
-                  {/* Reviewed */}
-                  <div className="flex items-center space-x-3 sm:border-l sm:pl-6">
-                    <div className="h-9 w-9 rounded-md bg-primary/10 flex items-center justify-center">
-                      <BarChart4Icon className="h-5 w-5 text-primary" />
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Reviewed Card */}
+            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+              <Card className={cn(
+                "overflow-hidden border hover:shadow-md transition-all h-full",
+                percentageComplete === 100 && "border-[#00b380]/30 hover:border-[#00b380]/70"
+              )}>
+                <CardContent className="p-4 relative">
+                  {/* Hover gradient effect */}
+                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className={cn(
+                      "absolute inset-0 bg-gradient-to-br",
+                      percentageComplete === 100 
+                        ? "from-[#00b380]/5 to-transparent" 
+                        : "from-primary/3 to-transparent"
+                    )} />
+                  </div>
+                
+                  <div className="flex items-center space-x-3">
+                    <div className={cn(
+                      "p-2 rounded-md", 
+                      percentageComplete === 100 
+                        ? "bg-[#00b380]/10" 
+                        : "bg-primary/10"
+                    )}>
+                      <BarChart4Icon className={cn(
+                        "h-5 w-5", 
+                        percentageComplete === 100 
+                          ? "text-[#00b380]" 
+                          : "text-primary"
+                      )} />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Reviewed</p>
                       <div className="flex items-baseline">
-                        <p className="text-xl font-bold">{articlesReviewed}</p>
-                        <span className="text-xs ml-1.5 text-muted-foreground">({percentageComplete}%)</span>
+                        <p className="text-2xl font-bold">{articlesReviewed}</p>
+                        <span className={cn(
+                          "text-xs ml-2",
+                          percentageComplete === 100 
+                            ? "text-[#00b380]" 
+                            : "text-muted-foreground"
+                        )}>
+                          ({percentageComplete}%)
+                        </span>
                       </div>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Included Card */}
+            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+              <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
+                <CardContent className="p-4 relative">
+                  {/* Hover gradient effect */}
+                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#00b380]/5 to-transparent" />
+                  </div>
                   
-                  {/* Included */}
-                  <div className="flex items-center space-x-3 sm:border-l sm:pl-6">
-                    <div className="h-9 w-9 rounded-md bg-[#00b380]/10 flex items-center justify-center">
-                      <CheckIcon className="h-5 w-5 text-[#00b380]" />
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 rounded-md" style={{ backgroundColor: `${COLORS.included}10` }}>
+                      <CheckCircle className="h-5 w-5" style={{ color: COLORS.included }} />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Included</p>
-                      <p className="text-xl font-bold">{articlesIncluded}</p>
+                      <p className="text-2xl font-bold">{articlesIncluded}</p>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Excluded Card */}
+            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+              <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
+                <CardContent className="p-4 relative">
+                  {/* Hover gradient effect */}
+                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#ff1d42]/5 to-transparent" />
+                  </div>
                   
-                  {/* Excluded */}
-                  <div className="flex items-center space-x-3 sm:border-l sm:pl-6">
-                    <div className="h-9 w-9 rounded-md bg-[#ff1d42]/10 flex items-center justify-center">
-                      <XIcon className="h-5 w-5 text-[#ff1d42]" />
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 rounded-md" style={{ backgroundColor: `${COLORS.excluded}10` }}>
+                      <XCircle className="h-5 w-5" style={{ color: COLORS.excluded }} />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Excluded</p>
-                      <p className="text-xl font-bold">{articlesExcluded}</p>
+                      <p className="text-2xl font-bold">{articlesExcluded}</p>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
           </motion.div>
 
           {/* Tabs for different views */}
