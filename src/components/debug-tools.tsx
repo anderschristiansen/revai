@@ -61,14 +61,6 @@ export function DebugTools() {
 
   return (
     <CoffeeLoaderOverlay isLoading={overlayVisible} loaderVariant={loaderVariant}>
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Debug Tools</CardTitle>
-          <CardDescription>
-            Preview and test UI components
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
           <Tabs defaultValue="loaders" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="loaders">Coffee Loaders</TabsTrigger>
@@ -127,8 +119,6 @@ export function DebugTools() {
               </Card>
             </TabsContent>
           </Tabs>
-        </CardContent>
-      </Card>
     </CoffeeLoaderOverlay>
   )
 } 

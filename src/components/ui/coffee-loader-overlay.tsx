@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import { CoffeeLoader, CoffeeBeanLoader, CoffeeProgress } from "./coffee-loaders";
+import { CoffeeLoader } from "./coffee-loader";
+import { CoffeeProgress } from "./coffee-progress";
 
 interface CoffeeLoaderOverlayProps {
   children: ReactNode;
@@ -14,12 +15,10 @@ export function CoffeeLoaderOverlay({
 }: CoffeeLoaderOverlayProps) {
   // Select the appropriate loader based on the variant
   const renderLoader = () => {
-    switch (loaderVariant % 3) {
+    switch (loaderVariant % 2) {
       case 0:
         return <CoffeeLoader />;
       case 1:
-        return <CoffeeBeanLoader />;
-      case 2:
         return <CoffeeProgress />;
       default:
         return <CoffeeLoader />;

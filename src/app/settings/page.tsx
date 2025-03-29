@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Mail, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -16,8 +15,9 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import React from 'react';
+import { DebugTools } from '@/components/debug-tools';
 
-type TabType = 'profile' | 'ai';
+type TabType = 'profile' | 'ai' | 'debug';
 
 type AiSettings = {
   instructions: string;
@@ -122,16 +122,6 @@ export default function Settings() {
       ...prev,
       [field]: value
     }));
-  };
-
-  const getUserInitials = (email: string | undefined) => {
-    if (!email) return '';
-    return email
-      .split('@')[0]
-      .split('.')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase();
   };
 
   const handleSignOut = async () => {
@@ -286,84 +276,86 @@ export default function Settings() {
             )}
           </div>
         );
+      case 'debug':
+        return (
+          <div className="space-y-4">
+            <DebugTools />
+          </div>
+        );
       default:
         return null;
     }
   };
 
   return (
-    <div className="container mx-auto py-8 flex justify-center">
-      <Card className="w-full max-w-6xl">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Avatar className="size-16">
-                <AvatarImage src="https://github.com/shadcn.png" alt={user?.email || ''} />
-                <AvatarFallback>{getUserInitials(user?.email)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <CardTitle>Settings</CardTitle>
-                <CardDescription>
-                  Manage your account settings and set e-mail preferences.
-                </CardDescription>
+    <div className="container mx-auto py-10">
+      <div className="flex flex-col md:flex-row gap-8">
+        <Card className="md:w-64 h-fit">
+          <CardHeader>
+            <CardTitle>Settings</CardTitle>
+            <CardDescription>
+              Manage your account settings
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="space-y-1 px-6 pb-6">
+              <div 
+                className={cn(
+                  "flex items-center py-2 px-3 rounded-md cursor-pointer hover:bg-muted transition-colors",
+                  activeTab === 'profile' && "bg-muted"
+                )}
+                onClick={() => setActiveTab('profile')}
+              >
+                <span>Profile</span>
+              </div>
+              <div 
+                className={cn(
+                  "flex items-center py-2 px-3 rounded-md cursor-pointer hover:bg-muted transition-colors",
+                  activeTab === 'ai' && "bg-muted"
+                )}
+                onClick={() => setActiveTab('ai')}
+              >
+                <span>AI Settings</span>
+              </div>
+              <div 
+                className={cn(
+                  "flex items-center py-2 px-3 rounded-md cursor-pointer hover:bg-muted transition-colors",
+                  activeTab === 'debug' && "bg-muted"
+                )}
+                onClick={() => setActiveTab('debug')}
+              >
+                <span>Debug Tools</span>
+              </div>
+              <div 
+                className="flex items-center py-2 px-3 rounded-md cursor-pointer hover:bg-muted text-red-500 hover:text-red-600 transition-colors"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-5 w-5 mr-2" />
+                <span>Sign out</span>
               </div>
             </div>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={handleSignOut}
-              className="flex items-center text-muted-foreground"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign out
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="p-8">
-          <div className="flex flex-col md:flex-row gap-10">
-            {/* Sidebar Navigation */}
-            <div className="w-full md:w-56 shrink-0">
-              <nav className="flex flex-col rounded-md overflow-hidden">
-                <Button
-                  variant="link"
-                  className={cn(
-                    "justify-start h-10 px-6 text-base",
-                    activeTab === 'profile' && "bg-muted"
-                  )}
-                  onClick={() => setActiveTab('profile')}
-                >
-                  Profile
-                </Button>
-                <Button
-                  variant="link"
-                  className={cn(
-                    "justify-start h-10 px-6 text-base",
-                    activeTab === 'ai' && "bg-muted"
-                  )}
-                  onClick={() => setActiveTab('ai')}
-                >
-                  AI
-                </Button>
-              </nav>
-            </div>
-
-            {/* Main Content */}
-            <div className="flex-1 p-4">
-              <div>
-                <h2 className="text-2xl font-semibold mb-4">
-                  {activeTab === 'profile' ? 'Profile' : 'AI Settings'}
-                </h2>
-                <p className="text-sm text-muted-foreground mb-10">
-                  {activeTab === 'profile' 
-                    ? 'This is how others will see you on the site.' 
-                    : 'Configure your AI preferences.'}
-                </p>
-                {renderTabContent()}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+        <div className="flex-1">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {activeTab === 'profile' && 'Profile Settings'}
+                {activeTab === 'ai' && 'AI Configuration'}
+                {activeTab === 'debug' && 'Developer Tools'}
+              </CardTitle>
+              <CardDescription>
+                {activeTab === 'profile' && 'Manage your account information'}
+                {activeTab === 'ai' && 'Configure the AI review system'}
+                {activeTab === 'debug' && 'Debug and test UI components'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {renderTabContent()}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 } 

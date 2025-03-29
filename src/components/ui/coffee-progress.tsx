@@ -1,6 +1,6 @@
 import React from "react";
 
-interface CoffeeProgressProps {
+export interface CoffeeProgressProps {
   message?: string;
   progress?: number;
 }
@@ -14,11 +14,11 @@ export function CoffeeProgress({
   const displayProgress = isIndeterminate ? 50 : Math.min(100, Math.max(0, progress));
   
   return (
-    <div className="flex flex-col items-center justify-center p-8 space-y-6 text-center">
-      <h3 className="text-xl font-medium">{message}</h3>
+    <div className="flex flex-col items-center justify-center space-y-3 text-center">
+      <h3 className="text-sm font-medium">{message}</h3>
       
       {/* Progress bar container */}
-      <div className="w-full max-w-md h-8 bg-secondary rounded-full overflow-hidden relative">
+      <div className="w-full h-4 bg-secondary rounded-full overflow-hidden relative">
         {/* Progress fill */}
         <div 
           className={`h-full bg-amber-700 ${isIndeterminate ? "animate-pulse" : ""}`}
@@ -29,10 +29,10 @@ export function CoffeeProgress({
             {[...Array(10)].map((_, i) => (
               <div
                 key={i}
-                className="absolute w-3 h-4 bg-amber-500 rounded-full animate-[dropFall_2s_ease-in_infinite]"
+                className="absolute w-1.5 h-2 bg-amber-500 rounded-full animate-dropFall"
                 style={{
                   left: `${(i * 10) + 5}%`,
-                  top: '-16px',
+                  top: '-8px',
                   animationDelay: `${i * 0.2}s`,
                   opacity: i * 10 <= displayProgress ? 1 : 0,
                 }}
@@ -44,12 +44,8 @@ export function CoffeeProgress({
       
       {/* Percentage display */}
       {!isIndeterminate && (
-        <p className="text-sm font-medium">{displayProgress}% complete</p>
+        <p className="text-xs font-medium">{displayProgress}% complete</p>
       )}
-      
-      <p className="text-muted-foreground max-w-md">
-        Each drop of coffee represents 10% progress. We&apos;re brewing up your article evaluations!
-      </p>
     </div>
   );
 } 

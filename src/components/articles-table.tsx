@@ -204,6 +204,8 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         filterPlaceholder="Search articles..."
         initialColumnVisibility={{ id: false }}
         initialSorting={[{ id: "status", desc: false }]}
+        pageSize={10}
+        pageSizeOptions={[5, 10, 25, 50, 100]}
       />
 
       {/* Article Details Dialog */}
