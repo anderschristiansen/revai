@@ -25,6 +25,7 @@ type AiSettings = {
   max_tokens: number;
   seed: number;
   model: string;
+  batch_size: number;
 };
 
 export default function Settings() {
@@ -37,7 +38,8 @@ export default function Settings() {
     temperature: 0.1,
     max_tokens: 500,
     seed: 12345,
-    model: 'gpt-3.5-turbo'
+    model: 'gpt-3.5-turbo',
+    batch_size: 10
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +49,7 @@ export default function Settings() {
     try {
       const { data, error } = await supabase
         .from('ai_settings')
-        .select('instructions, temperature, max_tokens, seed, model')
+        .select('instructions, temperature, max_tokens, seed, model, batch_size')
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
@@ -62,7 +64,8 @@ export default function Settings() {
           temperature: data.temperature,
           max_tokens: data.max_tokens,
           seed: data.seed,
-          model: data.model
+          model: data.model,
+          batch_size: data.batch_size || 10
         });
       }
     } catch (error) {
@@ -92,6 +95,7 @@ export default function Settings() {
           max_tokens: aiSettings.max_tokens,
           seed: aiSettings.seed,
           model: aiSettings.model,
+          batch_size: aiSettings.batch_size,
           updated_at: new Date().toISOString()
         })
         .order('created_at', { ascending: false })
@@ -232,6 +236,21 @@ export default function Settings() {
                     />
                     <p className="text-xs text-muted-foreground">
                       Fixed random seed for reproducible results.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="batch-size">Batch Size</Label>
+                    <Input
+                      id="batch-size"
+                      type="number"
+                      min="1"
+                      max="100"
+                      value={aiSettings.batch_size}
+                      onChange={(e) => handleInputChange('batch_size', parseInt(e.target.value))}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Number of articles to process in each batch (1-100).
                     </p>
                   </div>
 

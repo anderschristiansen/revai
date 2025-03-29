@@ -23,7 +23,6 @@ import {
   XCircle
 } from "lucide-react";
 import React from "react";
-import { LottieCoffeeLoader } from "@/components/ui/lottie-coffee-loader";
 import { supabase } from "@/lib/supabase";
 import { Tooltip } from "@/components/ui/tooltip";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -31,11 +30,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-
-// Import the Lottie animation data
-// Note: You need to place your Lottie JSON file in the public/lottie directory
-// and update the path/filename below
-import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
 
 // Colors for the visualization - using the same colors as session-card.tsx
 const COLORS = {
@@ -111,8 +105,8 @@ export default function ReviewPage() {
   const [newTitle, setNewTitle] = useState("");
   const [articles, setArticles] = useState<Article[]>([]);
   const [evaluating, setEvaluating] = useState(false);
-  const [loaderVariant, setLoaderVariant] = useState(0);
   const [activeTab, setActiveTab] = useState("articles");
+  const [batchRunning, setBatchRunning] = useState(false);
 
   const loadSessionData = React.useCallback(async () => {
     try {
@@ -156,6 +150,24 @@ export default function ReviewPage() {
       }
 
       setArticles(data || []);
+      
+      // Check if there's an ongoing batch by looking at last_evaluated_at
+      const { data: sessionData, error: sessionError } = await supabase
+        .from("review_sessions")
+        .select("last_evaluated_at")
+        .eq("id", sessionId)
+        .single();
+        
+      if (!sessionError && sessionData?.last_evaluated_at) {
+        // If the last evaluation was less than 5 minutes ago, consider it active
+        const lastEvalTime = new Date(sessionData.last_evaluated_at).getTime();
+        const currentTime = new Date().getTime();
+        const fiveMinutesInMs = 5 * 60 * 1000;
+        
+        setBatchRunning(currentTime - lastEvalTime < fiveMinutesInMs);
+      } else {
+        setBatchRunning(false);
+      }
     } catch (error) {
       console.error("Error loading articles:", error);
       toast.error("Could not load articles");
@@ -186,7 +198,9 @@ export default function ReviewPage() {
         table: 'review_sessions',
         filter: `id=eq.${sessionId}` 
       }, () => {
+        // Simply refresh data and check batch status
         loadSessionData();
+        loadArticles(); // This will also check batch status
       })
       .subscribe();
     
@@ -275,13 +289,11 @@ export default function ReviewPage() {
     }
     
     setEvaluating(true);
-    // Randomly select a loader variant
-    setLoaderVariant(Math.floor(Math.random() * 3));
     
     try {
-      toast.info(`Evaluating ${articlesToEvaluate.length} articles...`);
+      toast.info(`Starting evaluation of ${articlesToEvaluate.length} articles in batches...`);
       
-      // Call the API to evaluate articles
+      // Call the API to start evaluation
       const response = await fetch("/api/evaluate", {
         method: "POST",
         headers: {
@@ -296,20 +308,21 @@ export default function ReviewPage() {
       const result = await response.json();
       
       if (!response.ok) {
-        throw new Error(result.error || "Failed to evaluate articles");
+        throw new Error(result.error || "Failed to start article evaluation");
       }
       
-      // Refresh articles
-      await loadArticles();
-      toast.success(`${result.count} articles were successfully evaluated`);
+      // Set the batch running state to true
+      setBatchRunning(true);
+      
+      toast.success(`Evaluation of ${result.count} articles has started`);
     } catch (error: unknown) {
-      console.error("Error evaluating articles:", error);
+      console.error("Error starting evaluation:", error);
       
       // Show a more specific error message
       if (error instanceof Error && error.message?.includes("API key")) {
         toast.error("OpenAI API key is missing or invalid. Please check your environment variables.");
       } else {
-        const errorMessage = error instanceof Error ? error.message : "Could not evaluate articles";
+        const errorMessage = error instanceof Error ? error.message : "Could not start evaluation";
         toast.error(errorMessage);
       }
     } finally {
@@ -323,6 +336,12 @@ export default function ReviewPage() {
   const articlesExcluded = articles.filter(a => a.user_decision === "No").length;
   const percentageComplete = articles.length > 0 
     ? Math.round((articlesReviewed / articles.length) * 100) 
+    : 0;
+  
+  // AI evaluation stats
+  const articlesAIEvaluated = articles.filter(a => a.ai_decision === "Yes" || a.ai_decision === "No").length;
+  const aiPercentageComplete = articles.length > 0
+    ? Math.round((articlesAIEvaluated / articles.length) * 100)
     : 0;
 
   if (loading) {
@@ -451,23 +470,60 @@ export default function ReviewPage() {
           className="space-y-6"
         >
           {/* Stats cards */}
-          <motion.div variants={fadeInUp} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {/* Total Articles Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-4 relative">
+                <CardContent className="p-3 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
                   </div>
                   
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-md bg-muted/40">
-                      <BookOpenIcon className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 rounded-md bg-muted/40">
+                      <BookOpenIcon className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Total Articles</p>
-                      <p className="text-2xl font-bold">{articles.length}</p>
+                      <p className="text-xs font-medium text-muted-foreground">Total</p>
+                      <p className="text-xl font-bold">{articles.length}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* AI Evaluation Card */}
+            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+              <Card className={cn(
+                "overflow-hidden border hover:shadow-md transition-all h-full",
+                aiPercentageComplete === 100 && "border-[#3b82f6]/30 hover:border-[#3b82f6]/70"
+              )}>
+                <CardContent className="p-3 relative">
+                  {/* Hover gradient effect */}
+                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6]/5 to-transparent" />
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 rounded-md bg-[#3b82f6]/10">
+                      <BotIcon className="h-4 w-4 text-[#3b82f6]" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-xs font-medium text-muted-foreground">AI</p>
+                        {batchRunning && (
+                          <Badge variant="outline" className="text-[0.65rem] py-0 h-4 bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/20 animate-pulse">
+                            Processing
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-baseline">
+                        <p className="text-xl font-bold">{articlesAIEvaluated}</p>
+                        <span className="text-[0.65rem] ml-1 text-muted-foreground">
+                          ({aiPercentageComplete}%)
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -480,7 +536,7 @@ export default function ReviewPage() {
                 "overflow-hidden border hover:shadow-md transition-all h-full",
                 percentageComplete === 100 && "border-[#00b380]/30 hover:border-[#00b380]/70"
               )}>
-                <CardContent className="p-4 relative">
+                <CardContent className="p-3 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className={cn(
@@ -491,26 +547,26 @@ export default function ReviewPage() {
                     )} />
                   </div>
                 
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
                     <div className={cn(
-                      "p-2 rounded-md", 
+                      "p-1.5 rounded-md", 
                       percentageComplete === 100 
                         ? "bg-[#00b380]/10" 
                         : "bg-primary/10"
                     )}>
                       <BarChart4Icon className={cn(
-                        "h-5 w-5", 
+                        "h-4 w-4", 
                         percentageComplete === 100 
                           ? "text-[#00b380]" 
                           : "text-primary"
                       )} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Reviewed</p>
+                      <p className="text-xs font-medium text-muted-foreground">Reviewed</p>
                       <div className="flex items-baseline">
-                        <p className="text-2xl font-bold">{articlesReviewed}</p>
+                        <p className="text-xl font-bold">{articlesReviewed}</p>
                         <span className={cn(
-                          "text-xs ml-2",
+                          "text-[0.65rem] ml-1",
                           percentageComplete === 100 
                             ? "text-[#00b380]" 
                             : "text-muted-foreground"
@@ -527,19 +583,19 @@ export default function ReviewPage() {
             {/* Included Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-4 relative">
+                <CardContent className="p-3 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#00b380]/5 to-transparent" />
                   </div>
                   
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-md" style={{ backgroundColor: `${COLORS.included}10` }}>
-                      <CheckCircle className="h-5 w-5" style={{ color: COLORS.included }} />
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 rounded-md" style={{ backgroundColor: `${COLORS.included}10` }}>
+                      <CheckCircle className="h-4 w-4" style={{ color: COLORS.included }} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Included</p>
-                      <p className="text-2xl font-bold">{articlesIncluded}</p>
+                      <p className="text-xs font-medium text-muted-foreground">Included</p>
+                      <p className="text-xl font-bold">{articlesIncluded}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -549,19 +605,19 @@ export default function ReviewPage() {
             {/* Excluded Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-4 relative">
+                <CardContent className="p-3 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#ff1d42]/5 to-transparent" />
                   </div>
                   
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-md" style={{ backgroundColor: `${COLORS.excluded}10` }}>
-                      <XCircle className="h-5 w-5" style={{ color: COLORS.excluded }} />
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 rounded-md" style={{ backgroundColor: `${COLORS.excluded}10` }}>
+                      <XCircle className="h-4 w-4" style={{ color: COLORS.excluded }} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Excluded</p>
-                      <p className="text-2xl font-bold">{articlesExcluded}</p>
+                      <p className="text-xs font-medium text-muted-foreground">Excluded</p>
+                      <p className="text-xl font-bold">{articlesExcluded}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -699,46 +755,6 @@ export default function ReviewPage() {
       {/* Main content */}
       <AnimatePresence mode="wait">
         {mainContent}
-      </AnimatePresence>
-      
-      {/* Coffee loader overlay */}
-      <AnimatePresence>
-        {evaluating && (
-          <motion.div 
-            className="fixed inset-0 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {/* Dimming backdrop */}
-            <motion.div 
-              className="absolute inset-0 bg-black/50 backdrop-blur-md"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-            
-            <motion.div 
-              className="bg-background/90 backdrop-blur-sm rounded-lg shadow-xl p-6 max-w-md relative z-10"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            >
-              <LottieCoffeeLoader 
-                animationData={coffeeAnimation} 
-                message={
-                  loaderVariant === 0 
-                    ? "Brewing your evaluations..." 
-                    : loaderVariant === 1 
-                      ? "Taking a coffee break while we work..." 
-                      : "Grinding these articles..."
-                }
-              />
-            </motion.div>
-          </motion.div>
-        )}
       </AnimatePresence>
     </div>
   );
