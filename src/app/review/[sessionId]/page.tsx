@@ -424,37 +424,48 @@ export default function ReviewPage() {
               </motion.div>
             </div>
           )}
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="bg-muted/60 px-2 py-1 rounded text-muted-foreground font-mono text-xs">
-                {sessionId}
-              </div>
-            </div>
-            <div className="flex items-center gap-1">
-              <FileTextIcon className="h-4 w-4 text-muted-foreground/70" />
-              <span>{articles.length} article{articles.length !== 1 ? 's' : ''}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <ListChecks className="h-4 w-4 text-muted-foreground/70" />
-              <span>{criteriaLines.length} criteria</span>
-            </div>
-            {articles.length > 0 && (
-              <div className="flex items-center gap-1 font-medium">
-                <span className="text-muted-foreground/70">Progress:</span>
+        </div>
+        
+        {batchRunning && (
+          <Tooltip content="AI is currently evaluating your articles">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", damping: 12 }}
+              className="flex items-center gap-3 bg-gradient-to-b from-[#3b82f6]/8 to-[#3b82f6]/3 px-4 py-3 rounded-lg border border-[#3b82f6]/15 shadow-sm hover:shadow-md hover:border-[#3b82f6]/30 transition-all cursor-help"
+            >
+              <div className="flex flex-col items-center relative">
+                <motion.div 
+                  animate={{ 
+                    boxShadow: ['0 0 0 0 rgba(59, 130, 246, 0)', '0 0 0 12px rgba(59, 130, 246, 0)'],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 2.5,
+                  }}
+                  className="absolute inset-0 rounded-full"
+                />
+                <div className="w-16 h-16 relative z-10">
+                  <Lottie 
+                    animationData={coffeeAnimation}
+                    loop={true}
+                    autoplay={true}
+                  />
+                </div>
                 <Badge 
                   variant="outline" 
-                  className={cn(
-                    percentageComplete === 100 
-                      ? "border-[#00b380]/40 bg-[#00b380]/10 text-[#00b380] hover:bg-[#00b380]/20" 
-                      : "border-primary/40 bg-primary/5 text-primary hover:bg-primary/10"
-                  )}
+                  className="text-xs text-[#3b82f6] font-medium mt-1 bg-white/80 backdrop-blur-sm border-[#3b82f6]/20 px-3"
                 >
-                  {percentageComplete}%
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#3b82f6] animate-pulse" />
+                    Brewing evaluations...
+                  </div>
                 </Badge>
               </div>
-            )}
-          </div>
-        </div>
+            </motion.div>
+          </Tooltip>
+        )}
       </div>
 
       {session.articles_count > 0 ? (
@@ -529,23 +540,6 @@ export default function ReviewPage() {
                         </div>
                       </div>
                     </div>
-                    
-                    {batchRunning ? (
-                      <div className="flex flex-col items-center pl-2 min-w-[60px]">
-                        <div className="w-10 h-10">
-                          <Lottie 
-                            animationData={coffeeAnimation}
-                            loop={true}
-                            autoplay={true}
-                          />
-                        </div>
-                        <span className="text-[0.6rem] text-[#3b82f6] font-medium">
-                          Brewing...
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="min-w-[60px]"></div>
-                    )}
                   </div>
                 </CardContent>
               </Card>
