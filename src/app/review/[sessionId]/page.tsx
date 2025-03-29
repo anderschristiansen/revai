@@ -444,59 +444,83 @@ export default function ReviewPage() {
           className="space-y-6"
         >
           {/* Stats cards */}
-          <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <motion.div variants={fadeInUp}>
             <Card>
-              <CardHeader className="py-4">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total Articles</CardTitle>
-              </CardHeader>
-              <CardContent className="py-0">
-                <div className="flex items-center">
-                  <BookOpenIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                  <span className="text-2xl font-bold">{articles.length}</span>
+              <CardContent className="p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-6">
+                  {/* Total Articles */}
+                  <div className="flex items-center space-x-3">
+                    <div className="h-9 w-9 rounded-md bg-muted/50 flex items-center justify-center">
+                      <BookOpenIcon className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Total</p>
+                      <p className="text-xl font-bold">{articles.length}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Reviewed */}
+                  <div className="flex items-center space-x-3 sm:border-l sm:pl-6">
+                    <div className="h-9 w-9 rounded-md bg-primary/10 flex items-center justify-center">
+                      <BarChart4Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Reviewed</p>
+                      <div className="flex items-baseline">
+                        <p className="text-xl font-bold">{articlesReviewed}</p>
+                        <span className="text-xs ml-1.5 text-muted-foreground">({percentageComplete}%)</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Included */}
+                  <div className="flex items-center space-x-3 sm:border-l sm:pl-6">
+                    <div className="h-9 w-9 rounded-md bg-[#00b380]/10 flex items-center justify-center">
+                      <CheckIcon className="h-5 w-5 text-[#00b380]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Included</p>
+                      <p className="text-xl font-bold">{articlesIncluded}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Excluded */}
+                  <div className="flex items-center space-x-3 sm:border-l sm:pl-6">
+                    <div className="h-9 w-9 rounded-md bg-[#ff1d42]/10 flex items-center justify-center">
+                      <XIcon className="h-5 w-5 text-[#ff1d42]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Excluded</p>
+                      <p className="text-xl font-bold">{articlesExcluded}</p>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="py-4">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Reviewed</CardTitle>
-              </CardHeader>
-              <CardContent className="py-0">
-                <div className="flex items-center">
-                  <BarChart4Icon className="mr-2 h-4 w-4 text-primary" />
-                  <span className="text-2xl font-bold">{articlesReviewed}</span>
-                  <span className="text-xs ml-2 text-muted-foreground">
-                    ({percentageComplete}%)
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="py-4">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Included</CardTitle>
-              </CardHeader>
-              <CardContent className="py-0">
-                <div className="flex items-center">
-                  <span className="w-4 h-4 mr-2 rounded-full bg-[#00b380]/20">
-                    <CheckIcon className="h-4 w-4 text-[#00b380]" />
-                  </span>
-                  <span className="text-2xl font-bold">{articlesIncluded}</span>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="py-4">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Excluded</CardTitle>
-              </CardHeader>
-              <CardContent className="py-0">
-                <div className="flex items-center">
-                  <span className="w-4 h-4 mr-2 rounded-full bg-[#ff1d42]/20">
-                    <XIcon className="h-4 w-4 text-[#ff1d42]" />
-                  </span>
-                  <span className="text-2xl font-bold">{articlesExcluded}</span>
-                </div>
+                
+                {/* Progress bar */}
+                {articles.length > 0 && (
+                  <div className="mt-4 pt-3 border-t">
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-muted-foreground">Review progress</span>
+                      <span className={cn(
+                        "font-medium",
+                        percentageComplete === 100 ? "text-[#00b380]" : "text-primary"
+                      )}>
+                        {percentageComplete}% complete
+                      </span>
+                    </div>
+                    <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                      <motion.div 
+                        className={cn(
+                          "h-full rounded-full",
+                          percentageComplete === 100 ? "bg-[#00b380]" : "bg-primary"
+                        )}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percentageComplete}%` }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                      />
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>
