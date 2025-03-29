@@ -65,7 +65,7 @@ export function SessionCard({
           "h-auto overflow-hidden border hover:border-primary/50 hover:shadow-lg transition-all group", 
           className
         )}>
-          <CardContent className="px-5 py-4">
+          <CardContent className="px-5 py-0">
             {/* Session title and timestamp */}
             <div className="flex justify-between items-start mb-3">
               <div className="space-y-1">
