@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { supabase } from "./supabase";
+import { AiSettings, EvaluationResult } from "./types";
 
 // Check for API key
 if (!process.env.OPENAI_API_KEY) {
@@ -10,19 +11,6 @@ if (!process.env.OPENAI_API_KEY) {
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-type EvaluationResult = {
-  decision: "Yes" | "No";
-  explanation: string;
-};
-
-type AiSettings = {
-  instructions: string;
-  temperature: number;
-  max_tokens: number;
-  seed: number;
-  model: string;
-};
 
 /**
  * Evaluates an article against inclusion criteria using OpenAI
@@ -75,14 +63,15 @@ export async function evaluateArticle(
 
 Instructions:
 1. Evaluate each inclusion criterion separately.
-2. Only mark the article as meeting the criteria if ALL conditions are met.
-3. Be objective and consistent in your assessment.
-4. Base your decision ONLY on the information provided in the title and abstract.
-5. Do not make assumptions about information not explicitly stated.
-6. If any single criterion is not met, the overall decision should be "No".
+2. Be objective and consistent in your assessment.
+3. Base your decision ONLY on the information provided in the title and abstract.
+4. Do not make assumptions about information not explicitly stated.
+5. If the article clearly meets ALL criteria, the decision should be "Include".
+6. If the article clearly fails to meet ANY criteria, the decision should be "Exclude".
+7. If there's insufficient information to make a clear determination, or if the article partially meets criteria but has some uncertainties, the decision should be "Unsure".
 
 Your output MUST follow this exact format:
-Decision: [Yes/No]
+Decision: [Include/Exclude/Unsure]
 Explanation: [Concise, structured explanation explaining why the article does or does not meet each criterion]`;
     }
 
@@ -120,7 +109,7 @@ Abstract: ${abstract}`;
     const response = completion.choices[0]?.message?.content || "";
     
     // Extract the decision and explanation using the specified format
-    const decisionMatch = response.match(/Decision:\s*(Yes|No)/i);
+    const decisionMatch = response.match(/Decision:\s*(Include|Exclude|Unsure)/i);
     
     // Use a different approach to handle multi-line explanations
     let explanation = "";
@@ -128,10 +117,10 @@ Abstract: ${abstract}`;
       explanation = response.split("Explanation:")[1].trim();
     }
     
-    const decision = decisionMatch ? decisionMatch[1] : "No";
+    const decision = decisionMatch ? decisionMatch[1] : "Unsure";
     
     return {
-      decision: decision as "Yes" | "No",
+      decision: decision as "Include" | "Exclude" | "Unsure",
       explanation: explanation,
     };
   } catch (error) {

@@ -7,7 +7,7 @@ import { notFound, useParams } from "next/navigation";
 import { ArticlesTable } from "@/components/articles-table";
 import { UploadForm } from "@/components/upload-form";
 import { toast } from "@/components/ui/sonner";
-import { SessionData } from "@/lib/types";
+import { SessionData, Article } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { 
   PencilIcon, 
@@ -30,6 +30,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import Lottie from "lottie-react";
+import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
 
 // Colors for the visualization - using the same colors as session-card.tsx
 const COLORS = {
@@ -80,18 +82,6 @@ const fadeInUp = {
       ease: "easeOut"
     }
   }
-};
-
-type Article = {
-  id: string;
-  session_id: string;
-  title: string;
-  abstract: string;
-  full_text: string;
-  ai_decision?: "Yes" | "No";
-  ai_explanation?: string;
-  user_decision?: "Yes" | "No";
-  needs_review: boolean;
 };
 
 export default function ReviewPage() {
@@ -279,7 +269,7 @@ export default function ReviewPage() {
     
     // Get articles that need AI evaluation - only consider articles that haven't been evaluated
     const articlesToEvaluate = articles.filter(
-      article => !(article.ai_decision === "Yes" || article.ai_decision === "No")
+      article => !(article.ai_decision === "Include" || article.ai_decision === "Exclude" || article.ai_decision === "Unsure")
     );
     
     // Check if there are articles to evaluate
@@ -339,10 +329,15 @@ export default function ReviewPage() {
     : 0;
   
   // AI evaluation stats
-  const articlesAIEvaluated = articles.filter(a => a.ai_decision === "Yes" || a.ai_decision === "No").length;
+  const articlesAIEvaluated = articles.filter(a => 
+    a.ai_decision === "Include" || a.ai_decision === "Exclude" || a.ai_decision === "Unsure"
+  ).length;
   const aiPercentageComplete = articles.length > 0
     ? Math.round((articlesAIEvaluated / articles.length) * 100)
     : 0;
+  const aiIncluded = articles.filter(a => a.ai_decision === "Include").length;
+  const aiExcluded = articles.filter(a => a.ai_decision === "Exclude").length;
+  const aiUnsure = articles.filter(a => a.ai_decision === "Unsure").length;
 
   if (loading) {
     return (
@@ -470,23 +465,23 @@ export default function ReviewPage() {
           className="space-y-6"
         >
           {/* Stats cards */}
-          <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {/* Total Articles Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-3 relative">
+                <CardContent className="p-2 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 rounded-md bg-muted/40">
-                      <BookOpenIcon className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center space-x-1.5">
+                    <div className="p-1 rounded-md bg-muted/40">
+                      <BookOpenIcon className="h-3.5 w-3.5 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-muted-foreground">Total</p>
-                      <p className="text-xl font-bold">{articles.length}</p>
+                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Total</p>
+                      <p className="text-lg font-bold leading-none">{articles.length}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -499,32 +494,58 @@ export default function ReviewPage() {
                 "overflow-hidden border hover:shadow-md transition-all h-full",
                 aiPercentageComplete === 100 && "border-[#3b82f6]/30 hover:border-[#3b82f6]/70"
               )}>
-                <CardContent className="p-3 relative">
+                <CardContent className="p-2 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6]/5 to-transparent" />
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 rounded-md bg-[#3b82f6]/10">
-                      <BotIcon className="h-4 w-4 text-[#3b82f6]" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <p className="text-xs font-medium text-muted-foreground">AI</p>
-                        {batchRunning && (
-                          <Badge variant="outline" className="text-[0.65rem] py-0 h-4 bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/20 animate-pulse">
-                            Processing
-                          </Badge>
-                        )}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-1.5">
+                      <div className="p-1 rounded-md bg-[#3b82f6]/10">
+                        <BotIcon className="h-3.5 w-3.5 text-[#3b82f6]" />
                       </div>
-                      <div className="flex items-baseline">
-                        <p className="text-xl font-bold">{articlesAIEvaluated}</p>
-                        <span className="text-[0.65rem] ml-1 text-muted-foreground">
-                          ({aiPercentageComplete}%)
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">AI</p>
+                        <div className="flex items-baseline">
+                          <p className="text-lg font-bold leading-none">{articlesAIEvaluated}</p>
+                          <span className="text-[0.6rem] ml-1 text-muted-foreground">
+                            ({aiPercentageComplete}%)
+                          </span>
+                        </div>
+                        <div className="flex gap-2 mt-0.5 text-[0.6rem] text-muted-foreground">
+                          <div className="flex items-center gap-0.5">
+                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.included }}></div>
+                            <span>{aiIncluded}</span>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.excluded }}></div>
+                            <span>{aiExcluded}</span>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></div>
+                            <span>{aiUnsure}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {batchRunning ? (
+                      <div className="flex flex-col items-center pl-2 min-w-[60px]">
+                        <div className="w-10 h-10">
+                          <Lottie 
+                            animationData={coffeeAnimation}
+                            loop={true}
+                            autoplay={true}
+                          />
+                        </div>
+                        <span className="text-[0.6rem] text-[#3b82f6] font-medium">
+                          Brewing...
                         </span>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="min-w-[60px]"></div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -536,7 +557,7 @@ export default function ReviewPage() {
                 "overflow-hidden border hover:shadow-md transition-all h-full",
                 percentageComplete === 100 && "border-[#00b380]/30 hover:border-[#00b380]/70"
               )}>
-                <CardContent className="p-3 relative">
+                <CardContent className="p-2 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className={cn(
@@ -547,26 +568,26 @@ export default function ReviewPage() {
                     )} />
                   </div>
                 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1.5">
                     <div className={cn(
-                      "p-1.5 rounded-md", 
+                      "p-1 rounded-md", 
                       percentageComplete === 100 
                         ? "bg-[#00b380]/10" 
                         : "bg-primary/10"
                     )}>
                       <BarChart4Icon className={cn(
-                        "h-4 w-4", 
+                        "h-3.5 w-3.5", 
                         percentageComplete === 100 
                           ? "text-[#00b380]" 
                           : "text-primary"
                       )} />
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-muted-foreground">Reviewed</p>
+                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Reviewed</p>
                       <div className="flex items-baseline">
-                        <p className="text-xl font-bold">{articlesReviewed}</p>
+                        <p className="text-lg font-bold leading-none">{articlesReviewed}</p>
                         <span className={cn(
-                          "text-[0.65rem] ml-1",
+                          "text-[0.6rem] ml-1",
                           percentageComplete === 100 
                             ? "text-[#00b380]" 
                             : "text-muted-foreground"
@@ -583,19 +604,19 @@ export default function ReviewPage() {
             {/* Included Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-3 relative">
+                <CardContent className="p-2 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#00b380]/5 to-transparent" />
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 rounded-md" style={{ backgroundColor: `${COLORS.included}10` }}>
-                      <CheckCircle className="h-4 w-4" style={{ color: COLORS.included }} />
+                  <div className="flex items-center space-x-1.5">
+                    <div className="p-1 rounded-md" style={{ backgroundColor: `${COLORS.included}10` }}>
+                      <CheckCircle className="h-3.5 w-3.5" style={{ color: COLORS.included }} />
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-muted-foreground">Included</p>
-                      <p className="text-xl font-bold">{articlesIncluded}</p>
+                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Included</p>
+                      <p className="text-lg font-bold leading-none">{articlesIncluded}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -605,19 +626,19 @@ export default function ReviewPage() {
             {/* Excluded Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-3 relative">
+                <CardContent className="p-2 relative">
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#ff1d42]/5 to-transparent" />
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 rounded-md" style={{ backgroundColor: `${COLORS.excluded}10` }}>
-                      <XCircle className="h-4 w-4" style={{ color: COLORS.excluded }} />
+                  <div className="flex items-center space-x-1.5">
+                    <div className="p-1 rounded-md" style={{ backgroundColor: `${COLORS.excluded}10` }}>
+                      <XCircle className="h-3.5 w-3.5" style={{ color: COLORS.excluded }} />
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-muted-foreground">Excluded</p>
-                      <p className="text-xl font-bold">{articlesExcluded}</p>
+                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Excluded</p>
+                      <p className="text-lg font-bold leading-none">{articlesExcluded}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -643,9 +664,15 @@ export default function ReviewPage() {
                 <Tooltip content={
                   articles.length === 0
                     ? "No articles to evaluate"
-                    : articles.every(article => article.ai_decision === "Yes" || article.ai_decision === "No")
+                    : articles.every(article => 
+                        article.ai_decision === "Include" || 
+                        article.ai_decision === "Exclude" || 
+                        article.ai_decision === "Unsure"
+                      )
                       ? "All articles have already been evaluated by AI"
-                      : "Evaluate all articles using AI"
+                      : batchRunning
+                        ? "AI is brewing your evaluations... ☕"
+                        : "Evaluate all articles using AI"
                 }>
                   <span>
                     <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
@@ -654,11 +681,20 @@ export default function ReviewPage() {
                           e.preventDefault();
                           evaluateArticles();
                         }} 
-                        disabled={evaluating || articles.length === 0 || articles.every(article => article.ai_decision === "Yes" || article.ai_decision === "No")}
+                        disabled={
+                          evaluating || 
+                          batchRunning || 
+                          articles.length === 0 || 
+                          articles.every(article => 
+                            article.ai_decision === "Include" || 
+                            article.ai_decision === "Exclude" || 
+                            article.ai_decision === "Unsure"
+                          )
+                        }
                         className="gap-2"
                       >
                         <BotIcon className="h-4 w-4" />
-                        {evaluating ? "Evaluating..." : "Evaluate all"}
+                        {evaluating ? "Evaluating..." : batchRunning ? "Brewing evaluations..." : "Evaluate all"}
                       </Button>
                     </motion.div>
                   </span>

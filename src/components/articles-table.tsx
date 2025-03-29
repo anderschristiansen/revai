@@ -20,6 +20,7 @@ import {
   Tooltip,
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/sonner"
+import { Article } from "@/lib/types"
 
 // Add URL detection regex
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -49,18 +50,6 @@ function TextWithLinks({ text }: { text: string }) {
       })}
     </>
   );
-}
-
-type Article = {
-  id: string
-  session_id: string
-  title: string
-  abstract: string
-  full_text: string
-  ai_decision?: "Yes" | "No"
-  ai_explanation?: string
-  user_decision?: "Yes" | "No"
-  needs_review: boolean
 }
 
 interface ArticlesTableProps {
@@ -176,14 +165,16 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
               </div>
             </div>
             
-            {/* AI badge - show for both include and exclude recommendations */}
+            {/* AI badge - show for all recommendation types */}
             {aiDecision && (
-              <Tooltip content={`AI recommendation: ${aiDecision === "Yes" ? "Include" : "Exclude"}`}>
+              <Tooltip content={`AI recommendation: ${aiDecision}`}>
                 <div className={cn(
                   "text-[11px] px-1.5 py-0.5 rounded border-[0.5px] flex items-center whitespace-nowrap mt-1",
-                  aiDecision === "Yes" 
+                  aiDecision === "Include" 
                     ? "border-[#00b380]/30 text-[#00b380]" 
-                    : "border-[#ff1d42]/30 text-[#ff1d42]"
+                    : aiDecision === "Exclude"
+                      ? "border-[#ff1d42]/30 text-[#ff1d42]"
+                      : "border-[#3b82f6]/30 text-[#3b82f6]" // Blue for Unsure
                 )}>
                   AI
                 </div>
@@ -264,17 +255,21 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                       </div>
                       <div className={cn(
                         "border rounded-md overflow-hidden",
-                        selectedArticle.ai_decision === "Yes"
+                        selectedArticle.ai_decision === "Include"
                           ? "border-[#00b380]/20"
-                          : "border-[#ff1d42]/20"
+                          : selectedArticle.ai_decision === "Exclude"
+                            ? "border-[#ff1d42]/20"
+                            : "border-[#3b82f6]/20" // Blue for Unsure
                       )}>
                         <div className={cn(
                           "px-4 py-3 flex items-center gap-2 font-medium",
-                          selectedArticle.ai_decision === "Yes" 
+                          selectedArticle.ai_decision === "Include" 
                             ? "bg-[#00b380]/5 text-[#00b380]" 
-                            : "bg-[#ff1d42]/5 text-[#ff1d42]"
+                            : selectedArticle.ai_decision === "Exclude"
+                              ? "bg-[#ff1d42]/5 text-[#ff1d42]"
+                              : "bg-[#3b82f6]/5 text-[#3b82f6]" // Blue for Unsure
                         )}>
-                          {selectedArticle.ai_decision === "Yes" ? "Recommendation: Include" : "Recommendation: Exclude"}
+                          Recommendation: {selectedArticle.ai_decision}
                         </div>
                         <div className="px-4 py-3 bg-background/80 border-t">
                           <div className="text-[14px] leading-relaxed">

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { SessionCard } from "@/components/session-card";
 import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
+import { Article, Session } from "@/lib/types";
 
 // Animation variants for staggered animations
 const container = {
@@ -24,26 +25,6 @@ const container = {
 const item = {
   hidden: { y: 20, opacity: 0 },
   show: { y: 0, opacity: 1 }
-};
-
-type Article = {
-  user_decision?: "Yes" | "No";
-  needs_review: boolean;
-  ai_decision?: "Yes" | "No";
-};
-
-type Session = {
-  id: string;
-  created_at: string;
-  articles_count: number;
-  criteria: string;
-  title?: string;
-  updated_at?: string;
-  reviewed_count?: number;
-  excluded_count?: number;
-  pending_count?: number;
-  articles: Article[];
-  ai_evaluated_count?: number;
 };
 
 export default function SessionsPage() {

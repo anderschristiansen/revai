@@ -58,9 +58,9 @@ create table articles (
   title text not null,
   abstract text,
   full_text text,
-  ai_decision text,
+  ai_decision text check (ai_decision in ('Include', 'Exclude', 'Unsure')),
   ai_explanation text,
-  user_decision text,
+  user_decision text check (user_decision in ('Yes', 'No')),
   needs_review boolean default true,
   created_at timestamp with time zone default now()
 );

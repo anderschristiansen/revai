@@ -1,19 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { evaluateArticle } from "@/lib/openai";
 import { supabase } from "@/lib/supabase";
+import { AiSettings } from "@/lib/types";
 
-// Define interface for AI Settings
-interface AISettings {
-  instructions: string;
-  temperature: number;
-  max_tokens: number;
-  seed: number;
-  model: string;
-  batch_size: number;
-}
-
-// Define interface for Article
-interface Article {
+// Define a simplified version of Article just for this API route
+interface ApiArticle {
   id: string;
   title: string;
   abstract: string;
@@ -116,7 +107,7 @@ async function processBatchesAsync(
   sessionId: string, 
   articleIds: string[], 
   criteria: string, 
-  aiSettings: AISettings, 
+  aiSettings: AiSettings, 
   batchSize: number
 ) {
   try {
@@ -163,7 +154,7 @@ async function processBatchesAsync(
 }
 
 // Function to process a single batch of articles
-async function processBatch(articles: Article[], criteria: string, aiSettings: AISettings) {
+async function processBatch(articles: ApiArticle[], criteria: string, aiSettings: AiSettings) {
   for (const article of articles) {
     try {
       // Evaluate with OpenAI

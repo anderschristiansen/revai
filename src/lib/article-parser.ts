@@ -1,9 +1,4 @@
-type Article = {
-  id: number;
-  title: string;
-  abstract: string;
-  fullText: string;
-};
+import { ParsedArticle } from "./types";
 
 /**
  * Parses articles from a text file with the format:
@@ -16,7 +11,7 @@ type Article = {
  * Abstract
  *   XXXX
  */
-export function parseArticles(text: string): Article[] {
+export function parseArticles(text: string): ParsedArticle[] {
   // Split the text by article markers <1>, <2>, etc.
   const articleMatches = text.match(/<\d+>[\s\S]+?(?=<\d+>|$)/g);
   
@@ -55,7 +50,7 @@ export function parseArticles(text: string): Article[] {
 /**
  * Extract specific sections from an article
  */
-export function extractArticleSections(article: Article) {
+export function extractArticleSections(article: ParsedArticle) {
   // Extract accession number
   const accessionMatch = article.fullText.match(/Accession Number\s+([\s\S]+?)(?=Title|$)/i);
   const accessionNumber = accessionMatch ? accessionMatch[1].trim() : "";
