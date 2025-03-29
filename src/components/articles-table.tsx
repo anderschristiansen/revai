@@ -244,9 +244,11 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     {selectedArticle.title}
                   </DialogTitle>
                   
-                  <p className="text-sm text-muted-foreground">
-                    Review this article to decide whether to include it in your systematic review
-                  </p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="bg-muted/60 px-2 py-0.5 rounded text-muted-foreground font-mono text-xs">
+                      {selectedArticle.id}
+                    </div>
+                  </div>
                 </div>
               </DialogHeader>
               
