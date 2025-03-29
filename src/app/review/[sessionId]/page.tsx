@@ -252,7 +252,6 @@ export default function ReviewPage() {
         
       if (error) throw error;
       
-      toast.success("Decision saved");
     } catch (error) {
       console.error("Error saving decision:", error);
       toast.error("Could not save decision");
