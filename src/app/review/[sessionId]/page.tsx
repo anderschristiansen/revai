@@ -252,8 +252,14 @@ export default function ReviewPage() {
   async function evaluateArticles() {
     if (evaluating) return;
     
-    // Check if all articles have already been evaluated
-    if (articles.every(article => article.ai_decision !== undefined)) {
+    // Get articles that need AI evaluation - only consider articles that haven't been evaluated
+    const articlesToEvaluate = articles.filter(
+      article => !(article.ai_decision === "Yes" || article.ai_decision === "No")
+    );
+    
+    // Check if there are articles to evaluate
+    if (articlesToEvaluate.length === 0) {
+      toast.info("No articles to evaluate");
       return;
     }
     
@@ -262,16 +268,6 @@ export default function ReviewPage() {
     setLoaderVariant(Math.floor(Math.random() * 3));
     
     try {
-      // Get articles that need AI evaluation
-      const articlesToEvaluate = articles.filter(
-        article => !article.ai_decision
-      );
-      
-      if (articlesToEvaluate.length === 0) {
-        setEvaluating(false);
-        return;
-      }
-      
       toast.info(`Evaluating ${articlesToEvaluate.length} articles...`);
       
       // Call the API to evaluate articles
@@ -541,9 +537,11 @@ export default function ReviewPage() {
                 </TabsList>
 
                 <Tooltip content={
-                  articles.every(article => article.ai_decision !== undefined)
-                    ? "All articles have already been evaluated by AI"
-                    : "Evaluate all articles using AI"
+                  articles.length === 0
+                    ? "No articles to evaluate"
+                    : articles.every(article => article.ai_decision === "Yes" || article.ai_decision === "No")
+                      ? "All articles have already been evaluated by AI"
+                      : "Evaluate all articles using AI"
                 }>
                   <span>
                     <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
@@ -552,7 +550,7 @@ export default function ReviewPage() {
                           e.preventDefault();
                           evaluateArticles();
                         }} 
-                        disabled={evaluating || articles.every(article => article.ai_decision !== undefined)}
+                        disabled={evaluating || articles.length === 0 || articles.every(article => article.ai_decision === "Yes" || article.ai_decision === "No")}
                         className="gap-2"
                       >
                         <BotIcon className="h-4 w-4" />
