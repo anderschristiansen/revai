@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Row,
 } from "@tanstack/react-table"
 
 import {
@@ -52,6 +53,7 @@ interface DataTableProps<TData, TValue> {
   pageSize?: number
   pageSizeOptions?: number[]
   getRowClassName?: (row: TData) => string
+  onRowClick?: (row: Row<TData>) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -64,6 +66,7 @@ export function DataTable<TData, TValue>({
   pageSize = 10,
   pageSizeOptions = [5, 10, 20, 50, 100],
   getRowClassName,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>(initialSorting)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -183,6 +186,8 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   className={getRowClassName ? getRowClassName(row.original as TData) : undefined}
+                  onClick={() => onRowClick && onRowClick(row)}
+                  style={onRowClick ? { cursor: 'pointer' } : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
