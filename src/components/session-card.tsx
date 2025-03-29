@@ -1,14 +1,21 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { FolderOpen } from "lucide-react";
+import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, TooltipProps } from "recharts";
 import { Tooltip } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
-// Colors for the pie chart
-const COLORS = ['#00b380', '#ff1d42', '#94a3b8'];
+// Colors for the visualization
+const COLORS = {
+  included: '#00b380',
+  excluded: '#ff1d42',
+  pending: '#94a3b8',
+  aiEvaluated: '#3b82f6',
+  cardHover: 'rgba(0,0,0,0.05)'
+};
 
 export type SessionCardProps = {
   id: string;
@@ -34,15 +41,6 @@ export function SessionCard({
   className,
 }: SessionCardProps) {
   
-  // Helper functions
-  function getChartData() {
-    return [
-      { name: 'Included', value: reviewed_count, color: COLORS[0] },
-      { name: 'Excluded', value: excluded_count, color: COLORS[1] },
-      { name: 'Pending', value: pending_count, color: COLORS[2] }
-    ];
-  }
-
   function getProgressPercentage() {
     const total = reviewed_count + excluded_count + pending_count;
     if (total === 0) return 0;
@@ -54,98 +52,158 @@ export function SessionCard({
     return ai_evaluated_count > 0;
   }
 
-  // Chart customization for tooltips
-  type ChartTooltipProps = TooltipProps<number, string> & {
-    active?: boolean;
-    payload?: Array<{
-      name: string;
-      value: number;
-      payload: {
-        name: string;
-        value: number;
-      };
-    }>;
-  };
+  // Calculate the segment sizes for our progress visualization
+  const progressPercentage = getProgressPercentage();
+  const includePercent = articles_count ? (reviewed_count / articles_count) * 100 : 0;
+  const excludePercent = articles_count ? (excluded_count / articles_count) * 100 : 0;
+  const pendingPercent = articles_count ? (pending_count / articles_count) * 100 : 0;
 
-  const CustomTooltip = ({ active, payload }: ChartTooltipProps) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-popover border rounded p-2 shadow-md text-xs">
-          <p className="font-medium">{`${payload[0].name}: ${payload[0].value}`}</p>
-        </div>
-      );
-    }
-    return null;
+  // Compute a visual rating based on progress
+  const getStatusColor = () => {
+    if (progressPercentage === 0) return 'bg-gray-200';
+    if (progressPercentage < 30) return 'bg-red-500';
+    if (progressPercentage < 70) return 'bg-yellow-500';
+    return 'bg-green-500';
   };
 
   return (
-    <Link href={`/review/${id}`}>
-      <Card className={`h-[140px] hover:shadow-lg transition-all duration-300 group ${className}`}>
-        <CardContent className="flex items-center justify-between h-full p-6">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              <h3 className="font-semibold group-hover:text-primary transition-colors">
-                {title || "Review Session"}
-              </h3>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Created on {format(new Date(created_at), "PP")}
-            </p>
-            <div className="flex flex-wrap gap-2 mt-1">
-              <span className="text-xs inline-flex items-center text-muted-foreground">
-                <span className="h-2 w-2 rounded-full bg-muted-foreground mr-1"></span>
-                {articles_count} article{articles_count !== 1 ? 's' : ''}
-              </span>
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    >
+      <Link href={`/review/${id}`} className="block">
+        <Card className={cn(
+          "h-auto overflow-hidden border hover:border-primary/50 hover:shadow-lg transition-all group", 
+          className
+        )}>
+          <CardContent className="p-0">
+            {/* Progress indicator bar at the top */}
+            {articles_count > 0 && (
+              <div className="flex h-1">
+                {includePercent > 0 && (
+                  <div 
+                    className="bg-[#00b380] h-full transition-all duration-500" 
+                    style={{ width: `${includePercent}%` }}
+                  />
+                )}
+                {excludePercent > 0 && (
+                  <div 
+                    className="bg-[#ff1d42] h-full transition-all duration-500" 
+                    style={{ width: `${excludePercent}%` }}
+                  />
+                )}
+                {pendingPercent > 0 && (
+                  <div 
+                    className="bg-[#94a3b8] h-full transition-all duration-500" 
+                    style={{ width: `${pendingPercent}%` }}
+                  />
+                )}
+              </div>
+            )}
+            
+            <div className="p-6">
+              {/* Session title and timestamp */}
+              <div className="flex justify-between items-start mb-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <FolderOpen className="h-5 w-5 text-primary/70 group-hover:text-primary transition-colors" />
+                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                      {title || "Review Session"}
+                    </h3>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="h-3.5 w-3.5 mr-1.5" />
+                    {format(new Date(created_at), "PPP")}
+                  </div>
+                </div>
+
+                {/* Status badge */}
+                {articles_count > 0 && (
+                  <div className="flex items-center">
+                    <Tooltip content={`${progressPercentage}% complete`}>
+                      <div className="flex items-center p-1 h-8 rounded-full">
+                        <div className={cn(
+                          "h-2.5 w-2.5 rounded-full transition-colors", 
+                          getStatusColor()
+                        )} />
+                      </div>
+                    </Tooltip>
+                  </div>
+                )}
+              </div>
+
+              {/* Stats section */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Article counts */}
+                <div className="space-y-3 border-r pr-4">
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-bold">{articles_count}</span>
+                    <span className="text-xs text-muted-foreground">Articles</span>
+                  </div>
+                  
+                  {hasAiEvaluations() && (
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></div>
+                      <span>{ai_evaluated_count} AI evaluated</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Review progress */}
+                {articles_count > 0 ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle className="h-3.5 w-3.5" style={{ color: COLORS.included }} />
+                        <span className="text-xs font-medium">Included</span>
+                      </div>
+                      <span className="text-xs font-bold">{reviewed_count}</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <XCircle className="h-3.5 w-3.5" style={{ color: COLORS.excluded }} />
+                        <span className="text-xs font-medium">Excluded</span>
+                      </div>
+                      <span className="text-xs font-bold">{excluded_count}</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <HelpCircle className="h-3.5 w-3.5" style={{ color: COLORS.pending }} />
+                        <span className="text-xs font-medium">Pending</span>
+                      </div>
+                      <span className="text-xs font-bold">{pending_count}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-xs text-muted-foreground italic">No articles uploaded yet</p>
+                  </div>
+                )}
+              </div>
               
-              {hasAiEvaluations() && (
-                <span className="text-xs inline-flex items-center text-muted-foreground">
-                  <span className="h-2 w-2 rounded-full bg-blue-400 mr-1"></span>
-                  AI-evaluated
-                </span>
+              {/* Progress indicator */}
+              {articles_count > 0 && (
+                <div className="mt-4">
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-muted-foreground">Progress</span>
+                    <span className="font-medium">{progressPercentage}%</span>
+                  </div>
+                  <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-primary rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progressPercentage}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                    />
+                  </div>
+                </div>
               )}
             </div>
-          </div>
-
-          {articles_count > 0 ? (
-            <Tooltip content={`${getProgressPercentage()}% reviewed • ${reviewed_count} included • ${excluded_count} excluded • ${pending_count} pending`}>
-              <div className="w-24 h-24">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={getChartData()}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={25}
-                      outerRadius={35}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      {getChartData().map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <text
-                      x="50%"
-                      y="50%"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="text-sm font-medium fill-foreground"
-                    >
-                      {getProgressPercentage()}%
-                    </text>
-                    <RechartsTooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </Tooltip>
-          ) : (
-            <div className="w-24 h-24 flex items-center justify-center">
-              <span className="text-xs text-muted-foreground">No articles</span>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </Link>
+          </CardContent>
+        </Card>
+      </Link>
+    </motion.div>
   );
 } 

@@ -8,6 +8,23 @@ import { toast } from "@/components/ui/sonner";
 import { useRouter } from "next/navigation";
 import { SessionCard } from "@/components/session-card";
 import { supabase } from "@/lib/supabase";
+import { motion } from "framer-motion";
+
+// Animation variants for staggered animations
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1 }
+};
 
 type Article = {
   user_decision?: "Yes" | "No";
@@ -103,51 +120,75 @@ export default function SessionsPage() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-8">
+    <div className="container mx-auto py-10">
+      <div className="flex justify-between items-center mb-10">
         <h1 className="text-4xl font-bold">Your Review Sessions</h1>
-        <div className="flex gap-2">
-          <Button onClick={createNewSession} size="lg">
+        <motion.div 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Button onClick={createNewSession} size="lg" className="shadow-sm">
             <PlusCircle className="mr-2 h-4 w-4" />
             Create New Session
           </Button>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {loading ? (
-          <Card className="h-full">
-            <CardContent className="flex items-center justify-center h-32">
-              <Loader2 className="h-6 w-6 animate-spin" />
-            </CardContent>
-          </Card>
-        ) : sessions.length > 0 ? (
-          sessions.map((session) => (
-            <SessionCard
-              key={session.id}
-              id={session.id}
-              title={session.title}
-              created_at={session.created_at}
-              articles_count={session.articles_count}
-              reviewed_count={session.reviewed_count}
-              excluded_count={session.excluded_count}
-              pending_count={session.pending_count}
-              ai_evaluated_count={session.ai_evaluated_count}
-            />
-          ))
-        ) : (
-          <div className="text-center py-12">
+      {loading ? (
+        <Card className="h-64">
+          <CardContent className="flex items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin text-primary/70" />
+          </CardContent>
+        </Card>
+      ) : sessions.length > 0 ? (
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
+          {sessions.map((session) => (
+            <motion.div key={session.id} variants={item}>
+              <SessionCard
+                id={session.id}
+                title={session.title}
+                created_at={session.created_at}
+                articles_count={session.articles_count}
+                reviewed_count={session.reviewed_count}
+                excluded_count={session.excluded_count}
+                pending_count={session.pending_count}
+                ai_evaluated_count={session.ai_evaluated_count}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      ) : (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-16 bg-muted/30 rounded-lg border border-dashed"
+        >
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
             <h3 className="text-2xl font-medium mb-4">No review sessions yet</h3>
-            <p className="text-muted-foreground mb-6">
-              Create a new session to begin your systematic review.
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              Create a new session to begin your systematic review process and start analyzing articles.
             </p>
-            <Button onClick={createNewSession} size="lg">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Create Your First Session
-            </Button>
-          </div>
-        )}
-      </div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button onClick={createNewSession} size="lg" className="shadow-sm">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Create Your First Session
+              </Button>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 } 
