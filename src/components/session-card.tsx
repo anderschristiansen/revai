@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle } from "lucide-react";
+import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -62,16 +62,23 @@ export function SessionCard({
     >
       <Link href={`/review/${id}`} className="block">
         <Card className={cn(
-          "h-auto overflow-hidden border hover:border-primary/50 hover:shadow-lg transition-all group", 
+          "h-auto overflow-hidden border hover:border-primary/50 hover:shadow-lg transition-all group relative", 
           className
         )}>
-          <CardContent className="px-5 py-0">
+          {/* Hover gradient effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-transparent" />
+          </div>
+
+          <CardContent className="px-5 pt-4 pb-4 relative">
             {/* Session title and timestamp */}
             <div className="flex justify-between items-start mb-3">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <FolderOpen className="h-5 w-5 text-primary/70 group-hover:text-primary transition-colors" />
-                  <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                  <div className="bg-primary/10 p-1.5 rounded-md group-hover:bg-primary/15 transition-colors">
+                    <FolderOpen className="h-4 w-4 text-primary/80 group-hover:text-primary transition-colors" />
+                  </div>
+                  <h3 className="font-semibold text-lg group-hover:text-primary transition-colors line-clamp-1">
                     {title || "Review Session"}
                   </h3>
                 </div>
@@ -83,7 +90,7 @@ export function SessionCard({
             </div>
 
             {/* Stats section */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 mt-4">
               {/* Article counts */}
               <div className="space-y-2 border-r pr-4">
                 <div className="flex flex-col">
@@ -108,46 +115,52 @@ export function SessionCard({
               {articles_count > 0 ? (
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <CheckCircle className="h-3.5 w-3.5" style={{ color: COLORS.included }} />
-                      <span className="text-xs font-medium">Included</span>
+                    <div className="flex items-center gap-1.5 group/stat">
+                      <CheckCircle className="h-3.5 w-3.5 group-hover/stat:text-[#00b380]" style={{ color: COLORS.included }} />
+                      <span className="text-xs font-medium group-hover/stat:text-[#00b380] transition-colors">Included</span>
                     </div>
                     <span className="text-xs font-bold">{reviewed_count}</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <XCircle className="h-3.5 w-3.5" style={{ color: COLORS.excluded }} />
-                      <span className="text-xs font-medium">Excluded</span>
+                    <div className="flex items-center gap-1.5 group/stat">
+                      <XCircle className="h-3.5 w-3.5 group-hover/stat:text-[#ff1d42]" style={{ color: COLORS.excluded }} />
+                      <span className="text-xs font-medium group-hover/stat:text-[#ff1d42] transition-colors">Excluded</span>
                     </div>
                     <span className="text-xs font-bold">{excluded_count}</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <HelpCircle className="h-3.5 w-3.5" style={{ color: COLORS.pending }} />
-                      <span className="text-xs font-medium">Pending</span>
+                    <div className="flex items-center gap-1.5 group/stat">
+                      <HelpCircle className="h-3.5 w-3.5 group-hover/stat:text-[#94a3b8]" style={{ color: COLORS.pending }} />
+                      <span className="text-xs font-medium group-hover/stat:text-[#94a3b8] transition-colors">Pending</span>
                     </div>
                     <span className="text-xs font-bold">{pending_count}</span>
                   </div>
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-full">
-                  <p className="text-xs text-muted-foreground italic">No articles uploaded yet</p>
+                  <div className="text-center">
+                    <BarChart3 className="h-5 w-5 text-muted-foreground/50 mx-auto mb-1" />
+                    <p className="text-xs text-muted-foreground italic">No articles yet</p>
+                  </div>
                 </div>
               )}
             </div>
             
             {/* Progress indicator */}
             {articles_count > 0 && (
-              <div className="mt-3">
+              <div className="mt-4">
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-muted-foreground">Progress</span>
-                  <span className="font-medium">{progressPercentage}%</span>
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <span className="inline-block h-1 w-1 rounded-full bg-primary"></span>
+                    Progress
+                  </span>
+                  <span className="font-semibold">{progressPercentage}%</span>
                 </div>
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                   <motion.div 
-                    className="h-full bg-primary rounded-full"
+                    className="h-full bg-primary rounded-full group-hover:brightness-110 transition-all"
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPercentage}%` }}
                     transition={{ duration: 1, ease: "easeOut" }}
