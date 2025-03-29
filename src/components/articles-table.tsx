@@ -202,7 +202,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         data={articles} 
         filterColumn="title"
         filterPlaceholder="Search articles by title..."
-        initialSorting={[{ id: "user_decision", desc: true }]}
+        initialSorting={[{ id: "title", desc: false }]}
         pageSize={10}
         pageSizeOptions={[5, 10, 25, 50, 100]}
         getRowClassName={() => {
