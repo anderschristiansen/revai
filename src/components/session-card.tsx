@@ -6,6 +6,8 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import Lottie from "lottie-react";
+import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
 
 // Colors for the visualization - using the site's red/green color scheme
 const COLORS = {
@@ -26,6 +28,7 @@ export type SessionCardProps = {
   excluded_count?: number;
   pending_count?: number;
   ai_evaluated_count?: number;
+  last_evaluated_at?: string;
   className?: string;
 };
 
@@ -38,6 +41,7 @@ export function SessionCard({
   excluded_count = 0,
   pending_count = 0,
   ai_evaluated_count = 0,
+  last_evaluated_at,
   className,
 }: SessionCardProps) {
   
@@ -56,10 +60,22 @@ export function SessionCard({
     // Session is completed when all articles have been reviewed
     return articles_count > 0 && pending_count === 0;
   }
+  
+  function isBatchRunning() {
+    if (!last_evaluated_at) return false;
+    
+    // If the last evaluation was less than 5 minutes ago, consider it active
+    const lastEvalTime = new Date(last_evaluated_at).getTime();
+    const currentTime = new Date().getTime();
+    const fiveMinutesInMs = 5 * 60 * 1000;
+    
+    return currentTime - lastEvalTime < fiveMinutesInMs;
+  }
 
   // Calculate the progress percentage
   const progressPercentage = getProgressPercentage();
   const completed = isCompleted();
+  const batchRunning = isBatchRunning();
 
   return (
     <motion.div
@@ -81,6 +97,53 @@ export function SessionCard({
                 : "from-primary/3 to-transparent"
             )} />
           </div>
+          
+          {/* AI Brewing indicator */}
+          {batchRunning && (
+            <div className="absolute top-0 right-0 mt-3 mr-3 z-10">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+                className="relative"
+              >
+                <motion.div
+                  animate={{ 
+                    boxShadow: ['0 0 0 0 rgba(59, 130, 246, 0.1)', '0 0 0 8px rgba(59, 130, 246, 0.2)'],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 2,
+                  }}
+                  className="absolute inset-0 rounded-full"
+                />
+                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white shadow-md border border-[#3b82f6]/30">
+                  <div className="w-7 h-7 relative overflow-hidden">
+                    <motion.div 
+                      animate={{ scale: [0.95, 1, 0.95], rotate: [0, 3, 0, -3, 0] }}
+                      transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                      className="absolute inset-0 scale-[2] -translate-y-[12%]"
+                    >
+                      <Lottie 
+                        animationData={coffeeAnimation}
+                        loop={true}
+                        autoplay={true}
+                      />
+                    </motion.div>
+                  </div>
+                  <motion.div
+                    animate={{ opacity: [0.8, 1, 0.8] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  >
+                    <span className="text-sm font-medium whitespace-nowrap text-[#3b82f6]">
+                      AI Brewing
+                    </span>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </div>
+          )}
 
           <CardContent className="px-5 pt-4 pb-4 relative">
             {/* Session title and timestamp */}

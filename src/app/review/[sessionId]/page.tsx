@@ -27,7 +27,6 @@ import { supabase } from "@/lib/supabase";
 import { Tooltip } from "@/components/ui/tooltip";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Lottie from "lottie-react";
@@ -429,39 +428,44 @@ export default function ReviewPage() {
         {batchRunning && (
           <Tooltip content="AI is currently evaluating your articles">
             <motion.div 
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", damping: 12 }}
-              className="flex items-center gap-3 bg-gradient-to-b from-[#3b82f6]/8 to-[#3b82f6]/3 px-4 py-3 rounded-lg border border-[#3b82f6]/15 shadow-sm hover:shadow-md hover:border-[#3b82f6]/30 transition-all cursor-help"
+              transition={{ duration: 0.3 }}
+              className="relative"
             >
-              <div className="flex flex-col items-center relative">
-                <motion.div 
-                  animate={{ 
-                    boxShadow: ['0 0 0 0 rgba(59, 130, 246, 0)', '0 0 0 12px rgba(59, 130, 246, 0)'],
-                  }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 2.5,
-                  }}
-                  className="absolute inset-0 rounded-full"
-                />
-                <div className="w-16 h-16 relative z-10">
-                  <Lottie 
-                    animationData={coffeeAnimation}
-                    loop={true}
-                    autoplay={true}
-                  />
+              <motion.div
+                animate={{ 
+                  boxShadow: ['0 0 0 0 rgba(59, 130, 246, 0.1)', '0 0 0 8px rgba(59, 130, 246, 0.2)'],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 2,
+                }}
+                className="absolute inset-0 rounded-full"
+              />
+              <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white shadow-md border border-[#3b82f6]/30">
+                <div className="w-7 h-7 relative overflow-hidden">
+                  <motion.div 
+                    animate={{ scale: [0.95, 1, 0.95], rotate: [0, 3, 0, -3, 0] }}
+                    transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                    className="absolute inset-0 scale-[2] -translate-y-[12%]"
+                  >
+                    <Lottie 
+                      animationData={coffeeAnimation}
+                      loop={true}
+                      autoplay={true}
+                    />
+                  </motion.div>
                 </div>
-                <Badge 
-                  variant="outline" 
-                  className="text-xs text-[#3b82f6] font-medium mt-1 bg-white/80 backdrop-blur-sm border-[#3b82f6]/20 px-3"
+                <motion.div
+                  animate={{ opacity: [0.8, 1, 0.8] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
                 >
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#3b82f6] animate-pulse" />
-                    Brewing evaluations...
-                  </div>
-                </Badge>
+                  <span className="text-sm font-medium whitespace-nowrap text-[#3b82f6]">
+                    AI Brewing
+                  </span>
+                </motion.div>
               </div>
             </motion.div>
           </Tooltip>
@@ -517,7 +521,33 @@ export default function ReviewPage() {
                         <BotIcon className="h-3.5 w-3.5 text-[#3b82f6]" />
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">AI</p>
+                        <div className="flex items-center gap-1">
+                          <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">AI</p>
+                          {batchRunning && (
+                            <div className="flex items-center ml-1">
+                              <div className="w-3.5 h-3.5 relative overflow-hidden">
+                                <motion.div 
+                                  animate={{ rotate: [0, 5, 0, -5, 0] }}
+                                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                                  className="absolute inset-0 scale-[2] -translate-y-[12%]"
+                                >
+                                  <Lottie 
+                                    animationData={coffeeAnimation}
+                                    loop={true}
+                                    autoplay={true}
+                                  />
+                                </motion.div>
+                              </div>
+                              <motion.span 
+                                animate={{ opacity: [0.8, 1, 0.8] }}
+                                transition={{ repeat: Infinity, duration: 1.5 }}
+                                className="text-[0.6rem] ml-0.5 text-[#3b82f6] font-medium"
+                              >
+                                Brewing
+                              </motion.span>
+                            </div>
+                          )}
+                        </div>
                         <div className="flex items-baseline">
                           <p className="text-lg font-bold leading-none">{articlesAIEvaluated}</p>
                           <span className="text-[0.6rem] ml-1 text-muted-foreground">
@@ -687,8 +717,30 @@ export default function ReviewPage() {
                         }
                         className="gap-2"
                       >
-                        <BotIcon className="h-4 w-4" />
-                        {evaluating ? "Evaluating..." : batchRunning ? "Brewing evaluations..." : "Evaluate all"}
+                        {batchRunning ? (
+                          <>
+                            <div className="w-4 h-4 relative overflow-hidden">
+                              <div className="absolute inset-0 scale-[2] -translate-y-[12%]">
+                                <Lottie 
+                                  animationData={coffeeAnimation}
+                                  loop={true}
+                                  autoplay={true}
+                                />
+                              </div>
+                            </div>
+                            <motion.span 
+                              animate={{ opacity: [0.9, 1, 0.9] }}
+                              transition={{ repeat: Infinity, duration: 1.5 }}
+                            >
+                              Brewing evaluations...
+                            </motion.span>
+                          </>
+                        ) : (
+                          <>
+                            <BotIcon className="h-4 w-4" />
+                            {evaluating ? "Evaluating..." : "Evaluate all"}
+                          </>
+                        )}
                       </Button>
                     </motion.div>
                   </span>

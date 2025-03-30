@@ -42,6 +42,7 @@ export type Session = {
   criteria: string;
   title?: string;
   updated_at?: string;
+  last_evaluated_at?: string;
   reviewed_count?: number;
   excluded_count?: number;
   pending_count?: number;

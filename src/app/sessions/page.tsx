@@ -139,6 +139,7 @@ export default function SessionsPage() {
                 excluded_count={session.excluded_count}
                 pending_count={session.pending_count}
                 ai_evaluated_count={session.ai_evaluated_count}
+                last_evaluated_at={session.last_evaluated_at}
               />
             </motion.div>
           ))}
