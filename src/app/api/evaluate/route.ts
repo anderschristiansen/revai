@@ -164,14 +164,6 @@ async function processBatchesAsync(
         // Process each batch
         await processBatch(batch, criteria, aiSettings);
         console.log(`Completed batch of ${batch.length} articles`);
-        
-        // Update session with progress (don't set ai_evaluation_running to false until all batches are done)
-        await supabase
-          .from("review_sessions")
-          .update({
-            last_evaluated_at: new Date().toISOString(),
-          })
-          .eq("id", sessionId);
       } catch (batchError) {
         console.error("Error processing batch:", batchError);
         // Continue with next batch even if one fails

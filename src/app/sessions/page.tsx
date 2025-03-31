@@ -91,8 +91,49 @@ export default function SessionsPage() {
         table: 'articles'
       }, (payload) => {
         console.log("Article update received:", payload);
-        // Simply reload all sessions to ensure we get the latest data
-        loadSessions();
+        // Only update the specific session that contains this article
+        setSessions(prevSessions => {
+          return prevSessions.map(session => {
+            // Check if this article belongs to this session
+            const hasArticle = session.files?.some(file => 
+              file.articles?.some(article => article.id === payload.new.id)
+            );
+            
+            if (hasArticle) {
+              // Update the specific article in the session
+              const updatedFiles = session.files?.map(file => ({
+                ...file,
+                articles: file.articles?.map(article => 
+                  article.id === payload.new.id ? {
+                    ...article,
+                    ...payload.new,
+                    ai_decision: payload.new.ai_decision as DecisionType,
+                    ai_explanation: payload.new.ai_explanation || '',
+                    user_decision: payload.new.user_decision as DecisionType | undefined,
+                    needs_review: payload.new.needs_review || false
+                  } : article
+                )
+              }));
+              
+              // Recalculate counts for this session
+              const allArticles = updatedFiles?.flatMap(file => file.articles || []) || [];
+              return {
+                ...session,
+                files: updatedFiles,
+                reviewed_count: allArticles.filter(a => a.user_decision === "Include").length,
+                excluded_count: allArticles.filter(a => a.user_decision === "Exclude").length,
+                pending_count: allArticles.filter(a => !a.user_decision).length,
+                ai_evaluated_count: allArticles.filter(a => 
+                  a.ai_decision === "Include" || 
+                  a.ai_decision === "Exclude" || 
+                  a.ai_decision === "Unsure"
+                ).length,
+                articles: allArticles as Article[]
+              };
+            }
+            return session;
+          });
+        });
       })
       .subscribe();
     

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
+import { useState, useEffect } from "react";
 
 // Colors for the visualization - using the site's red/green color scheme
 const COLORS = {
@@ -57,7 +58,14 @@ export function SessionCard({
   className,
   onDelete,
 }: SessionCardProps) {
-  
+  // Add local state for AI evaluation count
+  const [localAiEvaluatedCount, setLocalAiEvaluatedCount] = useState(ai_evaluated_count);
+
+  // Update local state when prop changes
+  useEffect(() => {
+    setLocalAiEvaluatedCount(ai_evaluated_count);
+  }, [ai_evaluated_count]);
+
   function getProgressPercentage() {
     const total = reviewed_count + excluded_count + pending_count;
     if (total === 0) return 0;
@@ -88,7 +96,7 @@ export function SessionCard({
   };
     
   const percentAI = files_processed && articles_count > 0
-    ? Math.floor((ai_evaluated_count / Math.max(1, articles_count)) * 100)
+    ? Math.floor((localAiEvaluatedCount / Math.max(1, articles_count)) * 100)
     : 0;
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -383,10 +391,10 @@ export function SessionCard({
             )}
 
             {/* AI evaluation indicator */}
-            {files_processed && ai_evaluated_count > 0 && (
+            {files_processed && localAiEvaluatedCount > 0 && (
               <div className="flex items-center gap-1.5 text-xs text-blue-600">
                 <span className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></span>
-                <span>{ai_evaluated_count} articles evaluated by AI ({percentAI}%)</span>
+                <span>{localAiEvaluatedCount} articles evaluated by AI ({percentAI}%)</span>
               </div>
             )}
 
