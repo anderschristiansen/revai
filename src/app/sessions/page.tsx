@@ -122,6 +122,7 @@ export default function SessionsPage() {
                 files: updatedFiles,
                 reviewed_count: allArticles.filter(a => a.user_decision === "Include").length,
                 excluded_count: allArticles.filter(a => a.user_decision === "Exclude").length,
+                unsure_count: allArticles.filter(a => a.user_decision === "Unsure").length,
                 pending_count: allArticles.filter(a => !a.user_decision).length,
                 ai_evaluated_count: allArticles.filter(a => 
                   a.ai_decision === "Include" || 
@@ -214,6 +215,7 @@ export default function SessionsPage() {
           ...session,
           reviewed_count: transformedArticles.filter((a: Article) => a.user_decision === "Include").length,
           excluded_count: transformedArticles.filter((a: Article) => a.user_decision === "Exclude").length,
+          unsure_count: transformedArticles.filter((a: Article) => a.user_decision === "Unsure").length,
           pending_count: transformedArticles.filter((a: Article) => !a.user_decision).length,
           ai_evaluated_count: transformedArticles.filter((a: Article) => 
             a.ai_decision === "Include" || 
@@ -382,15 +384,14 @@ export default function SessionsPage() {
                 title={session.title}
                 created_at={session.created_at}
                 articles_count={session.articles_count}
-                files_count={session.files_count}
                 reviewed_count={session.reviewed_count}
                 excluded_count={session.excluded_count}
                 pending_count={session.pending_count}
+                unsure_count={session.unsure_count}
                 ai_evaluated_count={session.ai_evaluated_count}
                 ai_evaluation_running={session.ai_evaluation_running}
                 files_processed={session.files_processed}
                 upload_running={session.files_upload_running}
-                needs_setup={session.files_processed}
                 onDelete={handleDeleteRequest}
               />
             </motion.div>

@@ -60,6 +60,7 @@ export type SessionView = SessionRecord & {
   reviewed_count: number;
   excluded_count: number;
   pending_count: number;
+  unsure_count: number;
   ai_evaluated_count: number;
   articles: Article[];
   files: FileWithArticles[];

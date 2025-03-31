@@ -173,7 +173,7 @@ export function UploadForm({ sessionId }: UploadFormProps) {
           articles_count: totalArticlesCount,
           files_count: articlesFiles.length,
           files_processed: true,
-          updated_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         })
         .eq('id', sessionId);
 

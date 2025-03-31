@@ -3,7 +3,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3, Trash2, FolderIcon, MoreHorizontal, UploadIcon, BotIcon } from "lucide-react";
+import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FolderOpen, Clock, Trash2, FolderIcon, MoreHorizontal, UploadIcon, BarChart4Icon, BotIcon } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -21,22 +22,24 @@ const COLORS = {
   notEvaluated: '#6b7280',
   cardHover: 'rgba(0,0,0,0.05)',
   uploadRunning: '#f59e0b', // Amber
+  unsure: '#f59e0b', // Amber for unsure status
 };
 
 export type SessionCardProps = {
   id: string;
-  title?: string;
+  title: string;
   created_at: string;
   articles_count: number;
-  files_count?: number;
   reviewed_count?: number;
   excluded_count?: number;
+  unsure_count?: number;
   pending_count?: number;
   ai_evaluated_count?: number;
+  ai_included_count?: number;
+  ai_excluded_count?: number;
   ai_evaluation_running?: boolean;
-  files_processed?: boolean;
+  files_processed: boolean;
   upload_running?: boolean;
-  needs_setup?: boolean;
   className?: string;
   onDelete?: (id: string) => void;
 };
@@ -46,15 +49,16 @@ export function SessionCard({
   title,
   created_at,
   articles_count,
-  files_count = 0,
   reviewed_count = 0,
   excluded_count = 0,
   pending_count = 0,
+  unsure_count = 0,
   ai_evaluated_count = 0,
+  ai_included_count = 0,
+  ai_excluded_count = 0,
   ai_evaluation_running = false,
   files_processed = false,
   upload_running = false,
-  needs_setup = false,
   className,
   onDelete,
 }: SessionCardProps) {
@@ -66,24 +70,12 @@ export function SessionCard({
     setLocalAiEvaluatedCount(ai_evaluated_count);
   }, [ai_evaluated_count]);
 
-  function getProgressPercentage() {
-    const total = reviewed_count + excluded_count + pending_count;
-    if (total === 0) return 0;
-    const completed = reviewed_count + excluded_count;
-    return Math.round((completed / total) * 100);
-  }
-
-  function hasAiEvaluations() {
-    return ai_evaluated_count > 0;
-  }
-  
   function isCompleted() {
     // Session is completed when all articles have been reviewed
     return articles_count > 0 && pending_count === 0;
   }
 
   // Calculate the progress percentage
-  const progressPercentage = getProgressPercentage();
   const completed = isCompleted();
 
   // Format date to a more readable format
@@ -225,8 +217,8 @@ export function SessionCard({
 
           <CardContent className="px-5 pt-4 pb-4 relative">
             {/* Session title and timestamp */}
-            <div className="flex justify-between items-start mb-3">
-              <div className="space-y-1">
+            <div className="flex justify-between items-start mb-4">
+              <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
                   <div className={cn(
                     "p-1.5 rounded-md transition-colors", 
@@ -282,129 +274,178 @@ export function SessionCard({
             </div>
 
             {/* Stats section */}
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              {/* Article counts */}
-              <div className="space-y-2 border-r pr-4">
-                <div className="flex flex-col">
-                  <span className="text-2xl font-bold">{articles_count}</span>
-                  <span className="text-xs text-muted-foreground">Articles</span>
-                </div>
-                
-                {files_count > 0 && (
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <FolderIcon className="h-3 w-3" />
-                    <span>{files_count} file{files_count !== 1 ? 's' : ''}</span>
+            <div className="grid grid-cols-2 gap-6 mt-4">
+              {/* Left side - Article counts and status */}
+              <div className="space-y-3">
+                {files_processed ? (
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-bold">{articles_count}</span>
+                    <span className="text-xs text-muted-foreground">Articles</span>
                   </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-sm text-[#3b82f6] font-bold">
+                  <FolderIcon className="h-4 w-4" />
+                  <span>Files Processing Required</span>
+                </div>
                 )}
                 
-                {files_processed && articles_count > 0 ? (
-                  <div className="flex items-center gap-1.5 text-xs">
-                    <div className="h-2 w-2 rounded-full bg-[#00b380]"></div>
-                    <span className="text-[#00b380]">All reviewed</span>
+                {/* Status indicators */}
+                {files_processed && (
+                  <div className="flex flex-col gap-2">
+                      <>
+                        <div className="flex items-center gap-4">
+                          <TooltipProvider>
+                            <Tooltip content="Included articles">
+                              <TooltipTrigger asChild>
+                                <div className="flex items-center gap-1.5">
+                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.included }}></div>
+                                  <span className="text-xs text-muted-foreground">{reviewed_count}</span>
+                                </div>
+                              </TooltipTrigger>
+                            </Tooltip>
+
+                            <Tooltip content="Excluded articles">
+                              <TooltipTrigger asChild>
+                                <div className="flex items-center gap-1.5">
+                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.excluded }}></div>
+                                  <span className="text-xs text-muted-foreground">{excluded_count}</span>
+                                </div>
+                              </TooltipTrigger>
+                            </Tooltip>
+
+                            <Tooltip content="Unsure articles">
+                              <TooltipTrigger asChild>
+                                <div className="flex items-center gap-1.5">
+                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.unsure }}></div>
+                                  <span className="text-xs text-muted-foreground">{unsure_count}</span>
+                                </div>
+                              </TooltipTrigger>
+                            </Tooltip>
+
+                            <Tooltip content="Pending review">
+                              <TooltipTrigger asChild>
+                                <div className="flex items-center gap-1.5">
+                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.pending }}></div>
+                                  <span className="text-xs text-muted-foreground">{pending_count}</span>
+                                </div>
+                              </TooltipTrigger>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      </>
                   </div>
-                ) : needs_setup ? (
-                  <div className="flex items-center gap-1.5 text-xs">
-                    <div className="h-2 w-2 rounded-full bg-amber-400"></div>
-                    <span className="text-amber-500">Setup required</span>
-                  </div>
-                ) : hasAiEvaluations() ? (
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></div>
-                    <span>{ai_evaluated_count} AI evaluated</span>
-                  </div>
-                ) : articles_count > 0 ? (
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <AlertCircle className="h-3 w-3" style={{ color: COLORS.notEvaluated }} />
-                    <span>Not evaluated by AI</span>
-                  </div>
-                ) : null}
+                )}
               </div>
 
-              {/* Review progress */}
-              {articles_count > 0 ? (
-                <div className="space-y-1.5">
+              {/* Right side - AI Evaluation Status */}
+              { files_processed && (
+                <div className="space-y-3 border-l pl-6">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 group/stat">
-                      <CheckCircle className="h-3.5 w-3.5 group-hover/stat:text-[#00b380]" style={{ color: COLORS.included }} />
-                      <span className="text-xs font-medium group-hover/stat:text-[#00b380] transition-colors">Included</span>
+                    <div className="flex items-center gap-2">
+                      <div className={cn(
+                        "p-1 rounded-md", 
+                        completed 
+                          ? "bg-[#00b380]/10" 
+                          : "bg-primary/10"
+                      )}>
+                        {/* <BarChart4Icon className={cn(
+                          "h-3.5 w-3.5", 
+                          completed 
+                            ? "text-[#00b380]" 
+                            : "text-primary"
+                        )} /> */}
+                        <BotIcon className={cn(
+                          "h-3.5 w-3.5 text-primary"
+                        )} />
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground">AI Evaluation</span>
                     </div>
-                    <span className="text-xs font-bold">{reviewed_count}</span>
+                    {ai_evaluation_running && (
+                      <span className="font-medium" style={{ color: COLORS.aiEvaluated }}>{percentAI}%</span>
+                    )}
                   </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 group/stat">
-                      <XCircle className="h-3.5 w-3.5 group-hover/stat:text-[#ff1d42]" style={{ color: COLORS.excluded }} />
-                      <span className="text-xs font-medium group-hover/stat:text-[#ff1d42] transition-colors">Excluded</span>
+
+                  {/* AI Evaluation Progress */}
+                  <div className="space-y-2">
+                    {ai_evaluation_running ? (
+                      <>
+                        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                          <motion.div 
+                            className="h-full rounded-full"
+                            style={{ backgroundColor: COLORS.aiEvaluated }}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${percentAI}%` }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                          />
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[0.6rem] text-[#3b82f6]">
+                          <div className="w-3 h-3 relative overflow-hidden">
+                            <motion.div 
+                              animate={{ rotate: [0, 5, 0, -5, 0] }}
+                              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                              className="absolute inset-0 scale-[2] -translate-y-[12%]"
+                            >
+                              <Lottie 
+                                animationData={coffeeAnimation}
+                                loop={true}
+                                autoplay={true}
+                              />
+                            </motion.div>
+                          </div>
+                          <span>AI is evaluating articles...</span>
+                        </div>
+                      </>
+                    ) : ai_evaluated_count > 0 ? (
+                      <div className="flex items-center gap-1.5 text-xs text-[#3b82f6]">
+                        <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.aiEvaluated }}></div>
+                        <span>AI Evaluation Complete</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                        <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.notEvaluated }}></div>
+                        <span>AI Not Evaluated</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* AI Decision Indicators */}
+                  {ai_evaluated_count > 0 && (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-4">
+                        <TooltipProvider>
+                          <Tooltip content="AI marked as included">
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center gap-1.5">
+                                <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.included }}></div>
+                                <span className="text-xs text-muted-foreground">{ai_included_count}</span>
+                              </div>
+                            </TooltipTrigger>
+                          </Tooltip>
+
+                          <Tooltip content="AI marked as excluded">
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center gap-1.5">
+                                <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.excluded }}></div>
+                                <span className="text-xs text-muted-foreground">{ai_excluded_count}</span>
+                              </div>
+                            </TooltipTrigger>
+                          </Tooltip>
+
+                          <Tooltip content="AI marked as unsure">
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center gap-1.5">
+                                <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.unsure }}></div>
+                                <span className="text-xs text-muted-foreground">{ai_evaluated_count - (ai_included_count + ai_excluded_count)}</span>
+                              </div>
+                            </TooltipTrigger>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
                     </div>
-                    <span className="text-xs font-bold">{excluded_count}</span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 group/stat">
-                      <HelpCircle className="h-3.5 w-3.5 group-hover/stat:text-[#94a3b8]" style={{ color: COLORS.pending }} />
-                      <span className="text-xs font-medium group-hover/stat:text-[#94a3b8] transition-colors">Pending</span>
-                    </div>
-                    <span className="text-xs font-bold">{pending_count}</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center">
-                    <BarChart3 className="h-5 w-5 text-muted-foreground/50 mx-auto mb-1" />
-                    <p className="text-xs text-muted-foreground italic">No articles yet</p>
-                  </div>
+                  )}
                 </div>
               )}
             </div>
-            
-            {/* Improved progress indicator */}
-            {articles_count > 0 && (
-              <div className="mt-4">
-                <div className="flex justify-between text-xs mb-1">
-                  <span className={cn(
-                    "flex items-center gap-1",
-                    completed ? "text-[#00b380]" : "text-muted-foreground"
-                  )}>
-                    <span className={cn(
-                      "inline-block h-1 w-1 rounded-full",
-                      completed ? "bg-[#00b380]" : "bg-primary"
-                    )}></span>
-                    {completed ? "Completed" : "Progress"}
-                  </span>
-                  <span className={cn(
-                    "font-semibold",
-                    completed ? "text-[#00b380]" : ""
-                  )}>{progressPercentage}%</span>
-                </div>
-                <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                  <motion.div 
-                    className={cn(
-                      "h-full rounded-full transition-all",
-                      completed ? "bg-[#00b380]" : "bg-primary group-hover:brightness-110"
-                    )}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progressPercentage}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* AI evaluation indicator */}
-            {files_processed && localAiEvaluatedCount > 0 && (
-              <div className="flex items-center gap-1.5 text-xs text-blue-600">
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></span>
-                <span>{localAiEvaluatedCount} articles evaluated by AI ({percentAI}%)</span>
-              </div>
-            )}
-
-            {/* AI Evaluation Status */}
-            {ai_evaluation_running && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <BotIcon className="h-4 w-4 animate-pulse" />
-                <span>AI Evaluation in Progress</span>
-              </div>
-            )}
           </CardContent>
         </Card>
       </Link>

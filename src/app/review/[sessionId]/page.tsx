@@ -118,21 +118,6 @@ export default function ReviewPage() {
         throw sessionError;
       }
 
-      // Check if this session needs setup (no articles or empty criteria)
-      const needsSetup = sessionData.needs_setup || 
-        (sessionData.articles_count === 0 && (!sessionData.criterias || sessionData.criterias.length === 0));
-      
-      // If needs_setup status changed, update it in the database
-      if (needsSetup !== sessionData.needs_setup) {
-        await supabase
-          .from("review_sessions")
-          .update({ needs_setup: needsSetup })
-          .eq("id", sessionId);
-        
-        // Update the session data with the new needs_setup value
-        sessionData.needs_setup = needsSetup;
-      }
-
       setSession(sessionData);
       setNewTitle(sessionData.title || "");
       
