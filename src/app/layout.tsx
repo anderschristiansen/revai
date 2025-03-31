@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/auth-context";
 import { NavBar } from "@/components/nav-bar";
+import { VersionBadge } from "@/components/version-badge";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
               <main>
                 {children}
               </main>
+              <VersionBadge />
             </div>
             <Toaster />
           </AuthProvider>
