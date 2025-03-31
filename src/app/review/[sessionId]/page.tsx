@@ -31,47 +31,6 @@ import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
 import { ReviewStats } from "@/components/review-stats";
 import { AIStats } from "@/components/ai-stats";
 
-// Animation variants
-const pageTransition = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { 
-      duration: 0.4,
-      ease: [0.22, 1, 0.36, 1]
-    }
-  },
-  exit: { 
-    opacity: 0,
-    transition: { 
-      duration: 0.2
-    }
-  }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: "easeOut"
-    }
-  }
-};
-
 export default function ReviewPage() {
   const params = useParams();
   const sessionId = params.sessionId as string;
@@ -402,10 +361,10 @@ export default function ReviewPage() {
 
   const mainContent = (
     <motion.div
-      variants={pageTransition}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
       className="container mx-auto py-8 space-y-8"
     >
       {/* Back button and header */}
@@ -518,13 +477,18 @@ export default function ReviewPage() {
 
       {session.articles_count > 0 ? (
         <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ staggerChildren: 0.1 }}
           className="space-y-6"
         >
           {/* Stats cards */}
-          <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
+          >
             {/* Total Articles Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
@@ -575,7 +539,11 @@ export default function ReviewPage() {
           </motion.div>
 
           {/* Tabs for different views */}
-          <motion.div variants={fadeInUp}>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <div className="flex items-center justify-between mb-4">
                 <TabsList>
@@ -694,16 +662,16 @@ export default function ReviewPage() {
                       </CardHeader>
                       <CardContent className="space-y-4">
                         {criteria.length > 0 ? (
-                          criteria.map((criterion) => (
+                          criteria.map((criterion, index) => (
                             <motion.div 
                               key={criterion.id} 
                               className="flex items-start gap-3 p-3 border rounded-md bg-card"
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: criteria.indexOf(criterion) * 0.05 }}
+                              transition={{ delay: index * 0.05 }}
                             >
                               <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0">
-                                {criteria.indexOf(criterion) + 1}
+                                {index + 1}
                               </div>
                               <p className="text-sm">{criterion.text}</p>
                             </motion.div>
