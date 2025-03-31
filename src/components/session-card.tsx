@@ -1,13 +1,14 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3 } from "lucide-react";
+import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
+import { Button } from "./ui/button";
 
 // Colors for the visualization - using the site's red/green color scheme
 const COLORS = {
@@ -30,6 +31,7 @@ export type SessionCardProps = {
   ai_evaluated_count?: number;
   batch_running?: boolean;
   className?: string;
+  onDelete?: (id: string) => void;
 };
 
 export function SessionCard({ 
@@ -43,6 +45,7 @@ export function SessionCard({
   ai_evaluated_count = 0,
   batch_running = false,
   className,
+  onDelete,
 }: SessionCardProps) {
   
   function getProgressPercentage() {
@@ -64,6 +67,15 @@ export function SessionCard({
   // Calculate the progress percentage
   const progressPercentage = getProgressPercentage();
   const completed = isCompleted();
+
+  const handleDelete = (e: React.MouseEvent) => {
+    // Prevent triggering the Link navigation
+    e.preventDefault();
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
 
   return (
     <motion.div
@@ -165,6 +177,18 @@ export function SessionCard({
                   {format(new Date(created_at), "PPP")}
                 </div>
               </div>
+              
+              {onDelete && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-50 hover:text-red-500"
+                  onClick={handleDelete}
+                  title="Delete session"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </div>
 
             {/* Stats section */}

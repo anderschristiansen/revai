@@ -10,6 +10,16 @@ import { SessionCard } from "@/components/session-card";
 import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
 import { Article, Session } from "@/lib/types";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle 
+} from "@/components/ui/alert-dialog";
 
 // Animation variants for staggered animations
 const container = {
@@ -30,6 +40,7 @@ const item = {
 export default function SessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteSessionId, setDeleteSessionId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -167,6 +178,58 @@ export default function SessionsPage() {
     }
   }
 
+  async function deleteSession(sessionId: string) {
+    try {
+      // First delete all articles for this session
+      const { error: articlesError } = await supabase
+        .from("articles")
+        .delete()
+        .eq("session_id", sessionId);
+      
+      if (articlesError) {
+        console.error("Error deleting articles:", articlesError);
+        toast.error("Failed to delete session articles");
+        return;
+      }
+      
+      // Then delete the session itself
+      const { error: sessionError } = await supabase
+        .from("review_sessions")
+        .delete()
+        .eq("id", sessionId);
+      
+      if (sessionError) {
+        console.error("Error deleting session:", sessionError);
+        toast.error("Failed to delete session");
+        return;
+      }
+      
+      // Refresh the sessions list
+      loadSessions();
+      toast.success("Session deleted successfully");
+    } catch (error) {
+      console.error("Error in deleteSession:", error);
+      toast.error("An error occurred while deleting the session");
+    } finally {
+      // Close the confirmation dialog
+      setDeleteSessionId(null);
+    }
+  }
+  
+  const handleDeleteConfirm = () => {
+    if (deleteSessionId) {
+      deleteSession(deleteSessionId);
+    }
+  };
+  
+  const handleDeleteCancel = () => {
+    setDeleteSessionId(null);
+  };
+  
+  const handleDeleteRequest = (id: string) => {
+    setDeleteSessionId(id);
+  };
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-10">
@@ -207,6 +270,7 @@ export default function SessionsPage() {
                 pending_count={session.pending_count}
                 ai_evaluated_count={session.ai_evaluated_count}
                 batch_running={session.batch_running}
+                onDelete={handleDeleteRequest}
               />
             </motion.div>
           ))}
@@ -238,6 +302,27 @@ export default function SessionsPage() {
           </motion.div>
         </motion.div>
       )}
+      
+      <AlertDialog open={!!deleteSessionId} onOpenChange={(open: boolean) => !open && setDeleteSessionId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete session</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the session and all its associated articles.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleDeleteCancel}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteConfirm} 
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 } 
