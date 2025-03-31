@@ -271,7 +271,7 @@ export default function SessionsPage() {
           {sessions.length > 0 && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" size="sm" className="text-muted-foreground hover:text-destructive">
+                <Button variant="outline" className="text-muted-foreground hover:text-destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete All
                 </Button>
