@@ -17,7 +17,7 @@ import { Slider } from "@/components/ui/slider";
 import React from 'react';
 import { DebugTools } from '@/components/debug-tools';
 
-type TabType = 'profile' | 'ai' | 'debug';
+type TabType = 'ai' | 'profile' | 'debug';
 
 type AiSettings = {
   instructions: string;
@@ -29,7 +29,7 @@ type AiSettings = {
 };
 
 export default function Settings() {
-  const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const [activeTab, setActiveTab] = useState<TabType>('ai');
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
@@ -321,20 +321,20 @@ export default function Settings() {
               <div 
                 className={cn(
                   "flex items-center py-2 px-3 rounded-md cursor-pointer hover:bg-muted transition-colors",
-                  activeTab === 'profile' && "bg-muted"
-                )}
-                onClick={() => setActiveTab('profile')}
-              >
-                <span>Profile</span>
-              </div>
-              <div 
-                className={cn(
-                  "flex items-center py-2 px-3 rounded-md cursor-pointer hover:bg-muted transition-colors",
                   activeTab === 'ai' && "bg-muted"
                 )}
                 onClick={() => setActiveTab('ai')}
               >
                 <span>AI Settings</span>
+              </div>
+              <div 
+                className={cn(
+                  "flex items-center py-2 px-3 rounded-md cursor-pointer hover:bg-muted transition-colors",
+                  activeTab === 'profile' && "bg-muted"
+                )}
+                onClick={() => setActiveTab('profile')}
+              >
+                <span>Profile</span>
               </div>
               <div 
                 className={cn(

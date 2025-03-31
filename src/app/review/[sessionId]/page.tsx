@@ -19,8 +19,6 @@ import {
   BarChart4Icon,
   BookOpenIcon, 
   BotIcon,
-  CheckCircle,
-  XCircle,
   FolderIcon
 } from "lucide-react";
 import React from "react";
@@ -40,7 +38,8 @@ const COLORS = {
   pending: '#94a3b8',
   aiEvaluated: '#3b82f6',
   notEvaluated: '#6b7280',
-  cardHover: 'rgba(0,0,0,0.05)'
+  cardHover: 'rgba(0,0,0,0.05)',
+  unsure: '#f59e0b'
 };
 
 // Animation variants
@@ -384,6 +383,7 @@ export default function ReviewPage() {
   const articlesReviewed = articles.filter(a => a.user_decision).length;
   const articlesIncluded = articles.filter(a => a.user_decision === "Include").length;
   const articlesExcluded = articles.filter(a => a.user_decision === "Exclude").length;
+  const articlesUnsure = articles.filter(a => a.user_decision === "Unsure").length;
   const percentageComplete = articles.length > 0 
     ? Math.round((articlesReviewed / articles.length) * 100) 
     : 0;
@@ -564,6 +564,74 @@ export default function ReviewPage() {
               </Card>
             </motion.div>
             
+            {/* Reviewed Card */}
+            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+              <Card className={cn(
+                "overflow-hidden border hover:shadow-md transition-all h-full",
+                percentageComplete === 100 && "border-[#00b380]/30 hover:border-[#00b380]/70"
+              )}>
+                <CardContent className="p-2 relative">
+                  {/* Hover gradient effect */}
+                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className={cn(
+                      "absolute inset-0 bg-gradient-to-br",
+                      percentageComplete === 100 
+                        ? "from-[#00b380]/5 to-transparent" 
+                        : "from-primary/3 to-transparent"
+                    )} />
+                  </div>
+                
+                  <div className="flex items-center space-x-1.5">
+                    <div className={cn(
+                      "p-1 rounded-md", 
+                      percentageComplete === 100 
+                        ? "bg-[#00b380]/10" 
+                        : "bg-primary/10"
+                    )}>
+                      <BarChart4Icon className={cn(
+                        "h-3.5 w-3.5", 
+                        percentageComplete === 100 
+                          ? "text-[#00b380]" 
+                          : "text-primary"
+                      )} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Reviewed</p>
+                      <div className="flex items-baseline">
+                        <p className="text-lg font-bold leading-none">{articlesReviewed}</p>
+                        <span className={cn(
+                          "text-[0.6rem] ml-1",
+                          percentageComplete === 100 
+                            ? "text-[#00b380]" 
+                            : "text-muted-foreground"
+                        )}>
+                          ({percentageComplete}%)
+                        </span>
+                      </div>
+                      <div className="flex gap-2 mt-0.5 text-[0.6rem] text-muted-foreground">
+                        <div className="flex items-center gap-0.5">
+                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.included }}></div>
+                          <span>{articlesIncluded}</span>
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.excluded }}></div>
+                          <span>{articlesExcluded}</span>
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.unsure }}></div>
+                          <span>{articlesUnsure}</span>
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.pending }}></div>
+                          <span>{articles.length - articlesReviewed}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
             {/* AI Evaluation Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Card className={cn(
@@ -630,100 +698,6 @@ export default function ReviewPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            {/* Reviewed Card */}
-            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-              <Card className={cn(
-                "overflow-hidden border hover:shadow-md transition-all h-full",
-                percentageComplete === 100 && "border-[#00b380]/30 hover:border-[#00b380]/70"
-              )}>
-                <CardContent className="p-2 relative">
-                  {/* Hover gradient effect */}
-                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div className={cn(
-                      "absolute inset-0 bg-gradient-to-br",
-                      percentageComplete === 100 
-                        ? "from-[#00b380]/5 to-transparent" 
-                        : "from-primary/3 to-transparent"
-                    )} />
-                  </div>
-                
-                  <div className="flex items-center space-x-1.5">
-                    <div className={cn(
-                      "p-1 rounded-md", 
-                      percentageComplete === 100 
-                        ? "bg-[#00b380]/10" 
-                        : "bg-primary/10"
-                    )}>
-                      <BarChart4Icon className={cn(
-                        "h-3.5 w-3.5", 
-                        percentageComplete === 100 
-                          ? "text-[#00b380]" 
-                          : "text-primary"
-                      )} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Reviewed</p>
-                      <div className="flex items-baseline">
-                        <p className="text-lg font-bold leading-none">{articlesReviewed}</p>
-                        <span className={cn(
-                          "text-[0.6rem] ml-1",
-                          percentageComplete === 100 
-                            ? "text-[#00b380]" 
-                            : "text-muted-foreground"
-                        )}>
-                          ({percentageComplete}%)
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            {/* Included Card */}
-            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-              <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-2 relative">
-                  {/* Hover gradient effect */}
-                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#00b380]/5 to-transparent" />
-                  </div>
-                  
-                  <div className="flex items-center space-x-1.5">
-                    <div className="p-1 rounded-md" style={{ backgroundColor: `${COLORS.included}10` }}>
-                      <CheckCircle className="h-3.5 w-3.5" style={{ color: COLORS.included }} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Included</p>
-                      <p className="text-lg font-bold leading-none">{articlesIncluded}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            {/* Excluded Card */}
-            <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-              <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
-                <CardContent className="p-2 relative">
-                  {/* Hover gradient effect */}
-                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#ff1d42]/5 to-transparent" />
-                  </div>
-                  
-                  <div className="flex items-center space-x-1.5">
-                    <div className="p-1 rounded-md" style={{ backgroundColor: `${COLORS.excluded}10` }}>
-                      <XCircle className="h-3.5 w-3.5" style={{ color: COLORS.excluded }} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Excluded</p>
-                      <p className="text-lg font-bold leading-none">{articlesExcluded}</p>
                     </div>
                   </div>
                 </CardContent>
