@@ -139,7 +139,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
             "flex items-start gap-3 py-2 pl-4 border-l-2", 
             userDecision === "Include" ? "border-l-[#00b380]" : 
             userDecision === "Exclude" ? "border-l-[#ff1d42]" : 
-            userDecision === "Unsure" ? "border-l-[#3b82f6]" : 
+            userDecision === "Unsure" ? "border-l-[#f59e0b]" : 
             "border-l-transparent"
           )}>
             {/* Content column with title and abstract */}
@@ -156,7 +156,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                         ? "bg-[#00b380]/10 text-[#00b380] border-[#00b380]/30" 
                         : userDecision === "Exclude"
                           ? "bg-[#ff1d42]/10 text-[#ff1d42] border-[#ff1d42]/30"
-                          : "bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/30"
+                          : "bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/30"
                     )}
                     variant="outline"
                   >
@@ -180,7 +180,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     ? "border-[#00b380]/30 text-[#00b380]" 
                     : aiDecision === "Exclude"
                       ? "border-[#ff1d42]/30 text-[#ff1d42]"
-                      : "border-[#3b82f6]/30 text-[#3b82f6]" // Blue for Unsure
+                      : "border-[#f59e0b]/30 text-[#f59e0b]" // Amber for Unsure
                 )}>
                   AI
                 </div>
@@ -235,7 +235,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                   "pl-4 border-l-2",
                   selectedArticle.user_decision === "Include" ? "border-l-[#00b380]" : 
                   selectedArticle.user_decision === "Exclude" ? "border-l-[#ff1d42]" : 
-                  selectedArticle.user_decision === "Unsure" ? "border-l-[#3b82f6]" : 
+                  selectedArticle.user_decision === "Unsure" ? "border-l-[#f59e0b]" : 
                   "border-l-transparent"
                 )}>
                   <DialogTitle className="text-xl font-semibold leading-tight mb-2">
@@ -246,6 +246,21 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     <div className="bg-muted/60 px-2 py-0.5 rounded text-muted-foreground font-mono text-xs">
                       {selectedArticle.id}
                     </div>
+                    {selectedArticle.user_decision && (
+                      <Badge 
+                        className={cn(
+                          "h-5 text-xs",
+                          selectedArticle.user_decision === "Include" 
+                            ? "bg-[#00b380]/10 text-[#00b380] border-[#00b380]/30" 
+                            : selectedArticle.user_decision === "Exclude"
+                              ? "bg-[#ff1d42]/10 text-[#ff1d42] border-[#ff1d42]/30"
+                              : "bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/30"
+                        )}
+                        variant="outline"
+                      >
+                        {selectedArticle.user_decision === "Include" ? "Included" : selectedArticle.user_decision === "Exclude" ? "Excluded" : "Unsure"}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </DialogHeader>
@@ -266,7 +281,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                           ? "border-[#00b380]/20"
                           : selectedArticle.ai_decision === "Exclude"
                             ? "border-[#ff1d42]/20"
-                            : "border-[#3b82f6]/20" // Blue for Unsure
+                            : "border-[#f59e0b]/20" // Amber for Unsure
                       )}>
                         <div className={cn(
                           "px-4 py-3 flex items-center gap-2 font-medium",
@@ -274,7 +289,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                             ? "bg-[#00b380]/5 text-[#00b380]" 
                             : selectedArticle.ai_decision === "Exclude"
                               ? "bg-[#ff1d42]/5 text-[#ff1d42]"
-                              : "bg-[#3b82f6]/5 text-[#3b82f6]" // Blue for Unsure
+                              : "bg-[#f59e0b]/5 text-[#f59e0b]" // Amber for Unsure
                         )}>
                           Recommendation: {selectedArticle.ai_decision}
                         </div>

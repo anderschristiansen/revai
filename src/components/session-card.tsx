@@ -3,27 +3,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { FolderOpen, Clock, Trash2, FolderIcon, MoreHorizontal, UploadIcon, BotIcon, BarChart4Icon } from "lucide-react";
+import { FolderOpen, Clock, Trash2, FolderIcon, MoreHorizontal, UploadIcon } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
-import { useState, useEffect } from "react";
-import { DecisionDots } from "@/components/decision-dots";
-
-// Colors for the visualization - using the site's red/green color scheme
-const COLORS = {
-  included: '#00b380', // Green
-  excluded: '#ff1d42', // Red
-  pending: '#94a3b8',
-  aiEvaluated: '#3b82f6',
-  notEvaluated: '#6b7280',
-  cardHover: 'rgba(0,0,0,0.05)',
-  uploadRunning: '#f59e0b', // Amber
-  unsure: '#f59e0b', // Amber for unsure status
-};
+import { ReviewStats } from "@/components/review-stats";
+import { AIStats } from "@/components/ai-stats";
 
 export type SessionCardProps = {
   id: string;
@@ -64,14 +52,6 @@ export function SessionCard({
   className,
   onDelete,
 }: SessionCardProps) {
-  // Add local state for AI evaluation count
-  const [localAiEvaluatedCount, setLocalAiEvaluatedCount] = useState(ai_evaluated_count);
-
-  // Update local state when prop changes
-  useEffect(() => {
-    setLocalAiEvaluatedCount(ai_evaluated_count);
-  }, [ai_evaluated_count]);
-
   function isCompleted() {
     // Session is completed when all articles have been reviewed
     return articles_count > 0 && pending_count === 0;
@@ -88,10 +68,6 @@ export function SessionCard({
       return dateString;
     }
   };
-    
-  const percentAI = files_processed && articles_count > 0
-    ? Math.floor((localAiEvaluatedCount / Math.max(1, articles_count)) * 100)
-    : 0;
 
   const handleDelete = (e: React.MouseEvent) => {
     // Prevent triggering the Link navigation
@@ -286,137 +262,37 @@ export function SessionCard({
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 text-sm text-[#3b82f6] font-bold">
-                  <FolderIcon className="h-4 w-4" />
-                  <span>Files Processing Required</span>
-                </div>
+                    <FolderIcon className="h-4 w-4" />
+                    <span>Files Processing Required</span>
+                  </div>
                 )}
               </div>
 
               {/* Middle - Review Status */}
               {files_processed && (
-                <div className="space-y-3 border-l pl-6">
-                  <div className="flex items-center gap-2">
-                    <div className={cn(
-                      "p-1 rounded-md", 
-                      completed 
-                        ? "bg-[#00b380]/10" 
-                        : "bg-primary/10"
-                    )}>
-                      <BarChart4Icon className={cn(
-                        "h-3.5 w-3.5", 
-                        completed 
-                          ? "text-[#00b380]" 
-                          : "text-primary"
-                      )} />
-                    </div>
-                    <span className="text-xs font-medium text-muted-foreground">Review Status</span>
-                  </div>
-
-                  {/* Review Progress */}
-                  <div className="space-y-2">
-                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                      <motion.div 
-                        className="h-full rounded-full"
-                        style={{ backgroundColor: completed ? COLORS.included : COLORS.pending }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.floor((reviewed_count / Math.max(1, articles_count)) * 100)}%` }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                      />
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: completed ? COLORS.included : COLORS.pending }}></div>
-                      <span>{completed ? "Review Complete" : "Review in Progress"}</span>
-                    </div>
-                  </div>
-
-                  {/* Review Decision Indicators */}
-                  <div className="flex flex-col gap-2">
-                    <DecisionDots
-                      included={reviewed_count}
-                      excluded={excluded_count}
-                      unsure={unsure_count}
-                      pending={pending_count}
-                    />
-                  </div>
+                <div className="border-l pl-6">
+                  <ReviewStats
+                    total={articles_count}
+                    reviewed={reviewed_count}
+                    included={articles_count - excluded_count - unsure_count - pending_count}
+                    excluded={excluded_count}
+                    unsure={unsure_count}
+                    pending={pending_count}
+                  />
                 </div>
               )}
 
               {/* Right side - AI Evaluation Status */}
-              { files_processed && (
-                <div className="space-y-3 border-l pl-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "p-1 rounded-md", 
-                        completed 
-                          ? "bg-[#00b380]/10" 
-                          : "bg-primary/10"
-                      )}>
-                        <BotIcon className={cn(
-                          "h-3.5 w-3.5 text-primary"
-                        )} />
-                      </div>
-                      <span className="text-xs font-medium text-muted-foreground">AI Evaluation</span>
-                    </div>
-                    {ai_evaluation_running && (
-                      <span className="font-medium" style={{ color: COLORS.aiEvaluated }}>{percentAI}%</span>
-                    )}
-                  </div>
-
-                  {/* AI Evaluation Progress */}
-                  <div className="space-y-2">
-                    {ai_evaluation_running ? (
-                      <>
-                        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                          <motion.div 
-                            className="h-full rounded-full"
-                            style={{ backgroundColor: COLORS.aiEvaluated }}
-                            initial={{ width: 0 }}
-                            animate={{ width: `${percentAI}%` }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                          />
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[0.6rem] text-[#3b82f6]">
-                          <div className="w-3 h-3 relative overflow-hidden">
-                            <motion.div 
-                              animate={{ rotate: [0, 5, 0, -5, 0] }}
-                              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                              className="absolute inset-0 scale-[2] -translate-y-[12%]"
-                            >
-                              <Lottie 
-                                animationData={coffeeAnimation}
-                                loop={true}
-                                autoplay={true}
-                              />
-                            </motion.div>
-                          </div>
-                          <span>AI is evaluating articles...</span>
-                        </div>
-                      </>
-                    ) : ai_evaluated_count > 0 ? (
-                      <div className="flex items-center gap-1.5 text-xs text-[#3b82f6]">
-                        <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.aiEvaluated }}></div>
-                        <span>AI Evaluation Complete</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                        <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.notEvaluated }}></div>
-                        <span>AI Not Evaluated</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* AI Decision Indicators */}
-                  {ai_evaluated_count > 0 && (
-                    <div className="flex flex-col gap-2">
-                      <DecisionDots
-                        included={ai_included_count}
-                        excluded={ai_excluded_count}
-                        unsure={ai_unsure_count}
-                        prefix="AI "
-                      />
-                    </div>
-                  )}
+              {files_processed && (
+                <div className="border-l pl-6">
+                  <AIStats
+                    total={articles_count}
+                    evaluated={ai_evaluated_count}
+                    included={ai_included_count}
+                    excluded={ai_excluded_count}
+                    unsure={ai_unsure_count}
+                    isRunning={ai_evaluation_running}
+                  />
                 </div>
               )}
             </div>

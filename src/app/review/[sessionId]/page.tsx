@@ -16,7 +16,6 @@ import {
   ListChecks, 
   ArrowLeftIcon, 
   FileTextIcon, 
-  BarChart4Icon,
   BookOpenIcon, 
   BotIcon,
   FolderIcon
@@ -27,10 +26,10 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
-import { DecisionDots } from "@/components/decision-dots";
+import { ReviewStats } from "@/components/review-stats";
+import { AIStats } from "@/components/ai-stats";
 
 // Animation variants
 const pageTransition = {
@@ -374,17 +373,11 @@ export default function ReviewPage() {
   const articlesIncluded = articles.filter(a => a.user_decision === "Include").length;
   const articlesExcluded = articles.filter(a => a.user_decision === "Exclude").length;
   const articlesUnsure = articles.filter(a => a.user_decision === "Unsure").length;
-  const percentageComplete = articles.length > 0 
-    ? Math.round((articlesReviewed / articles.length) * 100) 
-    : 0;
   
   // AI evaluation stats
   const articlesAIEvaluated = articles.filter(a => 
     a.ai_decision === "Include" || a.ai_decision === "Exclude" || a.ai_decision === "Unsure"
   ).length;
-  const aiPercentageComplete = articles.length > 0
-    ? Math.round((articlesAIEvaluated / articles.length) * 100)
-    : 0;
   const aiIncluded = articles.filter(a => a.ai_decision === "Include").length;
   const aiExcluded = articles.filter(a => a.ai_decision === "Exclude").length;
   const aiUnsure = articles.filter(a => a.ai_decision === "Unsure").length;
@@ -554,123 +547,30 @@ export default function ReviewPage() {
               </Card>
             </motion.div>
             
-            {/* Reviewed Card */}
+            {/* Review Stats Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-              <Card className={cn(
-                "overflow-hidden border hover:shadow-md transition-all h-full",
-                percentageComplete === 100 && "border-[#00b380]/30 hover:border-[#00b380]/70"
-              )}>
-                <CardContent className="p-2 relative">
-                  {/* Hover gradient effect */}
-                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div className={cn(
-                      "absolute inset-0 bg-gradient-to-br",
-                      percentageComplete === 100 
-                        ? "from-[#00b380]/5 to-transparent" 
-                        : "from-primary/3 to-transparent"
-                    )} />
-                  </div>
-                
-                  <div className="flex items-center space-x-1.5">
-                    <div className={cn(
-                      "p-1 rounded-md", 
-                      percentageComplete === 100 
-                        ? "bg-[#00b380]/10" 
-                        : "bg-primary/10"
-                    )}>
-                      <BarChart4Icon className={cn(
-                        "h-3.5 w-3.5", 
-                        percentageComplete === 100 
-                          ? "text-[#00b380]" 
-                          : "text-primary"
-                      )} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Reviewed</p>
-                      <div className="flex items-baseline">
-                        <p className="text-lg font-bold leading-none">{articlesReviewed}</p>
-                        <span className={cn(
-                          "text-[0.6rem] ml-1",
-                          percentageComplete === 100 
-                            ? "text-[#00b380]" 
-                            : "text-muted-foreground"
-                        )}>
-                          ({percentageComplete}%)
-                        </span>
-                      </div>
-                      <DecisionDots
-                        included={articlesIncluded}
-                        excluded={articlesExcluded}
-                        unsure={articlesUnsure}
-                        pending={articles.length - articlesReviewed}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <ReviewStats
+                total={articles.length}
+                reviewed={articlesReviewed}
+                included={articlesIncluded}
+                excluded={articlesExcluded}
+                unsure={articlesUnsure}
+                pending={articles.length - articlesReviewed}
+                inCard
+              />
             </motion.div>
             
-            {/* AI Evaluation Card */}
+            {/* AI Stats Card */}
             <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-              <Card className={cn(
-                "overflow-hidden border hover:shadow-md transition-all h-full",
-                aiPercentageComplete === 100 && "border-[#3b82f6]/30 hover:border-[#3b82f6]/70"
-              )}>
-                <CardContent className="p-2 relative">
-                  {/* Hover gradient effect */}
-                  <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6]/5 to-transparent" />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1.5">
-                      <div className="p-1 rounded-md bg-[#3b82f6]/10">
-                        <BotIcon className="h-3.5 w-3.5 text-[#3b82f6]" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-1">
-                          <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">AI</p>
-                          {batchRunning && (
-                            <div className="flex items-center ml-1">
-                              <div className="w-3.5 h-3.5 relative overflow-hidden">
-                                <motion.div 
-                                  animate={{ rotate: [0, 5, 0, -5, 0] }}
-                                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                                  className="absolute inset-0 scale-[2] -translate-y-[12%]"
-                                >
-                                  <Lottie 
-                                    animationData={coffeeAnimation}
-                                    loop={true}
-                                    autoplay={true}
-                                  />
-                                </motion.div>
-                              </div>
-                              <motion.span 
-                                animate={{ opacity: [0.8, 1, 0.8] }}
-                                transition={{ repeat: Infinity, duration: 1.5 }}
-                                className="text-[0.6rem] ml-0.5 text-[#3b82f6] font-medium"
-                              >
-                                Brewing
-                              </motion.span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex items-baseline">
-                          <p className="text-lg font-bold leading-none">{articlesAIEvaluated}</p>
-                          <span className="text-[0.6rem] ml-1 text-muted-foreground">
-                            ({aiPercentageComplete}%)
-                          </span>
-                        </div>
-                        <DecisionDots
-                          included={aiIncluded}
-                          excluded={aiExcluded}
-                          unsure={aiUnsure}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <AIStats
+                total={articles.length}
+                evaluated={articlesAIEvaluated}
+                included={aiIncluded}
+                excluded={aiExcluded}
+                unsure={aiUnsure}
+                isRunning={batchRunning}
+                inCard
+              />
             </motion.div>
           </motion.div>
 
