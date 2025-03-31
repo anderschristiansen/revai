@@ -89,28 +89,40 @@ export function UploadForm({ sessionId }: UploadFormProps) {
   };
 
   async function uploadFiles() {
-    const formData = new FormData();
+    let totalArticlesCount = 0;
+    const processedFiles = [];
     
-    // Add session ID
-    formData.append('sessionId', sessionId);
-    
-    // Add all files with their filenames
-    articlesFiles.forEach((file, index) => {
-      formData.append(`articles`, file);
-      formData.append(`filenames[${index}]`, file.name);
-    });
-
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `Could not process files`);
+    for (const file of articlesFiles) {
+      const formData = new FormData();
+      formData.append('sessionId', sessionId);
+      formData.append('articles', file);
+      formData.append(`filenames[0]`, file.name);
+      
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `Could not process file: ${file.name}`);
+        }
+  
+        const result = await response.json();
+        totalArticlesCount += result.totalArticlesCount || 0;
+        processedFiles.push(...(result.files || []));
+      } catch (error) {
+        console.error(`Error processing file ${file.name}:`, error);
+        throw error;
+      }
     }
-
-    return response.json();
+    
+    return {
+      totalArticlesCount,
+      filesCount: articlesFiles.length,
+      files: processedFiles
+    };
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -123,7 +135,7 @@ export function UploadForm({ sessionId }: UploadFormProps) {
     setIsUploading(true);
 
     try {
-      // Upload the files first
+      // Upload the files
       const result = await uploadFiles();
       
       // Update the session with all properties in a single call
