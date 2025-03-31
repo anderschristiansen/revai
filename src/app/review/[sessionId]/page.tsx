@@ -266,6 +266,11 @@ export default function ReviewPage() {
       const result = await response.json();
       
       if (!response.ok) {
+        // Check for specific API key errors
+        if (result.error?.includes("OpenAI API key")) {
+          toast.error(result.error, { duration: 10000 });
+          return;
+        }
         throw new Error(result.error || "Failed to start article evaluation");
       }
       
@@ -273,7 +278,7 @@ export default function ReviewPage() {
       setBatchRunning(true);
       
       toast.success(`Evaluation of ${result.count} articles has started`);
-    } catch (error: unknown) {
+    } catch (error) {
       console.error("Error starting evaluation:", error);
       
       // If there was an error, set ai_evaluation_running back to false in the database
@@ -288,7 +293,7 @@ export default function ReviewPage() {
       
       // Show a more specific error message
       if (error instanceof Error && error.message?.includes("API key")) {
-        toast.error("OpenAI API key is missing or invalid. Please check your environment variables.");
+        toast.error(error.message, { duration: 10000 });
       } else {
         const errorMessage = error instanceof Error ? error.message : "Could not start evaluation";
         toast.error(errorMessage);
