@@ -28,7 +28,7 @@ export type SessionCardProps = {
   excluded_count?: number;
   pending_count?: number;
   ai_evaluated_count?: number;
-  last_evaluated_at?: string;
+  batch_running?: boolean;
   className?: string;
 };
 
@@ -41,7 +41,7 @@ export function SessionCard({
   excluded_count = 0,
   pending_count = 0,
   ai_evaluated_count = 0,
-  last_evaluated_at,
+  batch_running = false,
   className,
 }: SessionCardProps) {
   
@@ -60,22 +60,10 @@ export function SessionCard({
     // Session is completed when all articles have been reviewed
     return articles_count > 0 && pending_count === 0;
   }
-  
-  function isBatchRunning() {
-    if (!last_evaluated_at) return false;
-    
-    // If the last evaluation was less than 5 minutes ago, consider it active
-    const lastEvalTime = new Date(last_evaluated_at).getTime();
-    const currentTime = new Date().getTime();
-    const fiveMinutesInMs = 5 * 60 * 1000;
-    
-    return currentTime - lastEvalTime < fiveMinutesInMs;
-  }
 
   // Calculate the progress percentage
   const progressPercentage = getProgressPercentage();
   const completed = isCompleted();
-  const batchRunning = isBatchRunning();
 
   return (
     <motion.div
@@ -99,7 +87,7 @@ export function SessionCard({
           </div>
           
           {/* AI Brewing indicator */}
-          {batchRunning && (
+          {batch_running && (
             <div className="absolute top-0 right-0 mt-3 mr-3 z-10">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}

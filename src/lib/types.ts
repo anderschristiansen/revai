@@ -33,6 +33,7 @@ export type SessionData = {
   created_at: string;
   updated_at?: string;
   last_evaluated_at?: string;
+  batch_running?: boolean;
 };
 
 export type Session = {
@@ -48,6 +49,7 @@ export type Session = {
   pending_count?: number;
   articles: Article[];
   ai_evaluated_count?: number;
+  batch_running?: boolean;
 };
 
 export type AiSettings = {

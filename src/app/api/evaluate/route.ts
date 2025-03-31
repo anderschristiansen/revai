@@ -65,6 +65,20 @@ export async function POST(request: NextRequest) {
 
     const batchSize = aiSettings?.batch_size || 10;
     
+    // Ensure batch_running is set to true in the database
+    const { error: updateError } = await supabase
+      .from("review_sessions")
+      .update({
+        batch_running: true,
+        last_evaluated_at: new Date().toISOString()
+      })
+      .eq("id", sessionId);
+      
+    if (updateError) {
+      console.error("Error setting batch_running flag:", updateError);
+      // Continue anyway as it's not critical
+    }
+    
     // Process articles in batches asynchronously
     // Trigger batch processing without waiting for completion
     processBatchesAsync(
@@ -134,7 +148,7 @@ async function processBatchesAsync(
         // Process each batch
         await processBatch(batch, criteria, aiSettings);
         
-        // Optional: Update session with progress
+        // Update session with progress (don't set batch_running to false until all batches are done)
         await supabase
           .from("review_sessions")
           .update({
@@ -148,8 +162,33 @@ async function processBatchesAsync(
     }
 
     console.log(`Completed evaluation of all ${articles.length} articles for session ${sessionId}`);
+    
+    // Now that all batches have been processed, set batch_running to false
+    const { error: updateError } = await supabase
+      .from("review_sessions")
+      .update({
+        batch_running: false,
+        last_evaluated_at: new Date().toISOString(),
+      })
+      .eq("id", sessionId);
+      
+    if (updateError) {
+      console.error("Error updating session when completing batch:", updateError);
+    }
   } catch (error) {
     console.error("Error in batch processing:", error);
+    
+    // If there was an error, still try to set batch_running to false
+    try {
+      await supabase
+        .from("review_sessions")
+        .update({
+          batch_running: false
+        })
+        .eq("id", sessionId);
+    } catch (updateError) {
+      console.error("Error resetting batch status after error:", updateError);
+    }
   }
 }
 

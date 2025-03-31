@@ -33,7 +33,68 @@ export default function SessionsPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // Initial load of sessions
     loadSessions();
+    
+    // Set up Supabase subscription for real-time updates
+    const sessionSubscription = supabase
+      .channel('sessions_changes')
+      .on('postgres_changes', { 
+        event: 'UPDATE', 
+        schema: 'public', 
+        table: 'review_sessions'
+      }, (payload) => {
+        console.log("Session update received:", payload);
+        // Simply reload all sessions to ensure we get the latest data
+        loadSessions();
+      })
+      .subscribe();
+      
+    // Set up Supabase subscription for article changes that might affect session stats
+    const articlesSubscription = supabase
+      .channel('articles_updates')
+      .on('postgres_changes', { 
+        event: 'UPDATE', 
+        schema: 'public', 
+        table: 'articles'
+      }, (payload) => {
+        console.log("Article update received:", payload);
+        // Simply reload all sessions to ensure we get the latest data
+        loadSessions();
+      })
+      .subscribe();
+    
+    // Also subscribe to INSERT and DELETE events separately for full reloads
+    const otherChangesSubscription = supabase
+      .channel('other_changes')
+      .on('postgres_changes', { 
+        event: 'INSERT', 
+        schema: 'public', 
+        table: 'review_sessions'
+      }, () => loadSessions())
+      .on('postgres_changes', { 
+        event: 'DELETE', 
+        schema: 'public', 
+        table: 'review_sessions'
+      }, () => loadSessions())
+      .on('postgres_changes', { 
+        event: 'INSERT', 
+        schema: 'public', 
+        table: 'articles'
+      }, () => loadSessions())
+      .on('postgres_changes', { 
+        event: 'DELETE', 
+        schema: 'public', 
+        table: 'articles'
+      }, () => loadSessions())
+      .subscribe();
+    
+    // Clean up subscriptions on unmount
+    return () => {
+      sessionSubscription.unsubscribe();
+      articlesSubscription.unsubscribe();
+      otherChangesSubscription.unsubscribe();
+    };
   }, []);
 
   async function loadSessions() {
@@ -56,13 +117,19 @@ export default function SessionsPage() {
       }
 
       // Process the data to count reviewed and excluded articles
-      const processedSessions = data.map(session => ({
-        ...session,
-        reviewed_count: session.articles.filter((a: Article) => a.user_decision === "Yes").length,
-        excluded_count: session.articles.filter((a: Article) => a.user_decision === "No").length,
-        pending_count: session.articles.filter((a: Article) => !a.user_decision).length,
-        ai_evaluated_count: session.articles.filter((a: Article) => a.ai_decision).length
-      }));
+      const processedSessions = data.map(session => {
+        return {
+          ...session,
+          reviewed_count: session.articles.filter((a: Article) => a.user_decision === "Yes").length,
+          excluded_count: session.articles.filter((a: Article) => a.user_decision === "No").length,
+          pending_count: session.articles.filter((a: Article) => !a.user_decision).length,
+          ai_evaluated_count: session.articles.filter((a: Article) => 
+            a.ai_decision === "Include" || a.ai_decision === "Exclude" || a.ai_decision === "Unsure"
+          ).length,
+          // Use the stored batch_running value or default to false if not present
+          batch_running: session.batch_running || false
+        };
+      });
 
       setSessions(processedSessions || []);
     } catch (error) {
@@ -139,7 +206,7 @@ export default function SessionsPage() {
                 excluded_count={session.excluded_count}
                 pending_count={session.pending_count}
                 ai_evaluated_count={session.ai_evaluated_count}
-                last_evaluated_at={session.last_evaluated_at}
+                batch_running={session.batch_running}
               />
             </motion.div>
           ))}

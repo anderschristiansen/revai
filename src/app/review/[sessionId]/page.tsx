@@ -140,20 +140,16 @@ export default function ReviewPage() {
 
       setArticles(data || []);
       
-      // Check if there's an ongoing batch by looking at last_evaluated_at
+      // Get the latest session data to check batch_running status
       const { data: sessionData, error: sessionError } = await supabase
         .from("review_sessions")
-        .select("last_evaluated_at")
+        .select("batch_running")
         .eq("id", sessionId)
         .single();
         
-      if (!sessionError && sessionData?.last_evaluated_at) {
-        // If the last evaluation was less than 5 minutes ago, consider it active
-        const lastEvalTime = new Date(sessionData.last_evaluated_at).getTime();
-        const currentTime = new Date().getTime();
-        const fiveMinutesInMs = 5 * 60 * 1000;
-        
-        setBatchRunning(currentTime - lastEvalTime < fiveMinutesInMs);
+      if (!sessionError && sessionData) {
+        // Use the batch_running flag directly from the database
+        setBatchRunning(sessionData.batch_running || false);
       } else {
         setBatchRunning(false);
       }
@@ -282,6 +278,20 @@ export default function ReviewPage() {
     try {
       toast.info(`Starting evaluation of ${articlesToEvaluate.length} articles in batches...`);
       
+      // Update the session to set batch_running to true
+      const { error: updateError } = await supabase
+        .from("review_sessions")
+        .update({
+          batch_running: true,
+          last_evaluated_at: new Date().toISOString()
+        })
+        .eq("id", sessionId);
+        
+      if (updateError) {
+        console.error("Error updating session batch status:", updateError);
+        // Continue anyway, as this is not critical
+      }
+      
       // Call the API to start evaluation
       const response = await fetch("/api/evaluate", {
         method: "POST",
@@ -300,12 +310,22 @@ export default function ReviewPage() {
         throw new Error(result.error || "Failed to start article evaluation");
       }
       
-      // Set the batch running state to true
+      // Set the batch running state locally as well
       setBatchRunning(true);
       
       toast.success(`Evaluation of ${result.count} articles has started`);
     } catch (error: unknown) {
       console.error("Error starting evaluation:", error);
+      
+      // If there was an error, set batch_running back to false in the database
+      try {
+        await supabase
+          .from("review_sessions")
+          .update({ batch_running: false })
+          .eq("id", sessionId);
+      } catch (updateError) {
+        console.error("Error resetting batch status:", updateError);
+      }
       
       // Show a more specific error message
       if (error instanceof Error && error.message?.includes("API key")) {
