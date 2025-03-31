@@ -50,6 +50,7 @@ export default function ReviewPage() {
     try {
       setLoading(true);
       
+      // First get the session data
       const { data: sessionData, error: sessionError } = await supabase
         .from("review_sessions")
         .select("*")
@@ -65,6 +66,18 @@ export default function ReviewPage() {
         throw sessionError;
       }
 
+      // Then get the files separately
+      const { data: filesData, error: filesError } = await supabase
+        .from("files")
+        .select("*")
+        .eq("session_id", sessionId)
+        .order("created_at", { ascending: false });
+
+      if (filesError) {
+        console.error("Error loading files:", filesError);
+      }
+
+      // Set the session data
       setSession(sessionData);
       setNewTitle(sessionData.title || "");
       
@@ -72,17 +85,27 @@ export default function ReviewPage() {
         setCriteria(sessionData.criterias);
       }
       
-      // Load files for this session
-      const { data: filesData, error: filesError } = await supabase
-        .from("files")
-        .select("*")
-        .eq("session_id", sessionId)
-        .order("created_at", { ascending: false });
+      // Set files data
+      setFiles(filesData || []);
       
-      if (filesError) {
-        console.error("Error loading files:", filesError);
-      } else {
-        setFiles(filesData || []);
+      // Load articles if we have files
+      if (filesData && filesData.length > 0) {
+        const fileIds = filesData.map(file => file.id);
+        const { data: articlesData, error: articlesError } = await supabase
+          .from("articles")
+          .select("*")
+          .in("file_id", fileIds)
+          .order("id");
+
+        if (articlesError) {
+          console.error("Error loading articles:", articlesError);
+        } else {
+          // Update articles state with the latest data
+          setArticles(articlesData || []);
+          
+          // Update batch running state based on session data
+          setBatchRunning(sessionData.ai_evaluation_running || false);
+        }
       }
       
     } catch (error) {
@@ -93,73 +116,22 @@ export default function ReviewPage() {
     }
   }, [sessionId]);
 
-  const loadArticles = React.useCallback(async () => {
-    try {
-      // Get all files for this session
-      const { data: filesData, error: filesError } = await supabase
-        .from("files")
-        .select("id")
-        .eq("session_id", sessionId);
-        
-      if (filesError) {
-        console.error("Error loading files:", filesError);
-        throw filesError;
-      }
-      
-      // If no files, return empty array
-      if (!filesData || filesData.length === 0) {
-        setArticles([]);
-        return;
-      }
-      
-      // Get all article_ids from all files in this session
-      const fileIds = filesData.map(file => file.id);
-      
-      // Get all articles for these files
-      const { data, error } = await supabase
-        .from("articles")
-        .select("*")
-        .in("file_id", fileIds)
-        .order("id");
-
-      if (error) {
-        throw error;
-      }
-
-      setArticles(data || []);
-      
-      // Get the latest session data to check ai_evaluation_running status
-      const { data: sessionData, error: sessionError } = await supabase
-        .from("review_sessions")
-        .select("ai_evaluation_running")
-        .eq("id", sessionId)
-        .single();
-        
-      if (!sessionError && sessionData) {
-        // Use the ai_evaluation_running flag directly from the database
-        setBatchRunning(sessionData.ai_evaluation_running || false);
-      } else {
-        setBatchRunning(false);
-      }
-    } catch (error) {
-      console.error("Error loading articles:", error);
-      toast.error("Could not load articles");
-    }
-  }, [sessionId]);
-
   useEffect(() => {
+    // Load initial data
     loadSessionData();
-    loadArticles();
     
+    // Set up subscriptions for real-time updates
     const articlesSubscription = supabase
       .channel('articles_changes')
       .on('postgres_changes', { 
         event: '*', 
         schema: 'public', 
         table: 'articles',
-        filter: `session_id=eq.${sessionId}` 
-      }, () => {
-        loadArticles();
+        filter: `file_id=in.(${files.map(f => f.id).join(',')})` 
+      }, (payload) => {
+        console.log("Article update received:", payload);
+        // Reload all data when articles change
+        loadSessionData();
       })
       .subscribe();
     
@@ -170,10 +142,9 @@ export default function ReviewPage() {
         schema: 'public', 
         table: 'review_sessions',
         filter: `id=eq.${sessionId}` 
-      }, () => {
-        // Simply refresh data and check batch status
+      }, (payload) => {
+        console.log("Session update received:", payload);
         loadSessionData();
-        loadArticles(); // This will also check batch status
       })
       .subscribe();
     
@@ -181,7 +152,7 @@ export default function ReviewPage() {
       articlesSubscription.unsubscribe();
       sessionSubscription.unsubscribe();
     };
-  }, [sessionId, loadSessionData, loadArticles]);
+  }, [sessionId, loadSessionData, files]);
 
   async function updateSessionTitle() {
     if (!newTitle.trim()) {
@@ -243,9 +214,9 @@ export default function ReviewPage() {
       console.error("Error saving decision:", error);
       toast.error("Could not save decision");
       // Reload articles to ensure consistency
-      loadArticles();
+      loadSessionData();
     }
-  }, [loadArticles]);
+  }, [loadSessionData]);
 
   async function evaluateArticles() {
     if (evaluating) return;
@@ -341,7 +312,7 @@ export default function ReviewPage() {
   const aiExcluded = articles.filter(a => a.ai_decision === "Exclude").length;
   const aiUnsure = articles.filter(a => a.ai_decision === "Unsure").length;
 
-  if (loading) {
+  if (loading && !session) {
     return (
       <motion.div 
         className="container mx-auto py-10 flex flex-col items-center justify-center min-h-[70vh]"
