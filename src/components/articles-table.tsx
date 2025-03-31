@@ -12,6 +12,7 @@ import {
   Bot,
   FileText,
   XCircle,
+  HelpCircle,
 } from "lucide-react"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
@@ -20,7 +21,7 @@ import {
   Tooltip,
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/sonner"
-import { Article } from "@/lib/types"
+import { Article, DecisionType } from "@/lib/types"
 
 // Add URL detection regex
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -54,7 +55,7 @@ function TextWithLinks({ text }: { text: string }) {
 
 interface ArticlesTableProps {
   articles: Article[]
-  onReviewArticle: (id: string, decision: "Yes" | "No") => Promise<void>
+  onReviewArticle: (id: string, decision: DecisionType) => Promise<void>
 }
 
 export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps) {
@@ -72,7 +73,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
     setSelectedArticle(null)
   }
 
-  async function handleArticleDecision(decision: "Yes" | "No", articleId?: string, showToast: boolean = true) {
+  async function handleArticleDecision(decision: DecisionType, articleId?: string, showToast: boolean = true) {
     const targetArticle = articleId ? articles.find(a => a.id === articleId) : selectedArticle;
     if (!targetArticle) return;
     
@@ -82,10 +83,12 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       
       // Show toast notification with shorter text (only when called from table actions)
       if (showToast) {
-        if (decision === "Yes") {
+        if (decision === "Include") {
           toast.success(`Article included`);
-        } else {
+        } else if (decision === "Exclude") {
           toast.info(`Article excluded`);
+        } else if (decision === "Unsure") {
+          toast.info(`Article marked as unsure`);
         }
       }
       
@@ -134,8 +137,9 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         return (
           <div className={cn(
             "flex items-start gap-3 py-2 pl-4 border-l-2", 
-            userDecision === "Yes" ? "border-l-[#00b380]" : 
-            userDecision === "No" ? "border-l-[#ff1d42]" : 
+            userDecision === "Include" ? "border-l-[#00b380]" : 
+            userDecision === "Exclude" ? "border-l-[#ff1d42]" : 
+            userDecision === "Unsure" ? "border-l-[#3b82f6]" : 
             "border-l-transparent"
           )}>
             {/* Content column with title and abstract */}
@@ -148,13 +152,15 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                   <Badge 
                     className={cn(
                       "h-5 text-xs",
-                      userDecision === "Yes" 
+                      userDecision === "Include" 
                         ? "bg-[#00b380]/10 text-[#00b380] border-[#00b380]/30" 
-                        : "bg-[#ff1d42]/10 text-[#ff1d42] border-[#ff1d42]/30"
+                        : userDecision === "Exclude"
+                          ? "bg-[#ff1d42]/10 text-[#ff1d42] border-[#ff1d42]/30"
+                          : "bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/30"
                     )}
                     variant="outline"
                   >
-                    {userDecision === "Yes" ? "Included" : "Excluded"}
+                    {userDecision === "Include" ? "Included" : userDecision === "Exclude" ? "Excluded" : "Unsure"}
                   </Badge>
                 )}
               </div>
@@ -227,8 +233,9 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                 {/* Status badges and title with left indicator */}
                 <div className={cn(
                   "pl-4 border-l-2",
-                  selectedArticle.user_decision === "Yes" ? "border-l-[#00b380]" : 
-                  selectedArticle.user_decision === "No" ? "border-l-[#ff1d42]" : 
+                  selectedArticle.user_decision === "Include" ? "border-l-[#00b380]" : 
+                  selectedArticle.user_decision === "Exclude" ? "border-l-[#ff1d42]" : 
+                  selectedArticle.user_decision === "Unsure" ? "border-l-[#3b82f6]" : 
                   "border-l-transparent"
                 )}>
                   <DialogTitle className="text-xl font-semibold leading-tight mb-2">
@@ -317,17 +324,17 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                 
                 <div className="flex gap-3">
                   <Button 
-                    onClick={() => handleArticleDecision("No", selectedArticle.id, false)}
+                    onClick={() => handleArticleDecision("Exclude", selectedArticle.id, false)}
                     variant="outline"
                     size="lg"
                     className={cn(
                       "min-w-32 font-medium transition-all",
                       "active:scale-95",
-                      isSubmitting && selectedArticle.user_decision === "No" && "opacity-50 pointer-events-none"
+                      isSubmitting && selectedArticle.user_decision === "Exclude" && "opacity-50 pointer-events-none"
                     )}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting && selectedArticle.user_decision === "No" ? (
+                    {isSubmitting && selectedArticle.user_decision === "Exclude" ? (
                       <motion.div 
                         initial={{ scale: 0.5, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -343,18 +350,46 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                       </>
                     )}
                   </Button>
-                  
+
                   <Button 
-                    onClick={() => handleArticleDecision("Yes", selectedArticle.id, false)}
+                    onClick={() => handleArticleDecision("Unsure", selectedArticle.id, false)}
+                    variant="outline"
                     size="lg"
                     className={cn(
                       "min-w-32 font-medium transition-all",
                       "active:scale-95",
-                      isSubmitting && selectedArticle.user_decision === "Yes" && "opacity-50 pointer-events-none"
+                      isSubmitting && selectedArticle.user_decision === "Unsure" && "opacity-50 pointer-events-none"
                     )}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting && selectedArticle.user_decision === "Yes" ? (
+                    {isSubmitting && selectedArticle.user_decision === "Unsure" ? (
+                      <motion.div 
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="flex items-center"
+                      >
+                        <HelpCircle className="h-4 w-4 mr-2" />
+                        Marked as Unsure
+                      </motion.div>
+                    ) : (
+                      <>
+                        <HelpCircle className="h-4 w-4 mr-2" />
+                        Unsure
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => handleArticleDecision("Include", selectedArticle.id, false)}
+                    size="lg"
+                    className={cn(
+                      "min-w-32 font-medium transition-all",
+                      "active:scale-95",
+                      isSubmitting && selectedArticle.user_decision === "Include" && "opacity-50 pointer-events-none"
+                    )}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting && selectedArticle.user_decision === "Include" ? (
                       <motion.div 
                         initial={{ scale: 0.5, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}

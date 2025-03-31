@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -14,9 +15,13 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { PlusIcon, X, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { CriteriaList } from "@/lib/types";
 
 const formSchema = z.object({
-  criteriaText: z.string().min(1, "Please provide inclusion criteria"),
+  criteriaList: z.array(z.object({
+    id: z.string(),
+    text: z.string().min(1, "Criterion text cannot be empty")
+  })).min(1, "Please provide at least one inclusion criterion")
 });
 
 type FileFormValues = z.infer<typeof formSchema>;
@@ -25,22 +30,30 @@ interface UploadFormProps {
   sessionId: string;
 }
 
-const DEFAULT_CRITERIA = `Studies must contain direct or indirect measurements of either ICP or CSF opening pressure.
-Only studies performed on humans will be included; studies based on animal models will be excluded.
-Studies must include interventions specifically targeting the systemic venous system for ICP management.
-Studies must be published in English and have undergone peer review.
-Studies focusing on patients treated for specific intracranial venous pathologies or obstructions using well-established methods (e.g., surgical shunts, stents, or thrombectomy) will be excluded.`;
+const DEFAULT_CRITERIA: CriteriaList = [
+  { id: "1", text: "Studies must contain direct or indirect measurements of either ICP or CSF opening pressure." },
+  { id: "2", text: "Only studies performed on humans will be included; studies based on animal models will be excluded." },
+  { id: "3", text: "Studies must include interventions specifically targeting the systemic venous system for ICP management." },
+  { id: "4", text: "Studies must be published in English and have undergone peer review." },
+  { id: "5", text: "Studies focusing on patients treated for specific intracranial venous pathologies or obstructions using well-established methods (e.g., surgical shunts, stents, or thrombectomy) will be excluded." }
+];
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export function UploadForm({ sessionId }: UploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [articlesFiles, setArticlesFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
   const router = useRouter();
 
   const form = useForm<FileFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { criteriaText: DEFAULT_CRITERIA },
+    defaultValues: { criteriaList: DEFAULT_CRITERIA },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "criteriaList"
   });
 
   const validateFiles = (files: File[]) => {
@@ -71,88 +84,113 @@ export function UploadForm({ sessionId }: UploadFormProps) {
     setArticlesFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const updateSession = async (updates: {
-    criteria?: string;
-    articles_count?: number;
-    files_count?: number;
-    needs_setup?: boolean;
-  }) => {
-    const { error } = await supabase
-      .from('review_sessions')
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', sessionId);
-
-    if (error) throw error;
-  };
-
-  async function uploadFiles() {
-    let totalArticlesCount = 0;
-    const processedFiles = [];
+  const uploadFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append('sessionId', sessionId);
+    formData.append('file', file);
     
-    for (const file of articlesFiles) {
-      const formData = new FormData();
-      formData.append('sessionId', sessionId);
-      formData.append('articles', file);
-      formData.append(`filenames[0]`, file.name);
-      
-      try {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-  
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || `Could not process file: ${file.name}`);
-        }
-  
-        const result = await response.json();
-        totalArticlesCount += result.totalArticlesCount || 0;
-        processedFiles.push(...(result.files || []));
-      } catch (error) {
-        console.error(`Error processing file ${file.name}:`, error);
-        throw error;
-      }
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || `Failed to process file: ${file.name}`);
     }
-    
-    return {
-      totalArticlesCount,
-      filesCount: articlesFiles.length,
-      files: processedFiles
-    };
-  }
+
+    if (!result.success || !result.articleCount) {
+      throw new Error(`No articles were successfully processed from file: ${file.name}`);
+    }
+
+    return result;
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (articlesFiles.length === 0 || !form.getValues().criteriaText) {
+    if (articlesFiles.length === 0 || !form.getValues().criteriaList.length) {
       toast.error("Please provide both files and inclusion criteria");
       return;
     }
 
     setIsUploading(true);
+    setUploadProgress({});
 
     try {
-      // Upload the files
-      const result = await uploadFiles();
-      
-      // Update the session with all properties in a single call
-      await updateSession({ 
-        criteria: form.getValues().criteriaText,
-        articles_count: result.totalArticlesCount,
-        files_count: result.filesCount,
-        needs_setup: false
-      });
+      // Update the criteria
+      const { error: updateError } = await supabase
+        .from('review_sessions')
+        .update({
+          criterias: form.getValues().criteriaList,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', sessionId);
 
-      // Navigate to the review page
+      if (updateError) {
+        throw new Error('Failed to update session criteria');
+      }
+
+      // Upload files sequentially
+      let totalArticlesCount = 0;
+      const processedFiles = [];
+      const errors: string[] = [];
+
+      for (const file of articlesFiles) {
+        try {
+          setUploadProgress(prev => ({ ...prev, [file.name]: 0 }));
+          const result = await uploadFile(file);
+          
+          totalArticlesCount += result.articleCount;
+          processedFiles.push({
+            filename: file.name,
+            success: true,
+            fileId: result.fileId,
+            articleCount: result.articleCount,
+            warnings: result.warnings
+          });
+          
+          setUploadProgress(prev => ({ ...prev, [file.name]: 100 }));
+        } catch (error) {
+          console.error(`Error processing file ${file.name}:`, error);
+          errors.push(error instanceof Error ? error.message : `Unknown error processing ${file.name}`);
+          setUploadProgress(prev => ({ ...prev, [file.name]: -1 }));
+        }
+      }
+
+      if (errors.length > 0) {
+        throw new Error(`Failed to process some files:\n${errors.join('\n')}`);
+      }
+
+      if (totalArticlesCount === 0) {
+        throw new Error('No articles were successfully processed from any of the uploaded files');
+      }
+
+      // Update session with final counts
+      const { error: finalUpdateError } = await supabase
+        .from('review_sessions')
+        .update({
+          articles_count: totalArticlesCount,
+          files_count: articlesFiles.length,
+          files_processed: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', sessionId);
+
+      if (finalUpdateError) {
+        throw new Error('Failed to update session with final counts');
+      }
+
+      toast.success(`Successfully processed ${totalArticlesCount} articles from ${articlesFiles.length} files`);
       router.push(`/review/${sessionId}`);
       
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Could not upload files');
+      const errorMessage = error instanceof Error ? error.message : 'Could not upload files';
+      toast.error(errorMessage);
+    } finally {
       setIsUploading(false);
+      setUploadProgress({});
     }
   }
 
@@ -164,24 +202,51 @@ export function UploadForm({ sessionId }: UploadFormProps) {
       <Form {...form}>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
-            <FormField
-              control={form.control}
-              name="criteriaText"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Inclusion Criteria</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder="Enter your inclusion criteria, one per line..."
-                      className="min-h-[120px] font-mono text-sm"
-                      disabled={isUploading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-4">
+              <FormLabel>Inclusion Criteria</FormLabel>
+              {fields.map((field: { id: string }, index: number) => (
+                <div key={field.id} className="flex items-start gap-2">
+                  <FormField
+                    control={form.control}
+                    name={`criteriaList.${index}.text`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder="Enter an inclusion criterion..."
+                            className="min-h-[80px] font-mono text-sm"
+                            disabled={isUploading}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 mt-2"
+                    onClick={() => remove(index)}
+                    disabled={isUploading}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                onClick={() => append({ id: crypto.randomUUID(), text: "" })}
+                disabled={isUploading}
+              >
+                <PlusIcon className="h-4 w-4 mr-2" />
+                Add Criterion
+              </Button>
+            </div>
 
             <div className="space-y-2">
               <FormLabel>Article Files (.txt)</FormLabel>
@@ -217,6 +282,17 @@ export function UploadForm({ sessionId }: UploadFormProps) {
                         className="flex items-center gap-1 py-1.5"
                       >
                         <span className="text-xs truncate max-w-[200px]">{file.name}</span>
+                        {isUploading && (
+                          <span className="ml-2">
+                            {uploadProgress[file.name] === -1 ? (
+                              <span className="text-red-500">Failed</span>
+                            ) : uploadProgress[file.name] === 100 ? (
+                              <span className="text-green-500">Done</span>
+                            ) : (
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                            )}
+                          </span>
+                        )}
                         <Button
                           type="button"
                           variant="ghost"

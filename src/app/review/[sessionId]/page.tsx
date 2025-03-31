@@ -7,7 +7,7 @@ import { notFound, useParams } from "next/navigation";
 import { ArticlesTable } from "@/components/articles-table";
 import { UploadForm } from "@/components/upload-form";
 import { toast } from "@/components/ui/sonner";
-import { SessionData, Article, File as ReviewFile } from "@/lib/types";
+import { SessionView, Article, File as ReviewFile, DecisionType, CriteriaList } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { 
   PencilIcon, 
@@ -89,8 +89,8 @@ export default function ReviewPage() {
   const sessionId = params.sessionId as string;
   
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<SessionData | null>(null);
-  const [criteriaLines, setCriteriaLines] = useState<string[]>([]);
+  const [session, setSession] = useState<SessionView | null>(null);
+  const [criteria, setCriteria] = useState<CriteriaList>([]);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [articles, setArticles] = useState<Article[]>([]);
@@ -120,7 +120,7 @@ export default function ReviewPage() {
 
       // Check if this session needs setup (no articles or empty criteria)
       const needsSetup = sessionData.needs_setup || 
-        (sessionData.articles_count === 0 && (!sessionData.criteria || sessionData.criteria.trim() === ''));
+        (sessionData.articles_count === 0 && (!sessionData.criterias || sessionData.criterias.length === 0));
       
       // If needs_setup status changed, update it in the database
       if (needsSetup !== sessionData.needs_setup) {
@@ -136,8 +136,8 @@ export default function ReviewPage() {
       setSession(sessionData);
       setNewTitle(sessionData.title || "");
       
-      if (sessionData.criteria) {
-        setCriteriaLines(sessionData.criteria.split('\n').filter((line: string) => line.trim()));
+      if (sessionData.criterias) {
+        setCriteria(sessionData.criterias);
       }
       
       // Load files for this session
@@ -196,16 +196,16 @@ export default function ReviewPage() {
 
       setArticles(data || []);
       
-      // Get the latest session data to check batch_running status
+      // Get the latest session data to check ai_evaluation_running status
       const { data: sessionData, error: sessionError } = await supabase
         .from("review_sessions")
-        .select("batch_running")
+        .select("ai_evaluation_running")
         .eq("id", sessionId)
         .single();
         
       if (!sessionError && sessionData) {
-        // Use the batch_running flag directly from the database
-        setBatchRunning(sessionData.batch_running || false);
+        // Use the ai_evaluation_running flag directly from the database
+        setBatchRunning(sessionData.ai_evaluation_running || false);
       } else {
         setBatchRunning(false);
       }
@@ -285,7 +285,7 @@ export default function ReviewPage() {
     setIsEditingTitle(false);
   }
 
-  const updateUserDecision = React.useCallback(async (articleId: string, decision: "Yes" | "No") => {
+  const updateUserDecision = React.useCallback(async (articleId: string, decision: DecisionType) => {
     try {
       // Update local state immediately for instant feedback
       setArticles(prevArticles => 
@@ -320,7 +320,7 @@ export default function ReviewPage() {
     
     // Get articles that need AI evaluation - only consider articles that haven't been evaluated
     const articlesToEvaluate = articles.filter(
-      article => !(article.ai_decision === "Include" || article.ai_decision === "Exclude" || article.ai_decision === "Unsure")
+      article => !article.ai_decision
     );
     
     // Check if there are articles to evaluate
@@ -334,11 +334,11 @@ export default function ReviewPage() {
     try {
       toast.info(`Starting evaluation of ${articlesToEvaluate.length} articles in batches...`);
       
-      // Update the session to set batch_running to true
+      // Update the session to set ai_evaluation_running to true
       const { error: updateError } = await supabase
         .from("review_sessions")
         .update({
-          batch_running: true,
+          ai_evaluation_running: true,
           last_evaluated_at: new Date().toISOString()
         })
         .eq("id", sessionId);
@@ -373,11 +373,11 @@ export default function ReviewPage() {
     } catch (error: unknown) {
       console.error("Error starting evaluation:", error);
       
-      // If there was an error, set batch_running back to false in the database
+      // If there was an error, set ai_evaluation_running back to false in the database
       try {
         await supabase
           .from("review_sessions")
-          .update({ batch_running: false })
+          .update({ ai_evaluation_running: false })
           .eq("id", sessionId);
       } catch (updateError) {
         console.error("Error resetting batch status:", updateError);
@@ -397,8 +397,8 @@ export default function ReviewPage() {
 
   // Calculate some stats
   const articlesReviewed = articles.filter(a => a.user_decision).length;
-  const articlesIncluded = articles.filter(a => a.user_decision === "Yes").length;
-  const articlesExcluded = articles.filter(a => a.user_decision === "No").length;
+  const articlesIncluded = articles.filter(a => a.user_decision === "Include").length;
+  const articlesExcluded = articles.filter(a => a.user_decision === "Exclude").length;
   const percentageComplete = articles.length > 0 
     ? Math.round((articlesReviewed / articles.length) * 100) 
     : 0;
@@ -865,19 +865,19 @@ export default function ReviewPage() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        {criteriaLines.length > 0 ? (
-                          criteriaLines.map((criterion, index) => (
+                        {criteria.length > 0 ? (
+                          criteria.map((criterion) => (
                             <motion.div 
-                              key={index} 
+                              key={criterion.id} 
                               className="flex items-start gap-3 p-3 border rounded-md bg-card"
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: index * 0.05 }}
+                              transition={{ delay: criteria.indexOf(criterion) * 0.05 }}
                             >
                               <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0">
-                                {index + 1}
+                                {criteria.indexOf(criterion) + 1}
                               </div>
-                              <p className="text-sm">{criterion}</p>
+                              <p className="text-sm">{criterion.text}</p>
                             </motion.div>
                           ))
                         ) : (

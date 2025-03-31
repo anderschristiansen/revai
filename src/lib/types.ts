@@ -1,18 +1,26 @@
 // Common types used throughout the application
 
+export type DecisionType = "Include" | "Exclude" | "Unsure";
+
 export type Criterion = {
   id: string;
   text: string;
 };
+
+export type CriteriaList = Criterion[];
 
 export type File = {
   id: string;
   session_id: string;
   filename: string;
   articles_count: number;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
 };
+
+export interface FileWithArticles extends File {
+  id: string;
+  articles: Article[];
+}
 
 export type Article = {
   id: string;
@@ -20,11 +28,10 @@ export type Article = {
   title: string;
   abstract: string;
   full_text: string;
-  ai_decision?: "Include" | "Exclude" | "Unsure";
+  ai_decision?: DecisionType;
   ai_explanation?: string;
-  user_decision?: "Yes" | "No";
+  user_decision?: DecisionType;
   needs_review: boolean;
-  created_at?: string;
 };
 
 export type ParsedArticle = {
@@ -34,39 +41,31 @@ export type ParsedArticle = {
   fullText: string;
 };
 
-export type SessionData = {
+export type SessionRecord = {
   id: string;
   title: string;
   articles_count: number;
   files_count: number;
-  criteria: string;
+  criterias: CriteriaList;
   created_at: string;
   updated_at?: string;
   last_evaluated_at?: string;
-  batch_running?: boolean;
-  needs_setup?: boolean;
+  ai_evaluated: boolean;
+  ai_evaluation_running?: boolean;
+  files_processed: boolean;
+  files_upload_running?: boolean;
 };
 
-export type Session = {
-  id: string;
-  created_at: string;
-  articles_count: number;
-  files_count: number;
-  criteria: string;
-  title?: string;
-  updated_at?: string;
-  last_evaluated_at?: string;
-  reviewed_count?: number;
-  excluded_count?: number;
-  pending_count?: number;
+export type SessionView = SessionRecord & {
+  reviewed_count: number;
+  excluded_count: number;
+  pending_count: number;
+  ai_evaluated_count: number;
   articles: Article[];
-  files?: File[];
-  ai_evaluated_count?: number;
-  batch_running?: boolean;
-  needs_setup?: boolean;
+  files: FileWithArticles[];
 };
 
-export type AiSettings = {
+export type AISettings = {
   instructions: string;
   temperature: number;
   max_tokens: number;
@@ -75,7 +74,29 @@ export type AiSettings = {
   batch_size?: number;
 };
 
-export type EvaluationResult = {
-  decision: "Include" | "Exclude" | "Unsure";
-  explanation: string;
-}; 
+// API-specific types
+export type ApiArticle = Pick<Article, 'id' | 'title' | 'abstract'> & {
+  file_id: string;
+};
+
+export type ApiResponse<T> = {
+  data: T;
+  error: null;
+} | {
+  data: null;
+  error: string;
+};
+
+export type EvaluateRequest = {
+  sessionId: string;
+  articleIds: string[];
+};
+
+export type EvaluateResponse = {
+  message: string;
+  count: number;
+};
+
+export type ErrorResponse = {
+  error: string;
+};

@@ -1,14 +1,15 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3, Trash2, FolderIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3, Trash2, FolderIcon, MoreHorizontal, UploadIcon, BotIcon } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
-import { Button } from "./ui/button";
 
 // Colors for the visualization - using the site's red/green color scheme
 const COLORS = {
@@ -17,7 +18,8 @@ const COLORS = {
   pending: '#94a3b8',
   aiEvaluated: '#3b82f6',
   notEvaluated: '#6b7280',
-  cardHover: 'rgba(0,0,0,0.05)'
+  cardHover: 'rgba(0,0,0,0.05)',
+  uploadRunning: '#f59e0b', // Amber
 };
 
 export type SessionCardProps = {
@@ -30,7 +32,9 @@ export type SessionCardProps = {
   excluded_count?: number;
   pending_count?: number;
   ai_evaluated_count?: number;
-  batch_running?: boolean;
+  ai_evaluation_running?: boolean;
+  files_processed?: boolean;
+  upload_running?: boolean;
   needs_setup?: boolean;
   className?: string;
   onDelete?: (id: string) => void;
@@ -46,7 +50,9 @@ export function SessionCard({
   excluded_count = 0,
   pending_count = 0,
   ai_evaluated_count = 0,
-  batch_running = false,
+  ai_evaluation_running = false,
+  files_processed = false,
+  upload_running = false,
   needs_setup = false,
   className,
   onDelete,
@@ -71,6 +77,19 @@ export function SessionCard({
   // Calculate the progress percentage
   const progressPercentage = getProgressPercentage();
   const completed = isCompleted();
+
+  // Format date to a more readable format
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), "MMM d, yyyy");
+    } catch {
+      return dateString;
+    }
+  };
+    
+  const percentAI = files_processed && articles_count > 0
+    ? Math.floor((ai_evaluated_count / Math.max(1, articles_count)) * 100)
+    : 0;
 
   const handleDelete = (e: React.MouseEvent) => {
     // Prevent triggering the Link navigation
@@ -103,7 +122,7 @@ export function SessionCard({
           </div>
           
           {/* AI Brewing indicator */}
-          {batch_running && (
+          {ai_evaluation_running && (
             <div className="absolute top-0 right-0 mt-3 mr-3 z-10">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -149,6 +168,53 @@ export function SessionCard({
             </div>
           )}
 
+          {/* Upload in progress indicator */}
+          {upload_running && (
+            <div className="absolute top-0 right-0 mt-3 mr-3 z-10">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+                className="relative"
+              >
+                <motion.div
+                  animate={{ 
+                    boxShadow: ['0 0 0 0 rgba(245, 158, 11, 0.1)', '0 0 0 8px rgba(245, 158, 11, 0.2)'],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 2,
+                  }}
+                  className="absolute inset-0 rounded-full"
+                />
+                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white shadow-md border border-amber-300">
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <motion.div
+                      animate={{ 
+                        y: [0, -3, 0],
+                      }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 1,
+                      }}
+                    >
+                      <UploadIcon className="h-4 w-4 text-amber-500" />
+                    </motion.div>
+                  </div>
+                  <motion.div
+                    animate={{ opacity: [0.8, 1, 0.8] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  >
+                    <span className="text-sm font-medium whitespace-nowrap text-amber-600">
+                      Uploading
+                    </span>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
           <CardContent className="px-5 pt-4 pb-4 relative">
             {/* Session title and timestamp */}
             <div className="flex justify-between items-start mb-3">
@@ -178,20 +244,32 @@ export function SessionCard({
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="h-3.5 w-3.5 mr-1.5" />
-                  {format(new Date(created_at), "PPP")}
+                  {formatDate(created_at)}
                 </div>
               </div>
               
               {onDelete && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-50 hover:text-red-500"
-                  onClick={handleDelete}
-                  title="Delete session"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <span className="sr-only">Open menu</span>
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDelete(e);
+                      }}
+                      className="text-red-600 focus:text-red-600"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>Delete</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
             </div>
 
@@ -211,7 +289,7 @@ export function SessionCard({
                   </div>
                 )}
                 
-                {completed ? (
+                {files_processed && articles_count > 0 ? (
                   <div className="flex items-center gap-1.5 text-xs">
                     <div className="h-2 w-2 rounded-full bg-[#00b380]"></div>
                     <span className="text-[#00b380]">All reviewed</span>
@@ -301,6 +379,22 @@ export function SessionCard({
                     transition={{ duration: 1, ease: "easeOut" }}
                   />
                 </div>
+              </div>
+            )}
+
+            {/* AI evaluation indicator */}
+            {files_processed && ai_evaluated_count > 0 && (
+              <div className="flex items-center gap-1.5 text-xs text-blue-600">
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></span>
+                <span>{ai_evaluated_count} articles evaluated by AI ({percentAI}%)</span>
+              </div>
+            )}
+
+            {/* AI Evaluation Status */}
+            {ai_evaluation_running && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <BotIcon className="h-4 w-4 animate-pulse" />
+                <span>AI Evaluation in Progress</span>
               </div>
             )}
           </CardContent>

@@ -1,16 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { evaluateArticle } from "@/lib/openai";
 import { supabase } from "@/lib/supabase";
-import { AiSettings } from "@/lib/types";
+import { 
+  AISettings, 
+  CriteriaList, 
+  ApiArticle, 
+  EvaluateRequest, 
+  EvaluateResponse, 
+  ErrorResponse,
+  SessionRecord 
+} from "@/lib/types";
 
-// Define a simplified version of Article just for this API route
-interface ApiArticle {
-  id: string;
-  title: string;
-  abstract: string;
-}
+// Function return types
+type ProcessBatchResult = Promise<void>;
+type ProcessBatchesResult = Promise<void>;
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse<EvaluateResponse | ErrorResponse>> {
   try {
     // Check for OpenAI API key
     if (!process.env.OPENAI_API_KEY) {
@@ -20,7 +25,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { sessionId, articleIds } = await request.json();
+    const { sessionId, articleIds } = await request.json() as EvaluateRequest;
 
     if (!sessionId || !articleIds || !Array.isArray(articleIds) || articleIds.length === 0) {
       return NextResponse.json(
@@ -32,9 +37,9 @@ export async function POST(request: NextRequest) {
     // Get the session criteria
     const { data: session, error: sessionError } = await supabase
       .from("review_sessions")
-      .select("criteria")
+      .select("criterias")
       .eq("id", sessionId)
-      .single();
+      .single<Pick<SessionRecord, 'id' | 'criterias'>>();
 
     if (sessionError || !session) {
       return NextResponse.json(
@@ -43,7 +48,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!session.criteria) {
+    if (!session.criterias || session.criterias.length === 0) {
       return NextResponse.json(
         { error: "No criteria found for this session" },
         { status: 400 }
@@ -56,7 +61,7 @@ export async function POST(request: NextRequest) {
       .select("instructions, temperature, max_tokens, seed, model, batch_size")
       .order("created_at", { ascending: false })
       .limit(1)
-      .single();
+      .single<AISettings>();
 
     if (aiSettingsError) {
       console.error("Error retrieving AI settings:", aiSettingsError);
@@ -65,17 +70,17 @@ export async function POST(request: NextRequest) {
 
     const batchSize = aiSettings?.batch_size || 10;
     
-    // Ensure batch_running is set to true in the database
+    // Ensure ai_evaluation_running is set to true in the database
     const { error: updateError } = await supabase
       .from("review_sessions")
       .update({
-        batch_running: true,
+        ai_evaluation_running: true,
         last_evaluated_at: new Date().toISOString()
       })
       .eq("id", sessionId);
       
     if (updateError) {
-      console.error("Error setting batch_running flag:", updateError);
+      console.error("Error setting ai_evaluation_running flag:", updateError);
       // Continue anyway as it's not critical
     }
     
@@ -84,7 +89,7 @@ export async function POST(request: NextRequest) {
     processBatchesAsync(
       sessionId, 
       articleIds, 
-      session.criteria, 
+      session.criterias, 
       aiSettings ? {
         instructions: aiSettings.instructions,
         temperature: aiSettings.temperature,
@@ -120,35 +125,47 @@ export async function POST(request: NextRequest) {
 async function processBatchesAsync(
   sessionId: string, 
   articleIds: string[], 
-  criteria: string, 
-  aiSettings: AiSettings, 
+  criteria: CriteriaList, 
+  aiSettings: AISettings, 
   batchSize: number
-) {
+): ProcessBatchesResult {
   try {
     // Get the articles to evaluate
     const { data: articles, error: articlesError } = await supabase
       .from("articles")
-      .select("id, title, abstract")
-      .in("id", articleIds)
-      .eq("session_id", sessionId);
+      .select("id, title, abstract, file_id")
+      .in("id", articleIds);
 
-    if (articlesError || !articles) {
+    if (articlesError) {
       console.error("Failed to retrieve articles:", articlesError);
       return;
     }
 
-    // Process in batches
-    const batches = [];
-    for (let i = 0; i < articles.length; i += batchSize) {
-      batches.push(articles.slice(i, i + batchSize));
+    if (!articles || articles.length === 0) {
+      console.error("No articles found to evaluate");
+      return;
     }
+
+    // Type assertion for articles
+    const typedArticles = articles as ApiArticle[];
+    console.log(`Found ${typedArticles.length} articles to evaluate`);
+
+    // Process in batches
+    const batches: ApiArticle[][] = [];
+    for (let i = 0; i < typedArticles.length; i += batchSize) {
+      batches.push(typedArticles.slice(i, i + batchSize));
+    }
+
+    console.log(`Created ${batches.length} batches of size ${batchSize}`);
 
     for (const batch of batches) {
       try {
+        console.log(`Processing batch of ${batch.length} articles`);
         // Process each batch
         await processBatch(batch, criteria, aiSettings);
+        console.log(`Completed batch of ${batch.length} articles`);
         
-        // Update session with progress (don't set batch_running to false until all batches are done)
+        // Update session with progress (don't set ai_evaluation_running to false until all batches are done)
         await supabase
           .from("review_sessions")
           .update({
@@ -161,13 +178,13 @@ async function processBatchesAsync(
       }
     }
 
-    console.log(`Completed evaluation of all ${articles.length} articles for session ${sessionId}`);
+    console.log(`Completed evaluation of all ${typedArticles.length} articles for session ${sessionId}`);
     
-    // Now that all batches have been processed, set batch_running to false
+    // Now that all batches have been processed, set ai_evaluation_running to false
     const { error: updateError } = await supabase
       .from("review_sessions")
       .update({
-        batch_running: false,
+        ai_evaluation_running: false,
         last_evaluated_at: new Date().toISOString(),
       })
       .eq("id", sessionId);
@@ -178,12 +195,12 @@ async function processBatchesAsync(
   } catch (error) {
     console.error("Error in batch processing:", error);
     
-    // If there was an error, still try to set batch_running to false
+    // If there was an error, still try to set ai_evaluation_running to false
     try {
       await supabase
         .from("review_sessions")
         .update({
-          batch_running: false
+          ai_evaluation_running: false
         })
         .eq("id", sessionId);
     } catch (updateError) {
@@ -193,16 +210,26 @@ async function processBatchesAsync(
 }
 
 // Function to process a single batch of articles
-async function processBatch(articles: ApiArticle[], criteria: string, aiSettings: AiSettings) {
+async function processBatch(
+  articles: ApiArticle[], 
+  criteria: CriteriaList, 
+  aiSettings: AISettings
+): ProcessBatchResult {
   for (const article of articles) {
     try {
+      console.log(`Evaluating article: ${article.id}`);
+      // Format criteria for OpenAI evaluation
+      const formattedCriteria = criteria.map(c => c.text).join('\n');
+
       // Evaluate with OpenAI
       const result = await evaluateArticle(
         article.title,
         article.abstract,
-        criteria,
+        formattedCriteria,
         aiSettings
       );
+
+      console.log(`Article ${article.id} evaluation result:`, result.decision);
 
       // Update the article with AI evaluation
       const { error: updateError } = await supabase
@@ -214,7 +241,9 @@ async function processBatch(articles: ApiArticle[], criteria: string, aiSettings
         .eq("id", article.id);
 
       if (updateError) {
-        console.error("Error updating article:", updateError);
+        console.error(`Error updating article ${article.id}:`, updateError);
+      } else {
+        console.log(`Successfully updated article ${article.id}`);
       }
     } catch (error) {
       console.error(`Failed to evaluate article ${article.id}:`, error);
