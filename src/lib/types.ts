@@ -5,9 +5,18 @@ export type Criterion = {
   text: string;
 };
 
-export type Article = {
+export type File = {
   id: string;
   session_id: string;
+  filename: string;
+  articles_count: number;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type Article = {
+  id: string;
+  file_id: string;
   title: string;
   abstract: string;
   full_text: string;
@@ -29,17 +38,20 @@ export type SessionData = {
   id: string;
   title: string;
   articles_count: number;
+  files_count: number;
   criteria: string;
   created_at: string;
   updated_at?: string;
   last_evaluated_at?: string;
   batch_running?: boolean;
+  needs_setup?: boolean;
 };
 
 export type Session = {
   id: string;
   created_at: string;
   articles_count: number;
+  files_count: number;
   criteria: string;
   title?: string;
   updated_at?: string;
@@ -48,8 +60,10 @@ export type Session = {
   excluded_count?: number;
   pending_count?: number;
   articles: Article[];
+  files?: File[];
   ai_evaluated_count?: number;
   batch_running?: boolean;
+  needs_setup?: boolean;
 };
 
 export type AiSettings = {

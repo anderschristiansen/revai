@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { PlusIcon, X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const formSchema = z.object({
   criteriaText: z.string().min(1, "Please provide inclusion criteria"),
@@ -28,7 +30,7 @@ interface UploadFormProps {
 export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: UploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [articlesFile, setArticlesFile] = useState<File | null>(null);
+  const [articlesFiles, setArticlesFiles] = useState<File[]>([]);
   const router = useRouter();
 
   const form = useForm<FileFormValues>({
@@ -38,21 +40,35 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
     },
   });
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!articlesFile || !form.getValues().criteriaText) {
-      toast.error("Please provide both a file and inclusion criteria");
-      return;
-    }
-
-    // Validate articles file
-    if (!articlesFile.name.endsWith('.txt')) {
-      toast.error("The article file must be a .txt file");
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = Array.from(e.target.files || []);
+    
+    // Validate all files
+    const invalidFiles = newFiles.filter(file => !file.name.endsWith('.txt'));
+    if (invalidFiles.length > 0) {
+      toast.error(`Files must be .txt files: ${invalidFiles.map(f => f.name).join(', ')}`);
       return;
     }
     
-    if (articlesFile.size > 10 * 1024 * 1024) {
-      toast.error("The article file must be less than 10MB");
+    const largeFiles = newFiles.filter(file => file.size > 10 * 1024 * 1024);
+    if (largeFiles.length > 0) {
+      toast.error(`Files must be less than 10MB: ${largeFiles.map(f => f.name).join(', ')}`);
+      return;
+    }
+
+    setArticlesFiles(prev => [...prev, ...newFiles]);
+    // Reset the input value to allow selecting the same file again
+    e.target.value = '';
+  };
+
+  const removeFile = (index: number) => {
+    setArticlesFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (articlesFiles.length === 0 || !form.getValues().criteriaText) {
+      toast.error("Please provide both files and inclusion criteria");
       return;
     }
 
@@ -73,20 +89,50 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
 
       // Only create session if it doesn't exist
       if (!existingSession) {
-        const { error: sessionError } = await supabase
-          .from('review_sessions')
-          .insert([
-            {
-              id: sessionId,
-              title: 'Systematic Review',
-              criteria: form.getValues().criteriaText,
-              articles_count: 0,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            }
-          ]);
+        try {
+          // First try with needs_setup column
+          const { error: sessionError } = await supabase
+            .from('review_sessions')
+            .insert([
+              {
+                id: sessionId,
+                title: 'Systematic Review',
+                criteria: form.getValues().criteriaText,
+                articles_count: 0,
+                files_count: 0, // Initialize files count
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                needs_setup: false // This will be a complete session since we're adding criteria and files
+              }
+            ]);
 
-        if (sessionError) throw sessionError;
+          // If there's an error with the needs_setup column, try again without it
+          if (sessionError && sessionError.message.includes('needs_setup')) {
+            console.warn('needs_setup column not found, creating without it');
+            const { error: fallbackError } = await supabase
+              .from('review_sessions')
+              .insert([
+                {
+                  id: sessionId,
+                  title: 'Systematic Review',
+                  criteria: form.getValues().criteriaText,
+                  articles_count: 0,
+                  files_count: 0, // Initialize files count
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString()
+                }
+              ]);
+            
+            if (fallbackError) throw fallbackError;
+          } else if (sessionError) {
+            throw sessionError;
+          }
+        } catch (error) {
+          console.error('Error creating session:', error);
+          toast.error('Could not create new session');
+          setIsUploading(false);
+          return;
+        }
       } else {
         // Update existing session with new criteria
         const { error: updateError } = await supabase
@@ -100,50 +146,84 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
         if (updateError) throw updateError;
       }
 
-      // Create FormData for file upload
-      const formData = new FormData();
-      formData.append('articles', articlesFile);
-      formData.append('sessionId', sessionId);
-      
-      // Convert criteria text to JSON format
-      const criteriaJson = JSON.stringify(
-        form.getValues().criteriaText
-          .split('\n')
-          .filter(line => line.trim())
-          .map(line => ({
-            id: crypto.randomUUID(),
-            text: line.trim(),
-            required: true
-          }))
-      );
-      formData.append('criteria', criteriaJson);
+      let totalArticlesCount = 0;
 
-      // Call the API to process the file
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      // Process each file
+      for (const file of articlesFiles) {
+        // Create a FormData for each file upload
+        const formData = new FormData();
+        formData.append('articles', file);
+        formData.append('sessionId', sessionId);
+        formData.append('filename', file.name);
+        
+        // Convert criteria text to JSON format
+        const criteriaJson = JSON.stringify(
+          form.getValues().criteriaText
+            .split('\n')
+            .filter(line => line.trim())
+            .map(line => ({
+              id: crypto.randomUUID(),
+              text: line.trim(),
+              required: true
+            }))
+        );
+        formData.append('criteria', criteriaJson);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Kunne ikke behandle artikler');
+        // Call the API to process the file
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `Could not process file: ${file.name}`);
+        }
+
+        const result = await response.json();
+        totalArticlesCount += result.articleCount;
       }
 
-      const result = await response.json();
-      
-      // Update session with article count
-      const { error: updateError } = await supabase
-        .from('review_sessions')
-        .update({ 
-          articles_count: result.articleCount,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', sessionId);
+      // Update session with total article count
+      try {
+        const { error: updateError } = await supabase
+          .from('review_sessions')
+          .update({ 
+            articles_count: totalArticlesCount,
+            files_count: articlesFiles.length,
+            updated_at: new Date().toISOString(),
+            needs_setup: false // Set needs_setup to false since we now have articles and criteria
+          })
+          .eq('id', sessionId);
 
-      if (updateError) throw updateError;
+        if (updateError) {
+          // If there's an error with the needs_setup column, try again without it
+          if (updateError.message.includes('needs_setup')) {
+            console.warn('needs_setup column not found, updating without it');
+            const { error: fallbackError } = await supabase
+              .from('review_sessions')
+              .update({ 
+                articles_count: totalArticlesCount,
+                files_count: articlesFiles.length,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', sessionId);
+              
+            if (fallbackError) throw fallbackError;
+          } else {
+            throw updateError;
+          }
+        }
+      } catch (error) {
+        console.error('Error updating session:', error);
+        toast.error('Could not update session information');
+      }
 
       setUploadSuccess(true);
-      toast.success(`Successfully uploaded ${result.articleCount} articles`);
+      toast.success(`Successfully uploaded ${totalArticlesCount} articles from ${articlesFiles.length} files`);
+
+      // Clear the files list
+      setArticlesFiles([]);
 
       // Call onUploadComplete to trigger a refresh of the parent component
       if (onUploadComplete) {
@@ -160,7 +240,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
       
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Could not upload file');
+      toast.error('Could not upload files');
     } finally {
       setIsUploading(false);
     }
@@ -208,17 +288,57 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
                 />
 
                 <div className="space-y-2">
-                  <FormLabel>Article File (.txt)</FormLabel>
-                  <Input
-                    type="file"
-                    accept=".txt"
-                    onChange={(e) => setArticlesFile(e.target.files?.[0] || null)}
-                    disabled={isUploading}
-                  />
+                  <FormLabel>Article Files (.txt)</FormLabel>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept=".txt"
+                      onChange={handleFileChange}
+                      disabled={isUploading}
+                      multiple
+                      className="flex-1"
+                    />
+                    <Button 
+                      type="button" 
+                      size="icon" 
+                      variant="outline"
+                      onClick={() => document.querySelector<HTMLInputElement>('input[type="file"]')?.click()}
+                      disabled={isUploading}
+                      title="Add files"
+                    >
+                      <PlusIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  {articlesFiles.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      <h4 className="text-sm font-medium">Selected Files ({articlesFiles.length})</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {articlesFiles.map((file, index) => (
+                          <Badge 
+                            key={`${file.name}-${index}`} 
+                            variant="secondary"
+                            className="flex items-center gap-1 py-1.5"
+                          >
+                            <span className="text-xs truncate max-w-[200px]">{file.name}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-4 w-4 ml-1 rounded-full"
+                              onClick={() => removeFile(index)}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <Button type="submit" disabled={isUploading}>
-                  {isUploading ? "Uploading..." : "Upload"}
+                <Button type="submit" disabled={isUploading || articlesFiles.length === 0}>
+                  {isUploading ? "Uploading..." : "Upload Files"}
                 </Button>
               </>
             )}

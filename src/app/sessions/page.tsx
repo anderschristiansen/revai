@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { SessionCard } from "@/components/session-card";
 import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
-import { Article, Session } from "@/lib/types";
+import { Session, File } from "@/lib/types";
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -20,6 +20,15 @@ import {
   AlertDialogHeader, 
   AlertDialogTitle 
 } from "@/components/ui/alert-dialog";
+
+// Extended interface for File with articles from the query
+interface FileWithArticles extends File {
+  articles: Array<{
+    user_decision?: string;
+    needs_review: boolean;
+    ai_decision?: string;
+  }>;
+}
 
 // Animation variants for staggered animations
 const container = {
@@ -115,10 +124,13 @@ export default function SessionsPage() {
         .from("review_sessions")
         .select(`
           *,
-          articles!inner (
-            user_decision,
-            needs_review,
-            ai_decision
+          files(
+            id,
+            articles(
+              user_decision,
+              needs_review,
+              ai_decision
+            )
           )
         `)
         .order("created_at", { ascending: false });
@@ -129,16 +141,25 @@ export default function SessionsPage() {
 
       // Process the data to count reviewed and excluded articles
       const processedSessions = data.map(session => {
+        // Get all articles from all files
+        const allArticles = session.files?.flatMap((file: FileWithArticles) => file.articles || []) || [];
+        
         return {
           ...session,
-          reviewed_count: session.articles.filter((a: Article) => a.user_decision === "Yes").length,
-          excluded_count: session.articles.filter((a: Article) => a.user_decision === "No").length,
-          pending_count: session.articles.filter((a: Article) => !a.user_decision).length,
-          ai_evaluated_count: session.articles.filter((a: Article) => 
+          reviewed_count: allArticles.filter((a: {user_decision?: string}) => a.user_decision === "Yes").length,
+          excluded_count: allArticles.filter((a: {user_decision?: string}) => a.user_decision === "No").length,
+          pending_count: allArticles.filter((a: {user_decision?: string}) => !a.user_decision).length,
+          ai_evaluated_count: allArticles.filter((a: {ai_decision?: string}) => 
             a.ai_decision === "Include" || a.ai_decision === "Exclude" || a.ai_decision === "Unsure"
           ).length,
           // Use the stored batch_running value or default to false if not present
-          batch_running: session.batch_running || false
+          batch_running: session.batch_running || false,
+          // Check if the session needs setup (no files or empty criteria)
+          needs_setup: session.needs_setup || (session.files_count === 0 && (!session.criteria || session.criteria.trim() === '')),
+          // Ensure files_count is available
+          files_count: session.files_count || session.files?.length || 0,
+          // Store articles from all files
+          articles: allArticles
         };
       });
 
@@ -180,19 +201,8 @@ export default function SessionsPage() {
 
   async function deleteSession(sessionId: string) {
     try {
-      // First delete all articles for this session
-      const { error: articlesError } = await supabase
-        .from("articles")
-        .delete()
-        .eq("session_id", sessionId);
-      
-      if (articlesError) {
-        console.error("Error deleting articles:", articlesError);
-        toast.error("Failed to delete session articles");
-        return;
-      }
-      
-      // Then delete the session itself
+      // No need to manually delete articles or files, as we have ON DELETE CASCADE
+      // set up in the database schema. We just need to delete the session.
       const { error: sessionError } = await supabase
         .from("review_sessions")
         .delete()
@@ -265,11 +275,13 @@ export default function SessionsPage() {
                 title={session.title}
                 created_at={session.created_at}
                 articles_count={session.articles_count}
+                files_count={session.files_count}
                 reviewed_count={session.reviewed_count}
                 excluded_count={session.excluded_count}
                 pending_count={session.pending_count}
                 ai_evaluated_count={session.ai_evaluated_count}
                 batch_running={session.batch_running}
+                needs_setup={session.needs_setup}
                 onDelete={handleDeleteRequest}
               />
             </motion.div>
@@ -308,7 +320,7 @@ export default function SessionsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete session</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the session and all its associated articles.
+              This will permanently delete the session and all its associated files and articles.
               This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>

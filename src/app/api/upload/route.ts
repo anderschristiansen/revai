@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     const articlesFile = formData.get("articles") as File;
     const criteriaJson = formData.get("criteria") as string;
     const sessionId = formData.get("sessionId") as string;
+    const filename = formData.get("filename") as string || articlesFile.name;
 
     if (!articlesFile || !criteriaJson || !sessionId) {
       return NextResponse.json(
@@ -68,7 +69,6 @@ export async function POST(request: NextRequest) {
       .from("review_sessions")
       .update({
         criteria: criteriaText,
-        articles_count: articles.length,
         updated_at: new Date().toISOString(),
       })
       .eq("id", sessionId);
@@ -81,23 +81,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Clear existing articles for this session
-    const { error: deleteArticlesError } = await supabase
-      .from("articles")
-      .delete()
-      .eq("session_id", sessionId);
+    // Create a new file entry
+    const { data: fileData, error: fileError } = await supabase
+      .from("files")
+      .insert({
+        session_id: sessionId,
+        filename: filename,
+        articles_count: articles.length,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select('id')
+      .single();
 
-    if (deleteArticlesError) {
-      console.error("Error clearing existing articles:", deleteArticlesError);
-      // Continue anyway
+    if (fileError) {
+      console.error("Error creating file entry:", fileError);
+      return NextResponse.json(
+        { error: "Failed to create file entry" },
+        { status: 500 }
+      );
     }
 
-    // Insert initial article entries
+    const fileId = fileData.id;
+
+    // Insert article entries for this file
+    let insertedCount = 0;
     for (const article of articles) {
       const { error: articleError } = await supabase
         .from("articles")
         .insert({
-          session_id: sessionId,
+          file_id: fileId,
+          session_id: sessionId, // Keeping session_id for backward compatibility
           title: article.title,
           abstract: article.abstract,
           full_text: article.fullText,
@@ -107,19 +121,42 @@ export async function POST(request: NextRequest) {
       if (articleError) {
         console.error("Error inserting article:", articleError);
         // Continue with the rest of the articles even if one fails
+      } else {
+        insertedCount++;
       }
     }
 
+    // If no articles were inserted successfully, delete the file entry
+    if (insertedCount === 0) {
+      await supabase
+        .from("files")
+        .delete()
+        .eq("id", fileId);
+        
+      return NextResponse.json(
+        { error: "Failed to insert any articles" },
+        { status: 500 }
+      );
+    }
+
+    // Update the file with the actual number of articles inserted
+    await supabase
+      .from("files")
+      .update({ articles_count: insertedCount })
+      .eq("id", fileId);
+
     return NextResponse.json({ 
       sessionId, 
-      message: "Files uploaded successfully",
-      articleCount: articles.length,
-      criteriaCount: criteria.length
+      fileId,
+      message: "File uploaded successfully",
+      articleCount: insertedCount,
+      criteriaCount: criteria.length,
+      filename: filename
     });
   } catch (error) {
     console.error("Upload processing error:", error);
     return NextResponse.json(
-      { error: "Failed to process the uploaded files" },
+      { error: "Failed to process the uploaded file" },
       { status: 500 }
     );
   }

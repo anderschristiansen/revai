@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3, Trash2 } from "lucide-react";
+import { FolderOpen, Clock, CheckCircle, XCircle, HelpCircle, AlertCircle, BarChart3, Trash2, FolderIcon } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -25,11 +25,13 @@ export type SessionCardProps = {
   title?: string;
   created_at: string;
   articles_count: number;
+  files_count?: number;
   reviewed_count?: number;
   excluded_count?: number;
   pending_count?: number;
   ai_evaluated_count?: number;
   batch_running?: boolean;
+  needs_setup?: boolean;
   className?: string;
   onDelete?: (id: string) => void;
 };
@@ -39,11 +41,13 @@ export function SessionCard({
   title,
   created_at,
   articles_count,
+  files_count = 0,
   reviewed_count = 0,
   excluded_count = 0,
   pending_count = 0,
   ai_evaluated_count = 0,
   batch_running = false,
+  needs_setup = false,
   className,
   onDelete,
 }: SessionCardProps) {
@@ -200,10 +204,22 @@ export function SessionCard({
                   <span className="text-xs text-muted-foreground">Articles</span>
                 </div>
                 
+                {files_count > 0 && (
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <FolderIcon className="h-3 w-3" />
+                    <span>{files_count} file{files_count !== 1 ? 's' : ''}</span>
+                  </div>
+                )}
+                
                 {completed ? (
                   <div className="flex items-center gap-1.5 text-xs">
                     <div className="h-2 w-2 rounded-full bg-[#00b380]"></div>
                     <span className="text-[#00b380]">All reviewed</span>
+                  </div>
+                ) : needs_setup ? (
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <div className="h-2 w-2 rounded-full bg-amber-400"></div>
+                    <span className="text-amber-500">Setup required</span>
                   </div>
                 ) : hasAiEvaluations() ? (
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

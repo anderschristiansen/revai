@@ -7,7 +7,7 @@ import { notFound, useParams } from "next/navigation";
 import { ArticlesTable } from "@/components/articles-table";
 import { UploadForm } from "@/components/upload-form";
 import { toast } from "@/components/ui/sonner";
-import { SessionData, Article } from "@/lib/types";
+import { SessionData, Article, File as ReviewFile } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { 
   PencilIcon, 
@@ -20,7 +20,8 @@ import {
   BookOpenIcon, 
   BotIcon,
   CheckCircle,
-  XCircle
+  XCircle,
+  FolderIcon
 } from "lucide-react";
 import React from "react";
 import { supabase } from "@/lib/supabase";
@@ -93,6 +94,7 @@ export default function ReviewPage() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [articles, setArticles] = useState<Article[]>([]);
+  const [files, setFiles] = useState<ReviewFile[]>([]);
   const [evaluating, setEvaluating] = useState(false);
   const [activeTab, setActiveTab] = useState("articles");
   const [batchRunning, setBatchRunning] = useState(false);
@@ -108,7 +110,27 @@ export default function ReviewPage() {
         .single();
 
       if (sessionError) {
+        if (sessionError.code === 'PGRST116') { // Not found
+          setSession(null);
+          setLoading(false);
+          return;
+        }
         throw sessionError;
+      }
+
+      // Check if this session needs setup (no articles or empty criteria)
+      const needsSetup = sessionData.needs_setup || 
+        (sessionData.articles_count === 0 && (!sessionData.criteria || sessionData.criteria.trim() === ''));
+      
+      // If needs_setup status changed, update it in the database
+      if (needsSetup !== sessionData.needs_setup) {
+        await supabase
+          .from("review_sessions")
+          .update({ needs_setup: needsSetup })
+          .eq("id", sessionId);
+        
+        // Update the session data with the new needs_setup value
+        sessionData.needs_setup = needsSetup;
       }
 
       setSession(sessionData);
@@ -116,6 +138,19 @@ export default function ReviewPage() {
       
       if (sessionData.criteria) {
         setCriteriaLines(sessionData.criteria.split('\n').filter((line: string) => line.trim()));
+      }
+      
+      // Load files for this session
+      const { data: filesData, error: filesError } = await supabase
+        .from("files")
+        .select("*")
+        .eq("session_id", sessionId)
+        .order("created_at", { ascending: false });
+      
+      if (filesError) {
+        console.error("Error loading files:", filesError);
+      } else {
+        setFiles(filesData || []);
       }
       
     } catch (error) {
@@ -128,10 +163,31 @@ export default function ReviewPage() {
 
   const loadArticles = React.useCallback(async () => {
     try {
+      // Get all files for this session
+      const { data: filesData, error: filesError } = await supabase
+        .from("files")
+        .select("id")
+        .eq("session_id", sessionId);
+        
+      if (filesError) {
+        console.error("Error loading files:", filesError);
+        throw filesError;
+      }
+      
+      // If no files, return empty array
+      if (!filesData || filesData.length === 0) {
+        setArticles([]);
+        return;
+      }
+      
+      // Get all article_ids from all files in this session
+      const fileIds = filesData.map(file => file.id);
+      
+      // Get all articles for these files
       const { data, error } = await supabase
         .from("articles")
         .select("*")
-        .eq("session_id", sessionId)
+        .in("file_id", fileIds)
         .order("id");
 
       if (error) {
@@ -703,6 +759,10 @@ export default function ReviewPage() {
                     <ListChecks className="h-4 w-4" />
                     <span>Criteria</span>
                   </TabsTrigger>
+                  <TabsTrigger value="files" className="gap-2">
+                    <FolderIcon className="h-4 w-4" />
+                    <span>Files</span>
+                  </TabsTrigger>
                 </TabsList>
 
                 <Tooltip content={
@@ -823,6 +883,78 @@ export default function ReviewPage() {
                         ) : (
                           <div className="text-center py-12">
                             <p className="text-muted-foreground">No criteria defined for this review.</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </AnimatePresence>
+              </TabsContent>
+
+              <TabsContent value="files" className="mt-0">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key="files-list"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Uploaded Files</CardTitle>
+                        <CardDescription>
+                          Files containing articles for this review
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {files.length > 0 ? (
+                          <div className="space-y-4">
+                            <div className="rounded-md border">
+                              <table className="w-full divide-y divide-border">
+                                <thead>
+                                  <tr className="bg-muted/50">
+                                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Filename</th>
+                                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Articles</th>
+                                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Uploaded</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border">
+                                  {files.map((file) => (
+                                    <motion.tr 
+                                      key={file.id}
+                                      initial={{ opacity: 0, y: 5 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                      className="bg-card hover:bg-muted/50 transition-colors"
+                                    >
+                                      <td className="px-4 py-3 text-sm">
+                                        <div className="flex items-center">
+                                          <FileTextIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                                          <span className="font-medium">{file.filename}</span>
+                                        </div>
+                                      </td>
+                                      <td className="px-4 py-3 text-sm">{file.articles_count}</td>
+                                      <td className="px-4 py-3 text-sm text-muted-foreground">
+                                        {file.created_at ? new Date(file.created_at).toLocaleString() : "Unknown"}
+                                      </td>
+                                    </motion.tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-center py-12">
+                            <FolderIcon className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                            <p className="text-muted-foreground">No files have been uploaded.</p>
+                            <Button 
+                              onClick={() => setActiveTab("articles")} 
+                              variant="outline" 
+                              className="mt-4"
+                            >
+                              View Articles
+                            </Button>
                           </div>
                         )}
                       </CardContent>
