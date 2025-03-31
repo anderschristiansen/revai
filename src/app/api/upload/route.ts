@@ -16,7 +16,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Read and validate file contents
-    const articlesText = await file.text();
+    let articlesText: string;
+    try {
+      articlesText = await file.text();
+    } catch (error) {
+      console.error("Error reading file:", error);
+      return NextResponse.json(
+        { error: "Failed to read file content" },
+        { status: 400 }
+      );
+    }
+
     if (!articlesText.trim()) {
       return NextResponse.json(
         { error: "File is empty" },
@@ -25,7 +35,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse articles
-    const articles = parseArticles(articlesText);
+    let articles;
+    try {
+      articles = parseArticles(articlesText);
+    } catch (error) {
+      console.error("Error parsing articles:", error);
+      return NextResponse.json(
+        { error: "Failed to parse articles from file" },
+        { status: 400 }
+      );
+    }
+
     if (articles.length === 0) {
       return NextResponse.json(
         { error: "No articles found in file" },
@@ -46,6 +66,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (fileError) {
+      console.error("Error creating file entry:", fileError);
       return NextResponse.json(
         { error: `Failed to create file entry: ${fileError.message}` },
         { status: 500 }
@@ -58,21 +79,26 @@ export async function POST(request: NextRequest) {
     const errors: string[] = [];
 
     for (const article of articles) {
-      const { error: articleError } = await supabase
-        .from("articles")
-        .insert({
-          file_id: fileId,
-          title: article.title,
-          abstract: article.abstract,
-          full_text: article.fullText,
-          needs_review: true,
-          created_at: new Date().toISOString(),
-        });
+      try {
+        const { error: articleError } = await supabase
+          .from("articles")
+          .insert({
+            file_id: fileId,
+            title: article.title,
+            abstract: article.abstract,
+            full_text: article.fullText,
+            needs_review: true,
+            created_at: new Date().toISOString(),
+          });
 
-      if (articleError) {
-        errors.push(`Failed to insert article: ${articleError.message}`);
-      } else {
-        insertedCount++;
+        if (articleError) {
+          errors.push(`Failed to insert article: ${articleError.message}`);
+        } else {
+          insertedCount++;
+        }
+      } catch (error) {
+        console.error("Error inserting article:", error);
+        errors.push(`Failed to insert article: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
 

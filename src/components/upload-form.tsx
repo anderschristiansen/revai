@@ -89,22 +89,27 @@ export function UploadForm({ sessionId }: UploadFormProps) {
     formData.append('sessionId', sessionId);
     formData.append('file', file);
     
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-    const result = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(result.error || `Failed to process file: ${file.name}`);
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || `Failed to process file: ${file.name}`);
+      }
+
+      if (!result.success || !result.articleCount) {
+        throw new Error(`No articles were successfully processed from file: ${file.name}`);
+      }
+
+      return result;
+    } catch (error) {
+      console.error(`Error processing file ${file.name}:`, error);
+      throw error;
     }
-
-    if (!result.success || !result.articleCount) {
-      throw new Error(`No articles were successfully processed from file: ${file.name}`);
-    }
-
-    return result;
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
