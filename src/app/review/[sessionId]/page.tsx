@@ -974,9 +974,7 @@ export default function ReviewPage() {
             transition={{ duration: 0.4 }}
           >
             <UploadForm 
-              sessionId={sessionId} 
-              onUploadComplete={loadSessionData} 
-              onArticlesRefresh={loadArticles}
+              sessionId={sessionId}
             />
           </motion.div>
         </AnimatePresence>

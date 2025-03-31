@@ -23,13 +23,10 @@ type FileFormValues = z.infer<typeof formSchema>;
 
 interface UploadFormProps {
   sessionId: string;
-  onUploadComplete?: () => Promise<void>;
-  onArticlesRefresh?: () => Promise<void>;
 }
 
-export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: UploadFormProps) {
+export function UploadForm({ sessionId }: UploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [articlesFiles, setArticlesFiles] = useState<File[]>([]);
   const router = useRouter();
 
@@ -73,78 +70,18 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
     }
 
     setIsUploading(true);
-    setUploadSuccess(false);
 
     try {
-      // Check if session exists first
-      const { data: existingSession, error: checkError } = await supabase
+      // Update session with new criteria
+      const { error: updateError } = await supabase
         .from('review_sessions')
-        .select('id')
-        .eq('id', sessionId)
-        .single();
+        .update({
+          criteria: form.getValues().criteriaText,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', sessionId);
 
-      if (checkError && checkError.code !== 'PGRST116') { // PGRST116 is "not found"
-        throw checkError;
-      }
-
-      // Only create session if it doesn't exist
-      if (!existingSession) {
-        try {
-          // First try with needs_setup column
-          const { error: sessionError } = await supabase
-            .from('review_sessions')
-            .insert([
-              {
-                id: sessionId,
-                title: 'Systematic Review',
-                criteria: form.getValues().criteriaText,
-                articles_count: 0,
-                files_count: 0, // Initialize files count
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                needs_setup: false // This will be a complete session since we're adding criteria and files
-              }
-            ]);
-
-          // If there's an error with the needs_setup column, try again without it
-          if (sessionError && sessionError.message.includes('needs_setup')) {
-            console.warn('needs_setup column not found, creating without it');
-            const { error: fallbackError } = await supabase
-              .from('review_sessions')
-              .insert([
-                {
-                  id: sessionId,
-                  title: 'Systematic Review',
-                  criteria: form.getValues().criteriaText,
-                  articles_count: 0,
-                  files_count: 0, // Initialize files count
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString()
-                }
-              ]);
-            
-            if (fallbackError) throw fallbackError;
-          } else if (sessionError) {
-            throw sessionError;
-          }
-        } catch (error) {
-          console.error('Error creating session:', error);
-          toast.error('Could not create new session');
-          setIsUploading(false);
-          return;
-        }
-      } else {
-        // Update existing session with new criteria
-        const { error: updateError } = await supabase
-          .from('review_sessions')
-          .update({
-            criteria: form.getValues().criteriaText,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', sessionId);
-
-        if (updateError) throw updateError;
-      }
+      if (updateError) throw updateError;
 
       let totalArticlesCount = 0;
 
@@ -192,51 +129,20 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
             articles_count: totalArticlesCount,
             files_count: articlesFiles.length,
             updated_at: new Date().toISOString(),
-            needs_setup: false // Set needs_setup to false since we now have articles and criteria
+            needs_setup: false
           })
           .eq('id', sessionId);
 
-        if (updateError) {
-          // If there's an error with the needs_setup column, try again without it
-          if (updateError.message.includes('needs_setup')) {
-            console.warn('needs_setup column not found, updating without it');
-            const { error: fallbackError } = await supabase
-              .from('review_sessions')
-              .update({ 
-                articles_count: totalArticlesCount,
-                files_count: articlesFiles.length,
-                updated_at: new Date().toISOString()
-              })
-              .eq('id', sessionId);
-              
-            if (fallbackError) throw fallbackError;
-          } else {
-            throw updateError;
-          }
-        }
+        if (updateError) throw updateError;
       } catch (error) {
         console.error('Error updating session:', error);
         toast.error('Could not update session information');
       }
 
-      setUploadSuccess(true);
       toast.success(`Successfully uploaded ${totalArticlesCount} articles from ${articlesFiles.length} files`);
-
-      // Clear the files list
-      setArticlesFiles([]);
-
-      // Call onUploadComplete to trigger a refresh of the parent component
-      if (onUploadComplete) {
-        await onUploadComplete();
-      }
-
-      // Call onArticlesRefresh to refresh the articles data
-      if (onArticlesRefresh) {
-        await onArticlesRefresh();
-      }
-
-      // Force a router refresh to ensure all data is loaded
-      router.refresh();
+      
+      // Navigate to the review page immediately
+      router.push(`/review/${sessionId}`);
       
     } catch (error) {
       console.error('Upload error:', error);
@@ -254,7 +160,7 @@ export function UploadForm({ sessionId, onUploadComplete, onArticlesRefresh }: U
       <Form {...form}>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
-            {uploadSuccess ? (
+            {isUploading ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <div className="mb-4">
                   <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mx-auto">

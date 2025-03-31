@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { PlusCircle, Loader2, Trash2 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { useRouter } from "next/navigation";
 import { SessionCard } from "@/components/session-card";
@@ -18,7 +18,8 @@ import {
   AlertDialogDescription, 
   AlertDialogFooter, 
   AlertDialogHeader, 
-  AlertDialogTitle 
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 
 // Extended interface for File with articles from the query
@@ -50,6 +51,7 @@ export default function SessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteSessionId, setDeleteSessionId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -240,19 +242,64 @@ export default function SessionsPage() {
     setDeleteSessionId(id);
   };
 
+  async function deleteAllSessions() {
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase
+        .from('review_sessions')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // This will match all valid UUIDs
+
+      if (error) throw error;
+
+      toast.success('All sessions deleted successfully');
+      setSessions([]);
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting all sessions:', error);
+      toast.error('Could not delete all sessions');
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   return (
     <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-4xl font-bold">Your Review Sessions</h1>
-        <motion.div 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Button onClick={createNewSession} size="lg" className="shadow-sm">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Create New Session
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Review Sessions</h1>
+        <div className="flex gap-4">
+          {sessions.length > 0 && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" size="sm" className="text-muted-foreground hover:text-destructive">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete All
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete All Sessions</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete all review sessions and their associated files and articles. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={deleteAllSessions}
+                    disabled={isDeleting}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isDeleting ? "Deleting..." : "Delete All"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+          <Button onClick={createNewSession}>
+            New Review Session
           </Button>
-        </motion.div>
+        </div>
       </div>
 
       {loading ? (
