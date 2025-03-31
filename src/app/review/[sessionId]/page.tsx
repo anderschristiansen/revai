@@ -30,17 +30,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
-
-// Colors for the visualization - using the same colors as session-card.tsx
-const COLORS = {
-  included: '#00b380', // Green
-  excluded: '#ff1d42', // Red
-  pending: '#94a3b8',
-  aiEvaluated: '#3b82f6',
-  notEvaluated: '#6b7280',
-  cardHover: 'rgba(0,0,0,0.05)',
-  unsure: '#f59e0b'
-};
+import { DecisionDots } from "@/components/decision-dots";
 
 // Animation variants
 const pageTransition = {
@@ -608,24 +598,12 @@ export default function ReviewPage() {
                           ({percentageComplete}%)
                         </span>
                       </div>
-                      <div className="flex gap-2 mt-0.5 text-[0.6rem] text-muted-foreground">
-                        <div className="flex items-center gap-0.5">
-                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.included }}></div>
-                          <span>{articlesIncluded}</span>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.excluded }}></div>
-                          <span>{articlesExcluded}</span>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.unsure }}></div>
-                          <span>{articlesUnsure}</span>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.pending }}></div>
-                          <span>{articles.length - articlesReviewed}</span>
-                        </div>
-                      </div>
+                      <DecisionDots
+                        included={articlesIncluded}
+                        excluded={articlesExcluded}
+                        unsure={articlesUnsure}
+                        pending={articles.length - articlesReviewed}
+                      />
                     </div>
                   </div>
                 </CardContent>
@@ -683,20 +661,11 @@ export default function ReviewPage() {
                             ({aiPercentageComplete}%)
                           </span>
                         </div>
-                        <div className="flex gap-2 mt-0.5 text-[0.6rem] text-muted-foreground">
-                          <div className="flex items-center gap-0.5">
-                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.included }}></div>
-                            <span>{aiIncluded}</span>
-                          </div>
-                          <div className="flex items-center gap-0.5">
-                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.excluded }}></div>
-                            <span>{aiExcluded}</span>
-                          </div>
-                          <div className="flex items-center gap-0.5">
-                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: COLORS.aiEvaluated }}></div>
-                            <span>{aiUnsure}</span>
-                          </div>
-                        </div>
+                        <DecisionDots
+                          included={aiIncluded}
+                          excluded={aiExcluded}
+                          unsure={aiUnsure}
+                        />
                       </div>
                     </div>
                   </div>

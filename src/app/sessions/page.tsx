@@ -129,6 +129,9 @@ export default function SessionsPage() {
                   a.ai_decision === "Exclude" || 
                   a.ai_decision === "Unsure"
                 ).length,
+                ai_included_count: allArticles.filter(a => a.ai_decision === "Include").length,
+                ai_excluded_count: allArticles.filter(a => a.ai_decision === "Exclude").length,
+                ai_unsure_count: allArticles.filter(a => a.ai_decision === "Unsure").length,
                 articles: allArticles as Article[]
               };
             }
@@ -222,6 +225,9 @@ export default function SessionsPage() {
             a.ai_decision === "Exclude" || 
             a.ai_decision === "Unsure"
           ).length,
+          ai_included_count: transformedArticles.filter((a: Article) => a.ai_decision === "Include").length,
+          ai_excluded_count: transformedArticles.filter((a: Article) => a.ai_decision === "Exclude").length,
+          ai_unsure_count: transformedArticles.filter((a: Article) => a.ai_decision === "Unsure").length,
           // Store articles from all files
           articles: transformedArticles
         };
@@ -389,6 +395,9 @@ export default function SessionsPage() {
                 pending_count={session.pending_count}
                 unsure_count={session.unsure_count}
                 ai_evaluated_count={session.ai_evaluated_count}
+                ai_included_count={session.ai_included_count}
+                ai_excluded_count={session.ai_excluded_count}
+                ai_unsure_count={session.ai_unsure_count}
                 ai_evaluation_running={session.ai_evaluation_running}
                 files_processed={session.files_processed}
                 upload_running={session.files_upload_running}

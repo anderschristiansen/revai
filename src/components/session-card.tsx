@@ -3,8 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { FolderOpen, Clock, Trash2, FolderIcon, MoreHorizontal, UploadIcon, BotIcon } from "lucide-react";
+import { FolderOpen, Clock, Trash2, FolderIcon, MoreHorizontal, UploadIcon, BotIcon, BarChart4Icon } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -12,6 +11,7 @@ import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
 import { useState, useEffect } from "react";
+import { DecisionDots } from "@/components/decision-dots";
 
 // Colors for the visualization - using the site's red/green color scheme
 const COLORS = {
@@ -37,6 +37,7 @@ export type SessionCardProps = {
   ai_evaluated_count?: number;
   ai_included_count?: number;
   ai_excluded_count?: number;
+  ai_unsure_count?: number;
   ai_evaluation_running?: boolean;
   files_processed: boolean;
   upload_running?: boolean;
@@ -56,6 +57,7 @@ export function SessionCard({
   ai_evaluated_count = 0,
   ai_included_count = 0,
   ai_excluded_count = 0,
+  ai_unsure_count = 0,
   ai_evaluation_running = false,
   files_processed = false,
   upload_running = false,
@@ -274,7 +276,7 @@ export function SessionCard({
             </div>
 
             {/* Stats section */}
-            <div className="grid grid-cols-2 gap-6 mt-4">
+            <div className="grid grid-cols-3 gap-6 mt-4">
               {/* Left side - Article counts and status */}
               <div className="space-y-3">
                 {files_processed ? (
@@ -288,54 +290,56 @@ export function SessionCard({
                   <span>Files Processing Required</span>
                 </div>
                 )}
-                
-                {/* Status indicators */}
-                {files_processed && (
-                  <div className="flex flex-col gap-2">
-                      <>
-                        <div className="flex items-center gap-4">
-                          <TooltipProvider>
-                            <Tooltip content="Included articles">
-                              <TooltipTrigger asChild>
-                                <div className="flex items-center gap-1.5">
-                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.included }}></div>
-                                  <span className="text-xs text-muted-foreground">{reviewed_count}</span>
-                                </div>
-                              </TooltipTrigger>
-                            </Tooltip>
-
-                            <Tooltip content="Excluded articles">
-                              <TooltipTrigger asChild>
-                                <div className="flex items-center gap-1.5">
-                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.excluded }}></div>
-                                  <span className="text-xs text-muted-foreground">{excluded_count}</span>
-                                </div>
-                              </TooltipTrigger>
-                            </Tooltip>
-
-                            <Tooltip content="Unsure articles">
-                              <TooltipTrigger asChild>
-                                <div className="flex items-center gap-1.5">
-                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.unsure }}></div>
-                                  <span className="text-xs text-muted-foreground">{unsure_count}</span>
-                                </div>
-                              </TooltipTrigger>
-                            </Tooltip>
-
-                            <Tooltip content="Pending review">
-                              <TooltipTrigger asChild>
-                                <div className="flex items-center gap-1.5">
-                                  <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.pending }}></div>
-                                  <span className="text-xs text-muted-foreground">{pending_count}</span>
-                                </div>
-                              </TooltipTrigger>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </>
-                  </div>
-                )}
               </div>
+
+              {/* Middle - Review Status */}
+              {files_processed && (
+                <div className="space-y-3 border-l pl-6">
+                  <div className="flex items-center gap-2">
+                    <div className={cn(
+                      "p-1 rounded-md", 
+                      completed 
+                        ? "bg-[#00b380]/10" 
+                        : "bg-primary/10"
+                    )}>
+                      <BarChart4Icon className={cn(
+                        "h-3.5 w-3.5", 
+                        completed 
+                          ? "text-[#00b380]" 
+                          : "text-primary"
+                      )} />
+                    </div>
+                    <span className="text-xs font-medium text-muted-foreground">Review Status</span>
+                  </div>
+
+                  {/* Review Progress */}
+                  <div className="space-y-2">
+                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                      <motion.div 
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: completed ? COLORS.included : COLORS.pending }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.floor((reviewed_count / Math.max(1, articles_count)) * 100)}%` }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                      />
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: completed ? COLORS.included : COLORS.pending }}></div>
+                      <span>{completed ? "Review Complete" : "Review in Progress"}</span>
+                    </div>
+                  </div>
+
+                  {/* Review Decision Indicators */}
+                  <div className="flex flex-col gap-2">
+                    <DecisionDots
+                      included={reviewed_count}
+                      excluded={excluded_count}
+                      unsure={unsure_count}
+                      pending={pending_count}
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Right side - AI Evaluation Status */}
               { files_processed && (
@@ -348,12 +352,6 @@ export function SessionCard({
                           ? "bg-[#00b380]/10" 
                           : "bg-primary/10"
                       )}>
-                        {/* <BarChart4Icon className={cn(
-                          "h-3.5 w-3.5", 
-                          completed 
-                            ? "text-[#00b380]" 
-                            : "text-primary"
-                        )} /> */}
                         <BotIcon className={cn(
                           "h-3.5 w-3.5 text-primary"
                         )} />
@@ -411,36 +409,12 @@ export function SessionCard({
                   {/* AI Decision Indicators */}
                   {ai_evaluated_count > 0 && (
                     <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-4">
-                        <TooltipProvider>
-                          <Tooltip content="AI marked as included">
-                            <TooltipTrigger asChild>
-                              <div className="flex items-center gap-1.5">
-                                <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.included }}></div>
-                                <span className="text-xs text-muted-foreground">{ai_included_count}</span>
-                              </div>
-                            </TooltipTrigger>
-                          </Tooltip>
-
-                          <Tooltip content="AI marked as excluded">
-                            <TooltipTrigger asChild>
-                              <div className="flex items-center gap-1.5">
-                                <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.excluded }}></div>
-                                <span className="text-xs text-muted-foreground">{ai_excluded_count}</span>
-                              </div>
-                            </TooltipTrigger>
-                          </Tooltip>
-
-                          <Tooltip content="AI marked as unsure">
-                            <TooltipTrigger asChild>
-                              <div className="flex items-center gap-1.5">
-                                <div className="h-2 w-2 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: COLORS.unsure }}></div>
-                                <span className="text-xs text-muted-foreground">{ai_evaluated_count - (ai_included_count + ai_excluded_count)}</span>
-                              </div>
-                            </TooltipTrigger>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
+                      <DecisionDots
+                        included={ai_included_count}
+                        excluded={ai_excluded_count}
+                        unsure={ai_unsure_count}
+                        prefix="AI "
+                      />
                     </div>
                   )}
                 </div>
