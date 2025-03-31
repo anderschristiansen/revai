@@ -46,51 +46,57 @@ export default function ReviewPage() {
   const [activeTab, setActiveTab] = useState("articles");
   const [batchRunning, setBatchRunning] = useState(false);
 
+  // Memoize the file IDs for the subscription filter
+  const fileIds = React.useMemo(() => 
+    files.map(f => f.id).join(','), 
+    [files]
+  );
+
   const loadSessionData = React.useCallback(async () => {
     try {
       setLoading(true);
       
-      // First get the session data
-      const { data: sessionData, error: sessionError } = await supabase
-        .from("review_sessions")
-        .select("*")
-        .eq("id", sessionId)
-        .single();
+      // Get session data and files in parallel
+      const [sessionResult, filesResult] = await Promise.all([
+        supabase
+          .from("review_sessions")
+          .select("*")
+          .eq("id", sessionId)
+          .single(),
+        supabase
+          .from("files")
+          .select("*")
+          .eq("session_id", sessionId)
+          .order("created_at", { ascending: false })
+      ]);
 
-      if (sessionError) {
-        if (sessionError.code === 'PGRST116') { // Not found
+      if (sessionResult.error) {
+        if (sessionResult.error.code === 'PGRST116') { // Not found
           setSession(null);
           setLoading(false);
           return;
         }
-        throw sessionError;
+        throw sessionResult.error;
       }
 
-      // Then get the files separately
-      const { data: filesData, error: filesError } = await supabase
-        .from("files")
-        .select("*")
-        .eq("session_id", sessionId)
-        .order("created_at", { ascending: false });
-
-      if (filesError) {
-        console.error("Error loading files:", filesError);
+      if (filesResult.error) {
+        console.error("Error loading files:", filesResult.error);
       }
 
       // Set the session data
-      setSession(sessionData);
-      setNewTitle(sessionData.title || "");
+      setSession(sessionResult.data);
+      setNewTitle(sessionResult.data.title || "");
       
-      if (sessionData.criterias) {
-        setCriteria(sessionData.criterias);
+      if (sessionResult.data.criterias) {
+        setCriteria(sessionResult.data.criterias);
       }
       
       // Set files data
-      setFiles(filesData || []);
+      setFiles(filesResult.data || []);
       
       // Load articles if we have files
-      if (filesData && filesData.length > 0) {
-        const fileIds = filesData.map(file => file.id);
+      if (filesResult.data && filesResult.data.length > 0) {
+        const fileIds = filesResult.data.map(file => file.id);
         const { data: articlesData, error: articlesError } = await supabase
           .from("articles")
           .select("*")
@@ -104,7 +110,7 @@ export default function ReviewPage() {
           setArticles(articlesData || []);
           
           // Update batch running state based on session data
-          setBatchRunning(sessionData.ai_evaluation_running || false);
+          setBatchRunning(sessionResult.data.ai_evaluation_running || false);
         }
       }
       
@@ -127,11 +133,43 @@ export default function ReviewPage() {
         event: '*', 
         schema: 'public', 
         table: 'articles',
-        filter: `file_id=in.(${files.map(f => f.id).join(',')})` 
+        filter: `file_id=in.(${fileIds})` 
       }, (payload) => {
         console.log("Article update received:", payload);
-        // Reload all data when articles change
-        loadSessionData();
+        // Only reload articles data, not the entire session
+        if (payload.eventType === 'UPDATE') {
+          // Update the specific article in the state
+          setArticles(prevArticles => 
+            prevArticles.map(article => 
+              article.id === payload.new.id ? {
+                ...article,
+                ai_decision: payload.new.ai_decision,
+                ai_explanation: payload.new.ai_explanation,
+                user_decision: payload.new.user_decision,
+                needs_review: payload.new.needs_review
+              } : article
+            )
+          );
+        } else if (payload.eventType === 'INSERT') {
+          // Add the new article to the state
+          const newArticle: Article = {
+            id: payload.new.id,
+            file_id: payload.new.file_id,
+            title: payload.new.title,
+            abstract: payload.new.abstract,
+            full_text: payload.new.full_text,
+            ai_decision: payload.new.ai_decision,
+            ai_explanation: payload.new.ai_explanation,
+            user_decision: payload.new.user_decision,
+            needs_review: payload.new.needs_review
+          };
+          setArticles(prevArticles => [...prevArticles, newArticle]);
+        } else if (payload.eventType === 'DELETE') {
+          // Remove the deleted article from the state
+          setArticles(prevArticles => 
+            prevArticles.filter(article => article.id !== payload.old.id)
+          );
+        }
       })
       .subscribe();
     
@@ -144,15 +182,69 @@ export default function ReviewPage() {
         filter: `id=eq.${sessionId}` 
       }, (payload) => {
         console.log("Session update received:", payload);
-        loadSessionData();
+        // Only update session-specific data
+        if (payload.eventType === 'UPDATE') {
+          setSession(prevSession => 
+            prevSession ? { ...prevSession, ...payload.new } : null
+          );
+          // Update batch running state if it changed
+          if (payload.new.ai_evaluation_running !== undefined) {
+            setBatchRunning(payload.new.ai_evaluation_running);
+          }
+        }
+      })
+      .subscribe();
+
+    // Add subscription for file changes
+    const filesSubscription = supabase
+      .channel('files_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'files',
+        filter: `session_id=eq.${sessionId}` 
+      }, async (payload) => {
+        console.log("File update received:", payload);
+        if (payload.eventType === 'INSERT') {
+          // Add the new file to the state with proper typing
+          const newFile: ReviewFile = {
+            id: payload.new.id,
+            session_id: payload.new.session_id,
+            filename: payload.new.filename,
+            articles_count: payload.new.articles_count,
+            created_at: payload.new.created_at
+          };
+          setFiles(prevFiles => [...prevFiles, newFile]);
+          
+          // Load articles for the new file
+          const { data: articlesData, error: articlesError } = await supabase
+            .from("articles")
+            .select("*")
+            .eq("file_id", payload.new.id)
+            .order("id");
+
+          if (articlesError) {
+            console.error("Error loading articles for new file:", articlesError);
+          } else if (articlesData) {
+            // Add new articles to the state
+            setArticles(prevArticles => [...prevArticles, ...articlesData]);
+          }
+        } else if (payload.eventType === 'DELETE') {
+          // Remove the deleted file and its articles from the state
+          setFiles(prevFiles => prevFiles.filter(file => file.id !== payload.old.id));
+          setArticles(prevArticles => 
+            prevArticles.filter(article => article.file_id !== payload.old.id)
+          );
+        }
       })
       .subscribe();
     
     return () => {
       articlesSubscription.unsubscribe();
       sessionSubscription.unsubscribe();
+      filesSubscription.unsubscribe();
     };
-  }, [sessionId, loadSessionData, files]);
+  }, [sessionId, fileIds]); // Only depend on sessionId and memoized fileIds
 
   async function updateSessionTitle() {
     if (!newTitle.trim()) {
