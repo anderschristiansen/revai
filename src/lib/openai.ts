@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { supabase } from "./supabase";
-import { AiSettings, EvaluationResult } from "./types";
+import { AISettings, DecisionType } from "./types";
 
 // Check for API key
 if (!process.env.OPENAI_API_KEY) {
@@ -18,61 +18,37 @@ const openai = new OpenAI({
 export async function evaluateArticle(
   title: string,
   abstract: string,
-  criteria: string,
-  customSettings?: Partial<AiSettings>
-): Promise<EvaluationResult> {
+  criteria: string
+): Promise<{
+  decision: DecisionType;
+  explanation: string;
+}> {
   try {
-    // If customSettings is not provided, fetch from Supabase
-    let settings: AiSettings = {
-      instructions: customSettings?.instructions || '',
-      temperature: customSettings?.temperature || 0.1,
-      max_tokens: customSettings?.max_tokens || 500,
-      seed: customSettings?.seed || 12345,
-      model: customSettings?.model || 'gpt-3.5-turbo'
-    };
+    const { data, error } = await supabase
+      .from('ai_settings')
+      .select('instructions, temperature, max_tokens, seed, model')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
 
-    // If no settings provided, fetch from database
-    if (!customSettings || Object.keys(customSettings).length === 0) {
-      try {
-        const { data, error } = await supabase
-          .from('ai_settings')
-          .select('instructions, temperature, max_tokens, seed, model')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
-
-        if (error) {
-          console.error("Error fetching AI settings:", error);
-        } else if (data) {
-          settings = {
-            instructions: data.instructions,
-            temperature: data.temperature,
-            max_tokens: data.max_tokens,
-            seed: data.seed,
-            model: data.model
-          };
-        }
-      } catch (error) {
-        console.error("Failed to fetch AI settings:", error);
-      }
+    if (error) {
+      throw new Error(`Failed to fetch AI settings: ${error.message}`);
     }
 
-    // If we still don't have instructions (failed to fetch or none found), use default
+    if (!data) {
+      throw new Error("No AI settings found in database");
+    }
+
+    const settings: AISettings = {
+      instructions: data.instructions,
+      temperature: data.temperature,
+      max_tokens: data.max_tokens,
+      seed: data.seed,
+      model: data.model
+    };
+
     if (!settings.instructions) {
-      settings.instructions = `You are a scientific literature reviewer evaluating whether articles meet specific inclusion criteria for a systematic review. Your task is to assess the article strictly based on the provided criteria.
-
-Instructions:
-1. Evaluate each inclusion criterion separately.
-2. Be objective and consistent in your assessment.
-3. Base your decision ONLY on the information provided in the title and abstract.
-4. Do not make assumptions about information not explicitly stated.
-5. If the article clearly meets ALL criteria, the decision should be "Include".
-6. If the article clearly fails to meet ANY criteria, the decision should be "Exclude".
-7. If there's insufficient information to make a clear determination, or if the article partially meets criteria but has some uncertainties, the decision should be "Unsure".
-
-Your output MUST follow this exact format:
-Decision: [Include/Exclude/Unsure]
-Explanation: [Concise, structured explanation explaining why the article does or does not meet each criterion]`;
+      throw new Error("AI settings instructions are required");
     }
 
     // Construct the prompt with the instructions and article info
@@ -120,7 +96,7 @@ Abstract: ${abstract}`;
     const decision = decisionMatch ? decisionMatch[1] : "Unsure";
     
     return {
-      decision: decision as "Include" | "Exclude" | "Unsure",
+      decision: decision as DecisionType,
       explanation: explanation,
     };
   } catch (error) {
