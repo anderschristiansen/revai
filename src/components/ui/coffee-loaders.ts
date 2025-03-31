@@ -4,17 +4,15 @@
 
 // For direct custom imports
 import { CoffeeLoader } from "./coffee-loader";
-import { CoffeeBeanLoader } from "./coffee-bean-loader";
 import { CoffeeProgress } from "./coffee-progress";
 import { LottieCoffeeLoader } from "./lottie-coffee-loader";
 
 // Export individual components
-export { CoffeeLoader, CoffeeBeanLoader, CoffeeProgress, LottieCoffeeLoader };
+export { CoffeeLoader, CoffeeProgress, LottieCoffeeLoader };
 
 // Create a named bundle object
 const CoffeeLoaders = {
   CoffeeLoader,
-  CoffeeBeanLoader,
   CoffeeProgress,
   LottieCoffeeLoader
 };

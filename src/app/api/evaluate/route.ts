@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { evaluateArticle } from "@/lib/openai";
 import { supabase } from "@/lib/supabase";
 import { 
-  AISettings, 
   CriteriaList, 
   ApiArticle, 
   EvaluateRequest, 
@@ -55,21 +54,24 @@ export async function POST(request: NextRequest): Promise<NextResponse<EvaluateR
       );
     }
 
-    // Get AI instructions from settings
+    // Get AI settings to determine batch size
     const { data: aiSettings, error: aiSettingsError } = await supabase
       .from("ai_settings")
-      .select("instructions, temperature, max_tokens, seed, model, batch_size")
+      .select("batch_size")
       .order("created_at", { ascending: false })
       .limit(1)
-      .single<AISettings>();
+      .single();
 
     if (aiSettingsError) {
-      console.error("Error retrieving AI settings:", aiSettingsError);
-      // We'll continue with default settings
+      console.error("Failed to fetch AI settings:", aiSettingsError);
+      return NextResponse.json(
+        { error: "Failed to retrieve AI settings" },
+        { status: 500 }
+      );
     }
 
-    const batchSize = aiSettings?.batch_size || 10;
-    
+    const batchSize = aiSettings?.batch_size || 10; // Default to 10 if not set
+
     // Ensure ai_evaluation_running is set to true in the database
     const { error: updateError } = await supabase
       .from("review_sessions")
@@ -89,22 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<EvaluateR
     processBatchesAsync(
       sessionId, 
       articleIds, 
-      session.criterias, 
-      aiSettings ? {
-        instructions: aiSettings.instructions,
-        temperature: aiSettings.temperature,
-        max_tokens: aiSettings.max_tokens,
-        seed: aiSettings.seed,
-        model: aiSettings.model,
-        batch_size: aiSettings.batch_size || 10
-      } : {
-        instructions: '',
-        temperature: 0.1,
-        max_tokens: 500,
-        seed: 12345,
-        model: 'gpt-3.5-turbo',
-        batch_size: 10
-      }, 
+      session.criterias,
       batchSize
     );
 
@@ -125,8 +112,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<EvaluateR
 async function processBatchesAsync(
   sessionId: string, 
   articleIds: string[], 
-  criteria: CriteriaList, 
-  aiSettings: AISettings, 
+  criteria: CriteriaList,
   batchSize: number
 ): ProcessBatchesResult {
   try {
@@ -162,7 +148,7 @@ async function processBatchesAsync(
       try {
         console.log(`Processing batch of ${batch.length} articles`);
         // Process each batch
-        await processBatch(batch, criteria, aiSettings);
+        await processBatch(batch, criteria);
         console.log(`Completed batch of ${batch.length} articles`);
       } catch (batchError) {
         console.error("Error processing batch:", batchError);
@@ -205,7 +191,6 @@ async function processBatchesAsync(
 async function processBatch(
   articles: ApiArticle[], 
   criteria: CriteriaList, 
-  aiSettings: AISettings
 ): ProcessBatchResult {
   for (const article of articles) {
     try {
@@ -217,8 +202,7 @@ async function processBatch(
       const result = await evaluateArticle(
         article.title,
         article.abstract,
-        formattedCriteria,
-        aiSettings
+        formattedCriteria
       );
 
       console.log(`Article ${article.id} evaluation result:`, result.decision);
