@@ -572,7 +572,7 @@ export default function ReviewPage() {
                     </div>
                     <div>
                       <p className="text-xs font-medium text-muted-foreground leading-none mb-0.5">Total</p>
-                      <p className="text-lg font-bold leading-none">{articles.length}</p>
+                      <p className="text-lg font-bold leading-none">{session.articles_count}</p>
                     </div>
                   </div>
                 </CardContent>
