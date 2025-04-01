@@ -13,6 +13,7 @@ import {
   FileText,
   XCircle,
   HelpCircle,
+  Loader2,
 } from "lucide-react"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/sonner"
 import { Article, DecisionType } from "@/lib/types"
+import { supabase } from "@/lib/supabase"
 
 // Add URL detection regex
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -62,6 +64,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isEvaluating, setIsEvaluating] = useState(false)
 
   function openArticleDialog(article: Article) {
     setSelectedArticle(article)
@@ -113,6 +116,118 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         toast.error("Failed to update article decision");
       }
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleManualAIEvaluation() {
+    if (!selectedArticle || isEvaluating) return;
+    
+    setIsEvaluating(true);
+    try {
+      // Debug the file_id structure
+      console.log("File ID:", selectedArticle.file_id);
+      
+      // Method 1: Try to extract session ID from file_id
+      const fileIdParts = selectedArticle.file_id.split("_");
+      let sessionId = fileIdParts.length > 1 ? fileIdParts[0] : selectedArticle.file_id;
+      
+      console.log("Attempting to query session with ID:", sessionId);
+      
+      // Get the session criteria to send to the AI
+      let { data: session, error: sessionError } = await supabase
+        .from("review_sessions")
+        .select("criterias")
+        .eq("id", sessionId)
+        .single();
+
+      // Method 2: If that fails, try to get the session from the files table
+      if (sessionError || !session) {
+        console.log("First approach failed, trying alternative method");
+        
+        // Get the session ID from the files table using the file_id
+        const { data: fileData, error: fileError } = await supabase
+          .from("files")
+          .select("session_id")
+          .eq("id", selectedArticle.file_id)
+          .single();
+        
+        if (fileError || !fileData) {
+          console.error("Could not get session ID from files table:", fileError);
+        } else {
+          sessionId = fileData.session_id;
+          console.log("Found session ID from files table:", sessionId);
+          
+          // Try again with the new session ID
+          const sessionResult = await supabase
+            .from("review_sessions")
+            .select("criterias")
+            .eq("id", sessionId)
+            .single();
+            
+          session = sessionResult.data;
+          sessionError = sessionResult.error;
+        }
+      }
+
+      if (sessionError) {
+        console.error("Session query error:", sessionError);
+        toast.error("Failed to retrieve session criteria");
+        setIsEvaluating(false);
+        return;
+      }
+
+      if (!session) {
+        console.error("No session found with ID:", sessionId);
+        toast.error("Session not found");
+        setIsEvaluating(false);
+        return;
+      }
+
+      console.log("Session criteria:", session.criterias);
+
+      if (!session.criterias || session.criterias.length === 0) {
+        toast.error("No criteria found for this session");
+        setIsEvaluating(false);
+        return;
+      }
+
+      // Format criteria for OpenAI evaluation
+      const formattedCriteria = session.criterias.map((c: { text: string }) => c.text).join('\n');
+
+      // Call the evaluate API
+      const response = await fetch("/api/evaluate/single", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          articleId: selectedArticle.id,
+          title: selectedArticle.title,
+          abstract: selectedArticle.abstract,
+          criteria: formattedCriteria,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to evaluate article");
+      }
+
+      const result = await response.json();
+      
+      // Update the UI optimistically
+      setSelectedArticle({
+        ...selectedArticle,
+        ai_decision: result.decision,
+        ai_explanation: result.explanation,
+      });
+
+      toast.success("Article evaluated successfully");
+    } catch (error) {
+      console.error("Error evaluating article:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to evaluate article");
+    } finally {
+      setIsEvaluating(false);
     }
   }
 
@@ -338,6 +453,29 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                 )}
                 
                 <div className="flex gap-3">
+                  {/* Add manual AI evaluation button with tooltip */}
+                  <Tooltip content="Manually evaluate this article using AI against the session's inclusion criteria">
+                    <Button
+                      onClick={handleManualAIEvaluation}
+                      variant="outline"
+                      size="lg"
+                      className="min-w-32 font-medium transition-all hover:bg-primary/5"
+                      disabled={isEvaluating || isSubmitting}
+                    >
+                      {isEvaluating ? (
+                        <div className="flex items-center">
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Evaluating...
+                        </div>
+                      ) : (
+                        <>
+                          <Bot className="h-4 w-4 mr-2" />
+                          AI Evaluate
+                        </>
+                      )}
+                    </Button>
+                  </Tooltip>
+
                   <Button 
                     onClick={() => handleArticleDecision("Exclude", selectedArticle.id, false)}
                     variant="outline"
