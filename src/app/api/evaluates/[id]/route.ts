@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { openaiService } from "@/lib/openai";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { DecisionType, Article } from "@/lib/types";
+
+const supabase = getSupabase();
 
 type EvaluateArticleRequest = {
   title: string;

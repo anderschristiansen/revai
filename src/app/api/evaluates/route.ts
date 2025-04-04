@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { EvaluateRequest, EvaluateResponse, ErrorResponse } from "@/lib/types";
+
+const supabase = getSupabase();
 
 export async function POST(request: NextRequest): Promise<NextResponse<EvaluateResponse | ErrorResponse>> {
   try {

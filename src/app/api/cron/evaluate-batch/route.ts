@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { openaiService } from "@/lib/openai";
+
+const supabase = getSupabase();
 
 /**
  * Cron job to evaluate a batch of articles marked as needs_ai_evaluation = true

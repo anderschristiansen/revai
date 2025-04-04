@@ -245,7 +245,7 @@ export default function ReviewPage() {
       sessionSubscription.unsubscribe();
       filesSubscription.unsubscribe();
     };
-  }, [sessionId, fileIds]); // Only depend on sessionId and memoized fileIds
+  }, [sessionId, fileIds, loadSessionData]);
 
   async function updateSessionTitle() {
     if (!newTitle.trim()) {
