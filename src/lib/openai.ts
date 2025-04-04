@@ -143,7 +143,7 @@ Explanation: [Short explanation why you made this decision]
 
           if (error.status === 429 || error.code === 'rate_limit_exceeded') {
             console.warn('Rate limit hit, waiting before retry...');
-            await this.delay(2000); // 2 second wait
+            await this.delay(1000 * Math.pow(2, attempt)); // 1s, 2s, 4s, 8s...
           }
         } else {
           console.error('Unexpected error during OpenAI evaluation:', error);
