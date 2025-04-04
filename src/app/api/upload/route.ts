@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
             abstract: article.abstract,
             full_text: article.fullText,
             needs_review: true,
+            needs_ai_evaluation: true,
             created_at: new Date().toISOString(),
           });
 

@@ -161,7 +161,8 @@ export default function ReviewPage() {
             ai_decision: payload.new.ai_decision,
             ai_explanation: payload.new.ai_explanation,
             user_decision: payload.new.user_decision,
-            needs_review: payload.new.needs_review
+            needs_review: payload.new.needs_review,
+            needs_ai_evaluation: payload.new.needs_ai_evaluation
           };
           setArticles(prevArticles => [...prevArticles, newArticle]);
         } else if (payload.eventType === 'DELETE') {
@@ -313,9 +314,9 @@ export default function ReviewPage() {
   async function evaluateArticles() {
     if (evaluating) return;
     
-    // Get articles that need AI evaluation - only consider articles that haven't been evaluated
+    // Get articles that need AI evaluation based on the needs_ai_evaluation flag
     const articlesToEvaluate = articles.filter(
-      article => !article.ai_decision
+      article => article.needs_ai_evaluation
     );
     
     // Check if there are articles to evaluate

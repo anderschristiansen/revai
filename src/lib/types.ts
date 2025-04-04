@@ -32,6 +32,7 @@ export type Article = {
   ai_explanation?: string;
   user_decision?: DecisionType;
   needs_review: boolean;
+  needs_ai_evaluation: boolean;
 };
 
 export type ParsedArticle = {

@@ -51,6 +51,7 @@ export async function POST(
       .update({
         ai_decision: result.decision,
         ai_explanation: result.explanation,
+        needs_ai_evaluation: false,
       })
       .eq("id", articleId);
 

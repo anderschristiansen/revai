@@ -62,46 +62,6 @@ create table articles (
   ai_explanation text,
   user_decision text check (user_decision in ('Yes', 'No')),
   needs_review boolean default true,
+  needs_ai_evaluation boolean default true,
   created_at timestamp with time zone default now()
 );
-```
-
-### Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-```
-
-## Usage
-
-1. Upload a .txt file containing articles (formatted with `<1>`, `<2>` markers)
-2. Upload a .txt file with your inclusion criteria
-3. Review AI decisions and make your own selections
-4. Results are stored in your Supabase database
-
-## Article File Format
-
-The application expects articles in this format:
-
-```
-<1>
-Accession Number
-  12345
-Title
-  Example article title
-Abstract
-  This is the abstract of the article...
-
-<2>
-Accession Number
-  67890
-...
-```
-
-## License
-
-MIT
