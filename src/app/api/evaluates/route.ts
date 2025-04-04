@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabase } from "@/lib/supabase";
 import { EvaluateRequest, EvaluateResponse, ErrorResponse } from "@/lib/types";
-
-const supabase = getSupabase();
+import { markArticlesForEvaluation, markSessionEvaluationRunning } from "@/lib/utils/supabase-utils";
 
 export async function POST(request: NextRequest): Promise<NextResponse<EvaluateResponse | ErrorResponse>> {
   try {
@@ -12,30 +10,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<EvaluateR
       return NextResponse.json({ error: "Session ID and article IDs are required" }, { status: 400 });
     }
 
-    // Mark articles as needing AI evaluation
-    const { error: articlesError } = await supabase
-      .from("articles")
-      .update({ needs_ai_evaluation: true })
-      .in("id", articleIds);
+    // 1. Mark articles as needing evaluation
+    await markArticlesForEvaluation(articleIds);
 
-    if (articlesError) {
-      console.error("Failed to update articles:", articlesError);
-      return NextResponse.json({ error: "Failed to mark articles for evaluation" }, { status: 500 });
-    }
-
-    // Mark session as running evaluation
-    const { error: sessionError } = await supabase
-      .from("review_sessions")
-      .update({
-        ai_evaluation_running: true,
-        last_evaluated_at: new Date().toISOString(),
-      })
-      .eq("id", sessionId);
-
-    if (sessionError) {
-      console.error("Failed to update session:", sessionError);
-      // Not critical
-    }
+    // 2. Mark session as evaluation running
+    await markSessionEvaluationRunning(sessionId);
 
     return NextResponse.json({
       message: "Marked articles for evaluation",

@@ -1,6 +1,6 @@
 import OpenAI, { APIError } from "openai";
-import { supabase } from "./supabase";
-import { AISettings, Criterion, DecisionType } from "./types";
+import { getAISettings } from "@/lib/utils/supabase-utils"; // 👈 Use our supabase-utils
+import { DecisionType } from "@/lib/types";
 
 /**
  * Service class to handle OpenAI interactions
@@ -18,34 +18,6 @@ class OpenAIService {
   }
 
   /**
-   * Retrieves the latest AI settings from the database
-   */
-  private async getAISettings(): Promise<AISettings> {
-    const { data, error } = await supabase
-      .from('ai_settings')
-      .select('instructions, temperature, max_tokens, seed, model')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (error) {
-      throw new Error(`Failed to fetch AI settings: ${error.message}`);
-    }
-
-    if (!data) {
-      throw new Error("No AI settings found in the database");
-    }
-
-    return {
-      instructions: data.instructions,
-      temperature: data.temperature,
-      max_tokens: data.max_tokens,
-      seed: data.seed,
-      model: data.model
-    };
-  }
-
-  /**
    * Constructs a prompt for article evaluation
    */
   private constructArticleEvaluationPrompt(
@@ -53,9 +25,6 @@ class OpenAIService {
     abstract: string,
     criterias: string
   ): string {
-    const parsedCriterias: Criterion[] = JSON.parse(criterias);
-    const criteriaTexts = parsedCriterias.map(c => c.text.trim());
-
     return `
 You are given a list of inclusion criteria and an article (title and abstract).
 
@@ -63,7 +32,7 @@ Evaluate the article according to the criteria.
 
 ---
 INCLUSION CRITERIA:
-${criteriaTexts.map((text, i) => `${i + 1}. ${text}`).join('\n')}
+${criterias}
 ---
 
 ARTICLE TITLE:
@@ -91,7 +60,7 @@ Explanation: [Short explanation why you made this decision]
     decision: DecisionType;
     explanation: string;
   }> {
-    const settings = await this.getAISettings();
+    const settings = await getAISettings();
     const prompt = this.constructArticleEvaluationPrompt(title, abstract, criterias);
 
     let attempt = 0;

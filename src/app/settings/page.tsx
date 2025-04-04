@@ -10,12 +10,12 @@ import { User, Mail, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
-import { supabase } from '@/lib/supabase';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import React from 'react';
 import { DebugTools } from '@/components/debug-tools';
+import { getAISettings, updateAISettings } from '@/lib/utils/supabase-utils';
 
 type TabType = 'ai' | 'profile' | 'debug';
 
@@ -47,16 +47,7 @@ export default function Settings() {
   const loadAiSettings = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('ai_settings')
-        .select('instructions, temperature, max_tokens, seed, model, batch_size')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error) {
-        throw error;
-      }
+      const data = await getAISettings();
 
       if (data) {
         setAiSettings({
@@ -87,23 +78,7 @@ export default function Settings() {
   const saveAiSettings = async () => {
     setIsSaving(true);
     try {
-      const { error } = await supabase
-        .from('ai_settings')
-        .update({
-          instructions: aiSettings.instructions,
-          temperature: aiSettings.temperature,
-          max_tokens: aiSettings.max_tokens,
-          seed: aiSettings.seed,
-          model: aiSettings.model,
-          batch_size: aiSettings.batch_size,
-          updated_at: new Date().toISOString()
-        })
-        .order('created_at', { ascending: false })
-        .limit(1);
-
-      if (error) {
-        throw error;
-      }
+      await updateAISettings(aiSettings);
 
       toast({
         title: 'Success',
