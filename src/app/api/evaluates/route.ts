@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { evaluateArticle } from "@/lib/openai";
+import { openaiService } from "@/lib/openai";
 import { supabase } from "@/lib/supabase";
 import { 
   CriteriaList, 
@@ -9,7 +9,6 @@ import {
   ErrorResponse,
   SessionRecord 
 } from "@/lib/types";
-import { OpenAI } from "openai";
 
 // Function return types
 type ProcessBatchResult = Promise<void>;
@@ -17,33 +16,6 @@ type ProcessBatchesResult = Promise<void>;
 
 export async function POST(request: NextRequest): Promise<NextResponse<EvaluateResponse | ErrorResponse>> {
   try {
-    // Check for OpenAI API key
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("OpenAI API key is missing in production environment");
-      return NextResponse.json(
-        { error: "OpenAI API key is missing. Please check your environment variables in Vercel." },
-        { status: 500 }
-      );
-    }
-
-    // Test the API key with a simple request
-    try {
-      const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-      });
-      await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: "test" }],
-        max_tokens: 5,
-      });
-    } catch (apiError) {
-      console.error("OpenAI API key validation failed:", apiError);
-      return NextResponse.json(
-        { error: "OpenAI API key is invalid or has insufficient permissions. Please check your API key in Vercel." },
-        { status: 500 }
-      );
-    }
-
     const { sessionId, articleIds } = await request.json() as EvaluateRequest;
 
     if (!sessionId || !articleIds || !Array.isArray(articleIds) || articleIds.length === 0) {
@@ -218,8 +190,8 @@ async function processBatch(
       // Format criteria for OpenAI evaluation
       const formattedCriteria = criteria.map(c => c.text).join('\n');
 
-      // Evaluate with OpenAI
-      const result = await evaluateArticle(
+      // Evaluate with OpenAI using our service
+      const result = await openaiService.evaluateArticle(
         article.title,
         article.abstract,
         formattedCriteria

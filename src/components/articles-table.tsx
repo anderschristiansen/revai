@@ -195,13 +195,12 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       const formattedCriteria = session.criterias.map((c: { text: string }) => c.text).join('\n');
 
       // Call the evaluate API
-      const response = await fetch("/api/evaluate/single", {
+      const response = await fetch(`/api/evaluates/${selectedArticle.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          articleId: selectedArticle.id,
           title: selectedArticle.title,
           abstract: selectedArticle.abstract,
           criteria: formattedCriteria,

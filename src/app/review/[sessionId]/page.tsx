@@ -344,7 +344,7 @@ export default function ReviewPage() {
       }
       
       // Call the API to start evaluation
-      const response = await fetch("/api/evaluate", {
+      const response = await fetch("/api/evaluates", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
