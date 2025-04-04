@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import OpenAI, { APIError } from "openai";
 import { supabase } from "./supabase";
 import { AISettings, Criterion, DecisionType } from "./types";
 
@@ -154,7 +154,18 @@ class OpenAIService {
   
         return { decision, explanation };
       } catch (error) {
-        console.error(`OpenAI call failed on attempt ${attempt + 1}:`, error);
+        if (error instanceof APIError) {
+          console.error(`OpenAI API Error [${error.status}]:`, error.message);
+      
+          // Handle rate limits (429)
+          if (error.status === 429 || error.code === 'rate_limit_exceeded') {
+            console.warn('Rate limit hit, waiting before retry...');
+            await new Promise(res => setTimeout(res, 2000)); // 2 sec delay
+          }
+        } else {
+          console.error('Unexpected error type:', error);
+        }
+      
         attempt++;
       }
     }
