@@ -7,7 +7,7 @@ import { notFound, useParams } from "next/navigation";
 import { ArticlesTable } from "@/components/articles-table";
 import { UploadForm } from "@/components/upload-form";
 import { toast } from "@/components/ui/sonner";
-import { SessionView, Article, File as ReviewFile, DecisionType, CriteriaList } from "@/lib/types";
+import { ReviewSessionView, Article, File as ReviewFile, DecisionType, CriteriaList } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { 
   PencilIcon, 
@@ -36,7 +36,7 @@ export default function ReviewPage() {
   const sessionId = params.sessionId as string;
   
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<SessionView | null>(null);
+  const [session, setSession] = useState<ReviewSessionView | null>(null);
   const [criteria, setCriteria] = useState<CriteriaList>([]);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState("");

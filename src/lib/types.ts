@@ -42,7 +42,7 @@ export type ParsedArticle = {
   fullText: string;
 };
 
-export type SessionRecord = {
+export type ReviewSession = {
   id: string;
   title: string;
   articles_count: number;
@@ -57,7 +57,7 @@ export type SessionRecord = {
   files_upload_running?: boolean;
 };
 
-export type SessionView = SessionRecord & {
+export type ReviewSessionView = ReviewSession & {
   reviewed_count: number;
   excluded_count: number;
   pending_count: number;
