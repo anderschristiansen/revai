@@ -21,10 +21,10 @@ type ErrorResponse = {
 
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<EvaluateArticleResponse | ErrorResponse>> {
   try {
-    const articleId = (await context.params).id;
+    const articleId = (await params).id;
     if (!articleId) return NextResponse.json({ error: "Article ID not found" }, { status: 400 });
 
     const { title, abstract, criteria } = await request.json() as EvaluateArticleRequest;
@@ -51,10 +51,10 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<Partial<Article> | ErrorResponse>> {
   try {
-    const articleId = params.id;
+    const articleId = (await params).id;
     if (!articleId) {
       return NextResponse.json({ error: "Article ID is required" }, { status: 400 });
     }
