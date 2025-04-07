@@ -20,7 +20,7 @@ const articleProcessor = new ArticleProcessor(supabaseUtils, openaiUtils);
 
 Deno.serve(async () => {
   try {
-    console.log("Starting article evaluation process....");
+    console.log("Starting article evaluation process...");
     
     const { processedCount, results } = await articleProcessor.processArticles();
 
