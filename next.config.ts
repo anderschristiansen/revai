@@ -13,14 +13,6 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
-  webpack: (config) => {
-    // Ignore Supabase functions during build
-    config.module.rules.push({
-      test: /supabase\/functions\/.*\.ts$/,
-      use: 'null-loader',
-    });
-    return config;
-  },
 };
 
 export default nextConfig;
