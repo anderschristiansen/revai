@@ -1,6 +1,6 @@
-import type { Article, ArticlesByFile, DecisionType, AISettings } from "./types.ts";
-import { SupabaseUtils } from "./supabase-utils.ts";
-import { OpenAIUtils } from "./openai-utils.ts";
+import type { Article, ArticlesByFile, DecisionType, AISettings } from "./types";
+import { SupabaseUtils } from "./supabase-utils";
+import { OpenAIUtils } from "./openai-utils";
 
 export class ArticleProcessor {
   private supabaseUtils: SupabaseUtils;

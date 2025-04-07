@@ -5,9 +5,9 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:/@kitsonk/xhr";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { SupabaseUtils } from "./supabase-utils.ts";
-import { OpenAIUtils } from "./openai-utils.ts";
-import { ArticleProcessor } from "./article-processor.ts";
+import { SupabaseUtils } from "./supabase-utils";
+import { OpenAIUtils } from "./openai-utils";
+import { ArticleProcessor } from "./article-processor";
 
 const supabaseUtils = new SupabaseUtils(
   Deno.env.get("NEXT_PUBLIC_SUPABASE_URL")!,

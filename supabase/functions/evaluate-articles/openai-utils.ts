@@ -1,5 +1,5 @@
 import { OpenAI } from "https://esm.sh/openai@4.20.1";
-import type { DecisionType, Evaluation, AISettings } from "./types.ts";
+import type { DecisionType, Evaluation, AISettings } from "./types";
 
 export class OpenAIUtils {
   private openai: OpenAI;

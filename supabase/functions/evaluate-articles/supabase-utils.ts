@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
-import type { AISettings, Article, File, ReviewSession } from "./types.ts";
+import type { AISettings, Article, File, ReviewSession } from "./types";
 
 export class SupabaseUtils {
   private supabase;
