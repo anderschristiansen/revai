@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev": "npm run dev -w web",
-    "build": "npm run build -w web",
+    "build": "cd web && npm install && npm run build",
     "start": "npm run start -w web",
     "lint": "npm run lint -w web",
     "functions:serve": "cd supabase && supabase functions serve --env-file=../web/.env.local evaluate-articles",
