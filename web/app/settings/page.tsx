@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { User, Mail, LogOut } from 'lucide-react';
@@ -31,7 +31,6 @@ type AiSettings = {
 export default function Settings() {
   const [activeTab, setActiveTab] = useState<TabType>('ai');
   const { user, signOut } = useAuth();
-  const { toast } = useToast();
   const router = useRouter();
   const [aiSettings, setAiSettings] = useState<AiSettings>({
     instructions: '',
@@ -61,15 +60,11 @@ export default function Settings() {
       }
     } catch (error) {
       console.error('Error loading AI settings:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load AI settings',
-        variant: 'destructive'
-      });
+      toast.error('Failed to load AI settings');
     } finally {
       setIsLoading(false);
     }
-  }, [toast]);
+  }, []);
 
   useEffect(() => {
     loadAiSettings();
@@ -80,17 +75,10 @@ export default function Settings() {
     try {
       await updateAISettings(aiSettings);
 
-      toast({
-        title: 'Success',
-        description: 'AI settings saved successfully',
-      });
+      toast.success('AI settings saved successfully');
     } catch (error) {
       console.error('Error saving AI settings:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to save AI settings',
-        variant: 'destructive'
-      });
+      toast.error('Failed to save AI settings');
     } finally {
       setIsSaving(false);
     }
@@ -109,11 +97,7 @@ export default function Settings() {
       router.push('/login');
     } catch (error) {
       console.error("Error signing out:", error);
-      toast({
-        title: "Error",
-        description: "Could not sign out. Please try again.",
-        variant: "destructive"
-      });
+      toast.error("Could not sign out. Please try again.");
     }
   };
 
