@@ -8,6 +8,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { SupabaseUtils } from "./supabase-utils.ts";
 import { OpenAIUtils } from "./openai-utils.ts";
 import { ArticleProcessor } from "./article-processor.ts";
+import { logger } from "./logger.ts";
 
 const supabaseUtils = new SupabaseUtils(
   Deno.env.get("NEXT_PUBLIC_SUPABASE_URL")!,
@@ -19,16 +20,24 @@ const openaiUtils = new OpenAIUtils(Deno.env.get("OPENAI_API_KEY")!);
 const articleProcessor = new ArticleProcessor(supabaseUtils, openaiUtils);
 
 Deno.serve(async () => {
+  const invocationId = `inv-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  
   try {
-    console.log("Starting article evaluation process...");
+    logger.info('EdgeFunction', `Starting article evaluation process [${invocationId}]`);
     
     // Find sessions awaiting evaluation
     const sessionIds = await supabaseUtils.getSessionsAwaitingEvaluation();
+    logger.info('EdgeFunction', `Found ${sessionIds.length} sessions awaiting evaluation`, { 
+      invocationId, 
+      count: sessionIds.length,
+      sessionIds
+    });
 
     if (sessionIds.length === 0) {
-      console.log("No sessions awaiting evaluation found");
+      logger.info('EdgeFunction', `No sessions to process, exiting [${invocationId}]`);
       return new Response(
         JSON.stringify({ 
+          invocationId,
           message: "No sessions awaiting evaluation found",
           sessionCount: 0,
           totalProcessedCount: 0
@@ -39,27 +48,44 @@ Deno.serve(async () => {
 
     // Process just the first session in the queue
     const sessionId = sessionIds[0];
-    const result = await articleProcessor.processSession(sessionId);
+    logger.info('EdgeFunction', `Processing session ${sessionId} [${invocationId}]`);
     
-    console.log(`Processed ${result.processedCount} articles for session ${sessionId}`);
+    const startTime = Date.now();
+    const result = await articleProcessor.processSession(sessionId);
+    const processingTime = Date.now() - startTime;
+    
+    logger.info('EdgeFunction', `Completed processing for session ${sessionId} [${invocationId}]`, {
+      invocationId,
+      sessionId,
+      processedCount: result.processedCount,
+      isCompleted: result.isCompleted,
+      processingTimeMs: processingTime,
+      remainingSessions: sessionIds.length - 1
+    });
     
     // Return information about the processing
     return new Response(
       JSON.stringify({ 
+        invocationId,
         message: `Processed ${result.processedCount} articles for session ${sessionId}`,
         sessionId,
         processedCount: result.processedCount,
         isSessionCompleted: result.isCompleted,
         moreSessionsQueued: sessionIds.length > 1,
+        processingTimeMs: processingTime,
         results: result.results
       }),
       { headers: { "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
-    console.error("Error in main function:", error);
+    logger.error('EdgeFunction', `Error in evaluation process [${invocationId}]`, error);
+    
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ 
+        invocationId,
+        error: errorMessage 
+      }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

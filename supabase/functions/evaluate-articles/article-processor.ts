@@ -1,6 +1,15 @@
 import type { Article, ArticlesByFile, DecisionType, AISettings } from "./types.ts";
 import { SupabaseUtils } from "./supabase-utils.ts";
 import { OpenAIUtils } from "./openai-utils.ts";
+import { logger } from "./logger.ts";
+
+export interface ArticleEvaluationResult {
+  fileId: string;
+  title: string;
+  decision: string;
+  reasoning: string;
+  processingTime: number;
+}
 
 export class ArticleProcessor {
   private supabaseUtils: SupabaseUtils;
@@ -9,6 +18,7 @@ export class ArticleProcessor {
   constructor(supabaseUtils: SupabaseUtils, openaiUtils: OpenAIUtils) {
     this.supabaseUtils = supabaseUtils;
     this.openaiUtils = openaiUtils;
+    logger.info("ArticleProcessor", "Article processor initialized");
   }
 
   /**
@@ -32,8 +42,12 @@ export class ArticleProcessor {
     criterias: string,
     settings: AISettings
   ): Promise<{ success: boolean; error?: string }> {
+    const startTime = Date.now();
     try {
-      console.log(`Processing article ${article.id}...`);
+      logger.info('ArticleEval', `Processing article ${article.id}`, { 
+        articleId: article.id,
+        fileId: article.file_id
+      });
       
       const evaluation = await this.openaiUtils.evaluateArticle(
         article.title,
@@ -42,7 +56,13 @@ export class ArticleProcessor {
         settings
       );
 
-      console.log(`Received evaluation for article ${article.id}:`, evaluation);
+      const processingTime = Date.now() - startTime;
+      logger.info('ArticleEval', `Completed evaluation for article ${article.id}`, {
+        articleId: article.id,
+        fileId: article.file_id,
+        decision: evaluation.decision,
+        processingTimeMs: processingTime
+      });
 
       await this.supabaseUtils.updateArticleEvaluation(
         article.id,
@@ -52,8 +72,15 @@ export class ArticleProcessor {
 
       return { success: true };
     } catch (error) {
+      const processingTime = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      console.error(`Error processing article ${article.id}:`, errorMessage);
+      
+      logger.error('ArticleEval', `Failed to evaluate article ${article.id}`, error, {
+        articleId: article.id,
+        fileId: article.file_id,
+        processingTimeMs: processingTime
+      });
+      
       return { success: false, error: errorMessage };
     }
   }
@@ -72,7 +99,8 @@ export class ArticleProcessor {
     }>;
     isCompleted: boolean;
   }> {
-    console.log(`Starting evaluation for session ${sessionId}`);
+    const sessionStartTime = Date.now();
+    logger.info('SessionEval', `Starting evaluation for session ${sessionId}`);
     
     // First, mark the session as running
     await this.supabaseUtils.markSessionEvaluationRunning(sessionId);
@@ -90,6 +118,7 @@ export class ArticleProcessor {
       // Get AI settings
       const settings = await this.supabaseUtils.getLatestAISettings();
       const batchSize = settings.batch_size || 10;
+      logger.info('SessionEval', `Using batch size ${batchSize}`, { sessionId, batchSize });
 
       // Get session details for criteria
       const session = await this.supabaseUtils.getReviewSession(sessionId);
@@ -102,16 +131,36 @@ export class ArticleProcessor {
       if (!articles || articles.length === 0) {
         // No articles to process means we're done with this session
         await this.supabaseUtils.markSessionEvaluationCompleted(sessionId);
-        console.log(`Completed evaluation for session ${sessionId}, no articles found`);
+        logger.info('SessionEval', `Session ${sessionId} has no articles to process, marking as completed`);
         return { sessionId, processedCount: 0, results: [], isCompleted: true };
       }
       
+      logger.info('SessionEval', `Retrieved ${articles.length} articles for session ${sessionId}`, {
+        sessionId,
+        articleCount: articles.length
+      });
+      
       // Group articles by file
       const articlesByFile = this.groupArticlesByFile(articles);
+      const fileGroups = Object.keys(articlesByFile).length;
+      
+      logger.info('SessionEval', `Grouped articles into ${fileGroups} file groups`, {
+        sessionId,
+        fileCount: fileGroups,
+        filesWithCounts: Object.entries(articlesByFile).map(([fileId, articles]) => ({ 
+          fileId, 
+          count: articles.length 
+        }))
+      });
       
       // Process each file group
       for (const [fileId, fileArticles] of Object.entries(articlesByFile)) {
-        console.log(`Processing file group ${fileId} with ${fileArticles.length} articles...`);
+        const fileStartTime = Date.now();
+        logger.info('SessionEval', `Processing file ${fileId} with ${fileArticles.length} articles`, {
+          sessionId,
+          fileId,
+          articleCount: fileArticles.length
+        });
         
         // Process each article in the file
         for (const article of fileArticles) {
@@ -128,6 +177,16 @@ export class ArticleProcessor {
             processedCount++;
           }
         }
+        
+        const fileProcessingTime = Date.now() - fileStartTime;
+        logger.info('SessionEval', `Completed processing file ${fileId}`, {
+          sessionId,
+          fileId,
+          processed: fileArticles.length,
+          successful: fileArticles.filter((_, i) => results[results.length - fileArticles.length + i].status === "success").length,
+          errors: fileArticles.filter((_, i) => results[results.length - fileArticles.length + i].status === "error").length,
+          processingTimeMs: fileProcessingTime
+        });
       }
       
       // Check if there are still more articles to process after this batch
@@ -137,22 +196,37 @@ export class ArticleProcessor {
       // Only mark the session as completed if all articles have been processed
       if (isCompleted) {
         await this.supabaseUtils.markSessionEvaluationCompleted(sessionId);
-        console.log(`Completed evaluation for session ${sessionId}, all articles processed`);
+        logger.info('SessionEval', `All articles processed for session ${sessionId}, marking as completed`);
       } else {
-        console.log(`Batch completed for session ${sessionId}, more articles remain for processing`);
-        // Keep the session marked as running, but don't update awaiting_ai_evaluation
+        logger.info('SessionEval', `Batch completed for session ${sessionId}, more articles remain`, {
+          sessionId,
+          processedInBatch: processedCount,
+          hasMoreArticles
+        });
       }
       
     } catch (error) {
-      console.error(`Error processing session ${sessionId}:`, error);
+      logger.error('SessionEval', `Error processing session ${sessionId}`, error);
+      
       // Even if there's an error, try to mark the session as not running
       try {
         // We don't mark as completed, just reset the running state
         await this.supabaseUtils.markSessionEvaluationFailed(sessionId);
+        logger.info('SessionEval', `Marked session ${sessionId} as failed after error`);
       } catch (markError) {
-        console.error(`Failed to mark session ${sessionId} as failed:`, markError);
+        logger.error('SessionEval', `Failed to mark session ${sessionId} as failed`, markError);
       }
     }
+
+    const sessionProcessingTime = Date.now() - sessionStartTime;
+    logger.info('SessionEval', `Session processing summary for ${sessionId}`, {
+      sessionId,
+      processedCount,
+      successCount: results.filter(r => r.status === "success").length,
+      errorCount: results.filter(r => r.status === "error").length,
+      isCompleted,
+      processingTimeMs: sessionProcessingTime
+    });
 
     return { sessionId, processedCount, results, isCompleted };
   }
@@ -171,6 +245,9 @@ export class ArticleProcessor {
       isCompleted: boolean;
     }>;
   }> {
+    const startTime = Date.now();
+    logger.info('BatchEval', `Starting batch processing of sessions`);
+    
     const sessionResults: Array<{
       sessionId: string;
       processedCount: number;
@@ -183,8 +260,14 @@ export class ArticleProcessor {
       const sessionIds = await this.supabaseUtils.getSessionsAwaitingEvaluation();
       
       if (!sessionIds || sessionIds.length === 0) {
+        logger.info('BatchEval', `No sessions awaiting evaluation found`);
         return { sessionCount: 0, totalProcessedCount: 0, sessionResults: [] };
       }
+      
+      logger.info('BatchEval', `Found ${sessionIds.length} sessions to process`, {
+        count: sessionIds.length,
+        sessionIds
+      });
       
       // Process each session
       for (const sessionId of sessionIds) {
@@ -197,9 +280,17 @@ export class ArticleProcessor {
         totalProcessedCount += result.processedCount;
       }
     } catch (error) {
-      console.error("Error in session processing:", error);
+      logger.error('BatchEval', `Error in batch processing`, error);
       throw error;
     }
+
+    const processingTime = Date.now() - startTime;
+    logger.info('BatchEval', `Batch processing completed`, {
+      sessionCount: sessionResults.length,
+      totalProcessedCount,
+      processingTimeMs: processingTime,
+      sessionResults
+    });
 
     return {
       sessionCount: sessionResults.length,
