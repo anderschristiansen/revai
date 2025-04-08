@@ -69,8 +69,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setUser(null);
             } else {
               setUser(user);
-              // Show success toast on successful login
-              toast.success('Successfully signed in');
             }
           } catch (error) {
             console.error('Error in auth state change handler:', error);
