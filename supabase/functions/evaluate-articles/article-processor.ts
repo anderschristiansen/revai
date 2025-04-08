@@ -89,7 +89,7 @@ export class ArticleProcessor {
     logger.info('SessionEval', `Starting session ${sessionId}`);
     
     // First, mark the session as running
-    await this.supabaseUtils.markSessionEvaluationRunning(sessionId);
+    await this.supabaseUtils.markSessionEvaluationRunning(sessionId, true);
     
     const results: Array<{
       articleId: string;
@@ -156,6 +156,8 @@ export class ArticleProcessor {
       } else {
         logger.info('SessionEval', `Batch completed for session ${sessionId}, more articles remain`);
       }
+
+      await this.supabaseUtils.markSessionEvaluationRunning(sessionId, false);
       
     } catch (error) {
       logger.error('SessionEval', `Error processing session ${sessionId}`, error);

@@ -214,23 +214,23 @@ export class SupabaseUtils {
   /**
    * Mark a session as evaluation running
    */
-  async markSessionEvaluationRunning(sessionId: string): Promise<void> {
+  async markSessionEvaluationRunning(sessionId: string, running: boolean): Promise<void> {
     try {
       const { error } = await this.supabase
         .from('review_sessions')
         .update({
-          ai_evaluation_running: true,
+          ai_evaluation_running: running,
           // Keep awaiting_ai_evaluation true while processing
           last_evaluated_at: new Date().toISOString(),
         })
         .eq('id', sessionId);
       
       if (error) {
-        logger.error('Supabase', `Failed to mark session ${sessionId} as running`, error);
+        logger.error('Supabase', `Failed to mark session ${sessionId} as ${running ? 'running' : 'not running'}`, error);
         throw new Error(`Failed to update session status: ${error.message}`);
       }
     } catch (error) {
-      logger.error('Supabase', `Error marking session ${sessionId} as running`, error);
+      logger.error('Supabase', `Error marking session ${sessionId} as ${running ? 'running' : 'not running'}`, error);
       throw error;
     }
   }
@@ -243,7 +243,6 @@ export class SupabaseUtils {
       const { error } = await this.supabase
         .from('review_sessions')
         .update({
-          ai_evaluation_running: false,
           awaiting_ai_evaluation: false,
           ai_evaluated: true,
         })
