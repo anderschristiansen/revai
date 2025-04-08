@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/auth-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
+import { toast } from '@/components/ui/sonner'
 import { AuthError } from '@supabase/supabase-js'
 
 export default function SignupPage() {
@@ -15,7 +15,6 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { signUp } = useAuth()
-  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,75 +22,69 @@ export default function SignupPage() {
 
     try {
       await signUp(email, password)
-      toast({
-        title: "Success",
-        description: "Please check your email to confirm your account.",
-      })
       router.push('/login')
+      toast.success("Account created successfully. Please check your email to verify your account.")
     } catch (error: unknown) {
       const authError = error as AuthError
-      toast({
-        title: "Error",
-        description: authError.message || "Failed to create account. Please try again.",
-        variant: "destructive",
-      })
+      toast.error(authError.message || "Failed to create account")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="w-full max-w-md space-y-8 rounded-lg border bg-card p-6 shadow-lg">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold">Create an account</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sign up to get started with RevAI
-          </p>
+    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+      <div className="w-full max-w-md space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground">
+            Create your account
+          </h2>
         </div>
-
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="space-y-4">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="-space-y-px rounded-md shadow-sm">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium">
+              <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
               <Input
-                id="email"
+                id="email-address"
+                name="email"
                 type="email"
+                autoComplete="email"
                 required
+                className="relative block w-full rounded-t-md border-0 py-1.5 text-foreground ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1"
-                placeholder="Enter your email"
-                autoComplete="email"
               />
             </div>
-
             <div>
-              <label htmlFor="password" className="block text-sm font-medium">
+              <label htmlFor="password" className="sr-only">
                 Password
               </label>
               <Input
                 id="password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
                 required
+                className="relative block w-full rounded-b-md border-0 py-1.5 text-foreground ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1"
-                placeholder="Create a password"
-                autoComplete="new-password"
               />
             </div>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={loading}
-          >
-            {loading ? 'Creating account...' : 'Create account'}
-          </Button>
+          <div>
+            <Button
+              type="submit"
+              className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={loading}
+            >
+              {loading ? "Creating account..." : "Sign up"}
+            </Button>
+          </div>
         </form>
 
         <div className="text-center text-sm">

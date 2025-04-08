@@ -1,22 +1,16 @@
 "use client"
 
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "@/components/ui/sonner"
 import { Button } from "@/components/ui/button"
-import { ToastAction } from "@/components/ui/toast"
 
 export function ToastDemo() {
-  const { toast } = useToast()
-
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
       <Button
         variant="outline"
         size="sm"
         onClick={() => {
-          toast({
-            title: "Info Notification",
-            description: "This is an informational message",
-          })
+          toast.info("This is an informational message")
         }}
       >
         Info Toast
@@ -26,11 +20,7 @@ export function ToastDemo() {
         variant="outline"
         size="sm"
         onClick={() => {
-          toast({
-            title: "Success",
-            description: "Action completed successfully!",
-            variant: "default",
-          })
+          toast.success("Action completed successfully!")
         }}
       >
         Success Toast
@@ -40,11 +30,7 @@ export function ToastDemo() {
         variant="outline"
         size="sm"
         onClick={() => {
-          toast({
-            title: "Error",
-            description: "Something went wrong!",
-            variant: "destructive",
-          })
+          toast.error("Something went wrong!")
         }}
       >
         Error Toast
@@ -54,16 +40,10 @@ export function ToastDemo() {
         variant="outline"
         size="sm"
         onClick={() => {
-          toast({
-            title: "With Action",
-            description: "Friday, February 10, 2023 at 5:57 PM",
-            action: (
-              <ToastAction altText="Try again">Try again</ToastAction>
-            ),
-          })
+          toast.coffee("Time for a coffee break!")
         }}
       >
-        Action Toast
+        Coffee Toast
       </Button>
     </div>
   )

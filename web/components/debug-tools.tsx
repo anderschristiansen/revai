@@ -8,21 +8,34 @@ import { CoffeeProgress } from "@/components/ui/coffee-progress"
 import { ToastDemo } from "@/components/ui/toast-demo"
 import { CoffeeLoaderOverlay } from "@/components/ui/coffee-loader-overlay"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "@/components/ui/sonner"
 
 export function DebugTools() {
   // State to control the overlay visibility
   const [overlayVisible, setOverlayVisible] = React.useState(false)
   const [loaderVariant, setLoaderVariant] = React.useState(0)
   const [timeoutId, setTimeoutId] = React.useState<NodeJS.Timeout | null>(null)
-  const { toast } = useToast()
 
   React.useEffect(() => {
-    // Cleanup timeout on unmount
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId)
+    if (overlayVisible) {
+      // Set a timeout to automatically hide the overlay after 5 seconds
+      const id = setTimeout(() => {
+        setOverlayVisible(false)
+        toast.success("The loader overlay has been automatically hidden after 5 seconds")
+      }, 5000)
+      
+      setTimeoutId(id)
+      
+      // Toast notification
+      toast.info("The loader will automatically hide after 5 seconds")
+    } else {
+      // Hide overlay
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+        setTimeoutId(null)
+      }
     }
-  }, [timeoutId])
+  }, [overlayVisible, timeoutId])
 
   const toggleOverlay = () => {
     if (!overlayVisible) {
@@ -34,19 +47,13 @@ export function DebugTools() {
       // Set a timer to hide it after 5 seconds
       const id = setTimeout(() => {
         setOverlayVisible(false)
-        toast({
-          title: "Evaluation complete",
-          description: "The loader overlay has been automatically hidden after 5 seconds."
-        })
+        toast.success("The loader overlay has been automatically hidden after 5 seconds.")
       }, 5000)
       
       setTimeoutId(id)
       
       // Toast notification
-      toast({
-        title: "Processing",
-        description: "The loader will automatically hide after 5 seconds."
-      })
+      toast.success("The loader will automatically hide after 5 seconds.")
     } else {
       // Hide overlay
       setOverlayVisible(false)

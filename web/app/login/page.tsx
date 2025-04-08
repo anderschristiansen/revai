@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/auth-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
+import { toast } from '@/components/ui/sonner'
 import { AuthError } from '@supabase/supabase-js'
 
 function LoginForm() {
@@ -16,7 +16,6 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { signIn } = useAuth()
-  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,17 +25,10 @@ function LoginForm() {
       await signIn(email, password)
       const redirectTo = searchParams.get('redirectedFrom') || '/sessions'
       router.push(redirectTo)
-      toast({
-        title: "Success",
-        description: "You have been logged in successfully.",
-      })
+      toast.success("You have been logged in successfully")
     } catch (error: unknown) {
       const authError = error as AuthError
-      toast({
-        title: "Error",
-        description: authError.message || "Invalid email or password.",
-        variant: "destructive",
-      })
+      toast.error(authError.message || "Invalid email or password")
     } finally {
       setLoading(false)
     }
