@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { FolderOpen, Clock, Trash2, FolderIcon, MoreHorizontal, UploadIcon } from "lucide-react";
+import { FolderOpen, Clock, Trash2, FolderIcon, MoreHorizontal, UploadIcon, BotIcon } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,7 @@ export type SessionCardProps = {
   ai_excluded_count?: number;
   ai_unsure_count?: number;
   ai_evaluation_running?: boolean;
+  awaiting_ai_evaluation?: boolean;
   files_processed: boolean;
   upload_running?: boolean;
   className?: string;
@@ -47,6 +48,7 @@ export function SessionCard({
   ai_excluded_count = 0,
   ai_unsure_count = 0,
   ai_evaluation_running = false,
+  awaiting_ai_evaluation = false,
   files_processed = false,
   upload_running = false,
   className,
@@ -193,6 +195,28 @@ export function SessionCard({
             </div>
           )}
 
+          {/* AI evaluation queued indicator */}
+          {!ai_evaluation_running && awaiting_ai_evaluation && (
+            <div className="absolute top-0 right-0 mt-3 mr-3 z-10">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+                className="relative"
+              >
+                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white shadow-md border border-amber-300">
+                  <div className="p-1 rounded-full bg-amber-100">
+                    <BotIcon className="h-4 w-4 text-amber-500" />
+                  </div>
+                  <span className="text-sm font-medium whitespace-nowrap text-amber-500">
+                    AI Queued
+                  </span>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
           <CardContent className="px-5 pt-4 pb-4 relative">
             {/* Session title and timestamp */}
             <div className="flex justify-between items-start mb-4">
@@ -292,6 +316,7 @@ export function SessionCard({
                     excluded={ai_excluded_count}
                     unsure={ai_unsure_count}
                     isRunning={ai_evaluation_running}
+                    isQueued={awaiting_ai_evaluation}
                   />
                 </div>
               )}

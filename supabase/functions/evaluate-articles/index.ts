@@ -22,13 +22,36 @@ Deno.serve(async () => {
   try {
     console.log("Starting article evaluation process...");
     
-    const { processedCount, results } = await articleProcessor.processArticles();
+    // Find sessions awaiting evaluation
+    const sessionIds = await supabaseUtils.getSessionsAwaitingEvaluation();
 
-    console.log(`Completed processing ${processedCount} articles`);
+    if (sessionIds.length === 0) {
+      console.log("No sessions awaiting evaluation found");
+      return new Response(
+        JSON.stringify({ 
+          message: "No sessions awaiting evaluation found",
+          sessionCount: 0,
+          totalProcessedCount: 0
+        }),
+        { headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Process just the first session in the queue
+    const sessionId = sessionIds[0];
+    const result = await articleProcessor.processSession(sessionId);
+    
+    console.log(`Processed ${result.processedCount} articles for session ${sessionId}`);
+    
+    // Return information about the processing
     return new Response(
       JSON.stringify({ 
-        message: `Evaluated ${processedCount} articles successfully`,
-        results 
+        message: `Processed ${result.processedCount} articles for session ${sessionId}`,
+        sessionId,
+        processedCount: result.processedCount,
+        isSessionCompleted: result.isCompleted,
+        moreSessionsQueued: sessionIds.length > 1,
+        results: result.results
       }),
       { headers: { "Content-Type": "application/json" } }
     );

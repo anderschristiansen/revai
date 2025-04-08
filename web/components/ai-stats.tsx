@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { BotIcon } from "lucide-react";
+import { BotIcon, Clock8Icon } from "lucide-react";
 import { DecisionDots } from "@/components/decision-dots";
 import { Card, CardContent } from "@/components/ui/card";
 import Lottie from "lottie-react";
@@ -12,6 +12,7 @@ interface AIStatsProps {
   excluded: number;
   unsure: number;
   isRunning?: boolean;
+  isQueued?: boolean;
   className?: string;
   inCard?: boolean;
 }
@@ -23,6 +24,7 @@ export function AIStats({
   excluded, 
   unsure,
   isRunning = false,
+  isQueued = false,
   className,
   inCard = false
 }: AIStatsProps) {
@@ -51,6 +53,14 @@ export function AIStats({
                 </div>
                 <span className="text-[0.6rem] ml-0.5 text-[#3b82f6] font-medium">
                   Brewing
+                </span>
+              </div>
+            )}
+            {isQueued && !isRunning && (
+              <div className="flex items-center ml-1">
+                <Clock8Icon className="w-3 h-3 text-amber-500" />
+                <span className="text-[0.6rem] ml-0.5 text-amber-500 font-medium">
+                  Queued
                 </span>
               </div>
             )}

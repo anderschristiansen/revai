@@ -210,12 +210,28 @@ export async function markArticlesForEvaluation(articleIds: string[]) {
   }
 }
 
+// Mark a session as awaiting AI evaluation
+export async function markSessionAwaitingEvaluation(sessionId: string) {
+  const { error } = await supabase
+    .from("review_sessions")
+    .update({
+      awaiting_ai_evaluation: true,
+    })
+    .eq("id", sessionId);
+
+  if (error) {
+    console.error("Failed to mark session as awaiting evaluation:", error);
+    throw new Error("Failed to mark session as awaiting evaluation");
+  }
+}
+
 // Mark a session as AI evaluation running
 export async function markSessionEvaluationRunning(sessionId: string) {
   const { error } = await supabase
     .from("review_sessions")
     .update({
       ai_evaluation_running: true,
+      awaiting_ai_evaluation: false,
       last_evaluated_at: new Date().toISOString(),
     })
     .eq("id", sessionId);
@@ -224,6 +240,23 @@ export async function markSessionEvaluationRunning(sessionId: string) {
     console.error("Failed to update session evaluation status:", error);
     // Not critical, but still throw if you want to make it strict:
     throw new Error("Failed to mark session evaluation running");
+  }
+}
+
+// Mark a session as AI evaluation completed
+export async function markSessionEvaluationCompleted(sessionId: string) {
+  const { error } = await supabase
+    .from("review_sessions")
+    .update({
+      ai_evaluation_running: false,
+      awaiting_ai_evaluation: false,
+      ai_evaluated: true,
+    })
+    .eq("id", sessionId);
+
+  if (error) {
+    console.error("Failed to mark session evaluation completed:", error);
+    throw new Error("Failed to mark session evaluation completed");
   }
 }
 

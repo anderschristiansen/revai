@@ -53,6 +53,7 @@ export type ReviewSession = {
   last_evaluated_at?: string;
   ai_evaluated: boolean;
   ai_evaluation_running?: boolean;
+  awaiting_ai_evaluation?: boolean;
   files_processed: boolean;
   files_upload_running?: boolean;
 };

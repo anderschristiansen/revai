@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { EvaluateRequest, EvaluateResponse, ErrorResponse } from "@/lib/types";
-import { markArticlesForEvaluation, markSessionEvaluationRunning } from "@/lib/utils/supabase-utils";
+import { markArticlesForEvaluation, markSessionAwaitingEvaluation } from "@/lib/utils/supabase-utils";
 
 export async function POST(request: NextRequest): Promise<NextResponse<EvaluateResponse | ErrorResponse>> {
   try {
@@ -13,8 +13,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<EvaluateR
     // 1. Mark articles as needing evaluation
     await markArticlesForEvaluation(articleIds);
 
-    // 2. Mark session as evaluation running
-    await markSessionEvaluationRunning(sessionId);
+    // 2. Mark session as awaiting evaluation (instead of running)
+    await markSessionAwaitingEvaluation(sessionId);
 
     return NextResponse.json({
       message: "Marked articles for evaluation",

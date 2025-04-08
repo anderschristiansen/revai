@@ -211,16 +211,17 @@ export default function SessionsPage() {
                 title={session.title}
                 created_at={session.created_at}
                 articles_count={session.articles_count}
+                files_processed={session.files_processed}
                 reviewed_count={session.reviewed_count}
                 excluded_count={session.excluded_count}
-                pending_count={session.pending_count}
                 unsure_count={session.unsure_count}
+                pending_count={session.pending_count}
                 ai_evaluated_count={session.ai_evaluated_count}
                 ai_included_count={session.ai_included_count}
                 ai_excluded_count={session.ai_excluded_count}
                 ai_unsure_count={session.ai_unsure_count}
                 ai_evaluation_running={session.ai_evaluation_running}
-                files_processed={session.files_processed}
+                awaiting_ai_evaluation={session.awaiting_ai_evaluation}
                 upload_running={session.files_upload_running}
                 onDelete={() => setDeleteSessionId(session.id)}
               />

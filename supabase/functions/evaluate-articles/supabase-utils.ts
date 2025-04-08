@@ -98,4 +98,141 @@ export class SupabaseUtils {
       throw new Error(`Failed to update article: ${error.message}`);
     }
   }
+
+  /**
+   * Gets sessions that are awaiting AI evaluation
+   */
+  async getSessionsAwaitingEvaluation(limit = 1): Promise<string[]> {
+    const { data, error } = await this.supabase
+      .from('review_sessions')
+      .select('id')
+      .eq('awaiting_ai_evaluation', true)
+      .eq('ai_evaluation_running', false)
+      .limit(limit);
+
+    if (error) {
+      throw new Error(`Failed to fetch sessions: ${error.message}`);
+    }
+
+    return (data || []).map(session => session.id);
+  }
+
+  /**
+   * Mark a session as evaluation running
+   */
+  async markSessionEvaluationRunning(sessionId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('review_sessions')
+      .update({
+        ai_evaluation_running: true,
+        awaiting_ai_evaluation: false,
+        last_evaluated_at: new Date().toISOString(),
+      })
+      .eq('id', sessionId);
+
+    if (error) {
+      throw new Error(`Failed to update session status: ${error.message}`);
+    }
+  }
+
+  /**
+   * Mark a session as evaluation completed
+   */
+  async markSessionEvaluationCompleted(sessionId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('review_sessions')
+      .update({
+        ai_evaluation_running: false,
+        awaiting_ai_evaluation: false,
+        ai_evaluated: true,
+      })
+      .eq('id', sessionId);
+
+    if (error) {
+      throw new Error(`Failed to update session status: ${error.message}`);
+    }
+  }
+
+  /**
+   * Mark a session as evaluation failed (error occurred)
+   */
+  async markSessionEvaluationFailed(sessionId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('review_sessions')
+      .update({
+        ai_evaluation_running: false,
+        // Keep awaiting_ai_evaluation true so it can be retried
+        awaiting_ai_evaluation: true
+      })
+      .eq('id', sessionId);
+
+    if (error) {
+      throw new Error(`Failed to update session status: ${error.message}`);
+    }
+  }
+
+  /**
+   * Gets file IDs for a specific session
+   */
+  private async getFileIdsForSession(sessionId: string): Promise<string[]> {
+    const { data, error } = await this.supabase
+      .from('files')
+      .select('id')
+      .eq('session_id', sessionId);
+
+    if (error) {
+      throw new Error(`Failed to fetch file IDs: ${error.message}`);
+    }
+
+    return (data || []).map(file => file.id);
+  }
+
+  /**
+   * Checks if a session has articles that need evaluation
+   */
+  async sessionHasArticlesForEvaluation(sessionId: string): Promise<boolean> {
+    // First get all file IDs for this session
+    const fileIds = await this.getFileIdsForSession(sessionId);
+    
+    if (fileIds.length === 0) {
+      return false;
+    }
+
+    const { count, error } = await this.supabase
+      .from('articles')
+      .select('id', { count: 'exact', head: true })
+      .eq('needs_ai_evaluation', true)
+      .in('file_id', fileIds);
+
+    if (error) {
+      throw new Error(`Failed to check articles: ${error.message}`);
+    }
+
+    return count !== null && count > 0;
+  }
+
+  /**
+   * Fetches articles that need AI evaluation for a specific session
+   */
+  async getArticlesForEvaluationBySession(sessionId: string, batchSize: number): Promise<Article[]> {
+    // First get all file IDs for this session
+    const fileIds = await this.getFileIdsForSession(sessionId);
+    
+    if (fileIds.length === 0) {
+      return [];
+    }
+
+    const { data: articles, error } = await this.supabase
+      .from('articles')
+      .select('id, title, abstract, file_id')
+      .eq('needs_ai_evaluation', true)
+      .in('file_id', fileIds)
+      .limit(batchSize);
+
+    if (error) {
+      throw new Error(`Failed to fetch articles: ${error.message}`);
+    }
+
+    return articles as Article[];
+  }
 } 

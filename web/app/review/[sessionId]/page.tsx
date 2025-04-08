@@ -14,7 +14,7 @@ import { UploadForm } from "@/components/upload-form";
 import { ReviewStats } from "@/components/review-stats";
 import { AIStats } from "@/components/ai-stats";
 import { toast } from "@/components/ui/sonner";
-import { ArrowLeftIcon, PencilIcon, CheckIcon, XIcon, FileTextIcon, ListChecks, FolderIcon, BotIcon } from "lucide-react";
+import { ArrowLeftIcon, PencilIcon, CheckIcon, XIcon, FileTextIcon, ListChecks, FolderIcon, BotIcon, Clock8Icon } from "lucide-react";
 import { useSupabaseRealtime } from "@/hooks/use-supabase-realtime";
 
 import { getSession, getFiles, getArticles, updateSessionTitle, updateArticleUserDecision } from "@/lib/utils/supabase-utils";
@@ -31,6 +31,7 @@ export default function ReviewPage() {
   const [evaluating, setEvaluating] = useState(false);
   const [batchRunning, setBatchRunning] = useState(false);
   const [activeTab, setActiveTab] = useState("articles");
+  const [awaitingEvaluation, setAwaitingEvaluation] = useState(false);
 
   // --- Load Session ---
   const loadSession = useCallback(async () => {
@@ -45,6 +46,7 @@ export default function ReviewPage() {
       setCriteria(sessionData.criterias || []);
       setNewTitle(sessionData.title || "");
       setBatchRunning(sessionData.ai_evaluation_running || false);
+      setAwaitingEvaluation(sessionData.awaiting_ai_evaluation || false);
     } catch (error) {
       console.error("Error loading session:", error);
       toast.error("Failed to load session");
@@ -77,6 +79,9 @@ export default function ReviewPage() {
       setSession(prev => prev ? { ...prev, ...payload.new } : null);
       if (payload.new?.ai_evaluation_running !== undefined) {
         setBatchRunning(payload.new.ai_evaluation_running);
+      }
+      if (payload.new?.awaiting_ai_evaluation !== undefined) {
+        setAwaitingEvaluation(payload.new.awaiting_ai_evaluation);
       }
     }
   });
@@ -191,6 +196,7 @@ export default function ReviewPage() {
           excluded={aiExcluded}
           unsure={aiUnsure}
           isRunning={batchRunning}
+          isQueued={awaitingEvaluation}
           inCard
         />
       </div>
@@ -205,13 +211,18 @@ export default function ReviewPage() {
           </TabsList>
 
           <Tooltip content="Start AI evaluation">
-            <Button onClick={handleEvaluateArticles} disabled={evaluating || batchRunning}>
+            <Button onClick={handleEvaluateArticles} disabled={evaluating || batchRunning || awaitingEvaluation}>
               {batchRunning ? (
                 <Lottie animationData={coffeeAnimation} className="h-5 w-5" />
+              ) : awaitingEvaluation ? (
+                <Clock8Icon className="h-4 w-4 mr-2 text-amber-500" />
               ) : (
                 <BotIcon className="h-4 w-4 mr-2" />
               )}
-              {evaluating ? "Evaluating..." : "Evaluate all"}
+              {evaluating ? "Evaluating..." : 
+               batchRunning ? "Brewing..." : 
+               awaitingEvaluation ? "In Queue..." : 
+               "Evaluate all"}
             </Button>
           </Tooltip>
         </div>
