@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/sonner";
 import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2 } from "lucide-react";
@@ -235,6 +235,9 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         }}
       >
         <DialogContent className="max-w-4xl flex flex-col max-h-[90vh]">
+          <DialogDescription className="sr-only">
+            Article review dialog showing details and allowing the user to include, exclude, or mark as unsure
+          </DialogDescription>
           {selectedArticle && (
             <>
               <DialogHeader className="flex-shrink-0 pb-3 border-b">
