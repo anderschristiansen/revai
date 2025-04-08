@@ -1,0 +1,29 @@
+# Supabase
+supabase/
+
+# Node modules
+node_modules/
+**/node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Next.js
+.next/
+**/.next/
+
+# Environment files
+.env*
+**/.env*
+
+# Logs
+*.log
+**/*.log
+
+# System files
+.DS_Store
+**/.DS_Store
+
+# Vercel
+.vercel/ 

@@ -1,0 +1,8 @@
+{
+  "name": "revai-supabase",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "supabase functions deploy evaluate-articles"
+  }
+} 

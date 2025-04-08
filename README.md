@@ -1,3 +1,53 @@
+# RevAI Monorepo
+
+This repository contains both the web application and Supabase functions for the RevAI project - a systematic review assistant.
+
+## Project Structure
+
+- `web/` - Next.js web application
+- `supabase/` - Supabase Edge Functions
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Supabase CLI
+
+### Getting Started
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Start the web application:
+```bash
+npm run dev
+```
+
+3. Deploy Supabase functions:
+```bash
+cd supabase
+supabase functions deploy
+```
+
+## Environment Variables
+
+Create a `.env.local` file in the `web` directory with:
+
+```bash
+OPENAI_API_KEY=your_openai_api_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+## Deployment
+
+- The web application is deployed to Vercel
+- Supabase functions are deployed using the Supabase CLI
+
 # Systematic Review Assistant
 
 A web-based tool that helps researchers screen large numbers of articles for systematic reviews using AI to assist with inclusion/exclusion decisions.
