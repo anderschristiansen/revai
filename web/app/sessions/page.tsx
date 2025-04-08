@@ -9,7 +9,7 @@ import {
   deleteAllReviewSessions, 
   getReviewSessionsWithFilesAndArticles 
 } from "@/lib/utils/supabase-utils";
-import { ReviewSessionView } from "@/lib/types";
+import { ReviewSessionView, Article } from "@/lib/types";
 import { SessionCard } from "@/components/session-card";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ import {
   AlertDialogAction 
 } from "@/components/ui/alert-dialog";
 import { useSupabaseRealtime } from "@/hooks/use-supabase-realtime";
+import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
 // Animation variants
 const container = {
@@ -96,12 +97,97 @@ export default function SessionsPage() {
   }, [loadSessions]);
 
   // Realtime updates for sessions and articles
-  useSupabaseRealtime(["INSERT", "UPDATE", "DELETE"], "review_sessions", () => {
-    loadSessions();
+  useSupabaseRealtime(["INSERT", "UPDATE", "DELETE"], "review_sessions", (payload: RealtimePostgresChangesPayload<ReviewSessionView>) => {
+    if (!payload.new && !payload.old) return;
+
+    if (payload.eventType === "INSERT") {
+      // Load the full session data for new sessions
+      loadSessions();
+    } else if (payload.eventType === "UPDATE") {
+      // Update the specific session in place without rebuilding the entire page
+      setSessions(prev => 
+        prev.map(session => {
+          if (session.id === (payload.new as ReviewSessionView | null)?.id) {
+            // Preserve the derived counts and computed fields
+            return {
+              ...session,
+              ...(payload.new as ReviewSessionView),
+              // Don't overwrite session's computed fields with payload data that might be missing them
+              reviewed_count: session.reviewed_count,
+              excluded_count: session.excluded_count,
+              unsure_count: session.unsure_count,
+              pending_count: session.pending_count,
+              ai_evaluated_count: session.ai_evaluated_count,
+              ai_included_count: session.ai_included_count,
+              ai_excluded_count: session.ai_excluded_count,
+              ai_unsure_count: session.ai_unsure_count,
+            };
+          }
+          return session;
+        })
+      );
+    } else if (payload.eventType === "DELETE") {
+      // Remove the deleted session
+      setSessions(prev => prev.filter(session => session.id !== (payload.old as ReviewSessionView | null)?.id));
+    }
   });
 
-  useSupabaseRealtime(["INSERT", "UPDATE", "DELETE"], "articles", () => {
-    loadSessions();
+  useSupabaseRealtime(["INSERT", "UPDATE", "DELETE"], "articles", (payload: RealtimePostgresChangesPayload<Article>) => {
+    if (!payload.new && !payload.old) return;
+    
+    // Find which session this article belongs to
+    const fileId = (payload.new as Article | null)?.file_id || (payload.old as Article | null)?.file_id;
+    if (!fileId) return;
+    
+    setSessions(prev => {
+      // Find the session that contains this file
+      const sessionWithFile = prev.find(s => 
+        s.files?.some(f => f.id === fileId)
+      );
+      
+      if (!sessionWithFile) return prev;
+      
+      // Create a copy of the sessions array
+      const updated = [...prev];
+      const sessionIndex = updated.findIndex(s => s.id === sessionWithFile.id);
+      const session = {...updated[sessionIndex]};
+      const articles = [...(session.articles || [])];
+      
+      // Update the articles array based on the event type
+      if (payload.eventType === "INSERT") {
+        articles.push(payload.new);
+      } else if (payload.eventType === "UPDATE") {
+        const articleIndex = articles.findIndex(a => a.id === payload.new.id);
+        if (articleIndex !== -1) {
+          articles[articleIndex] = {...articles[articleIndex], ...payload.new};
+        }
+      } else if (payload.eventType === "DELETE") {
+        const articleIndex = articles.findIndex(a => a.id === payload.old.id);
+        if (articleIndex !== -1) {
+          articles.splice(articleIndex, 1);
+        }
+      }
+      
+      // Recalculate counts
+      session.articles = articles;
+      session.reviewed_count = articles.filter(a => a.user_decision === "Include").length;
+      session.excluded_count = articles.filter(a => a.user_decision === "Exclude").length;
+      session.unsure_count = articles.filter(a => a.user_decision === "Unsure").length;
+      session.pending_count = articles.filter(a => !a.user_decision).length;
+      session.ai_evaluated_count = articles.filter(a => 
+        a.ai_decision === "Include" || 
+        a.ai_decision === "Exclude" || 
+        a.ai_decision === "Unsure"
+      ).length;
+      session.ai_included_count = articles.filter(a => a.ai_decision === "Include").length;
+      session.ai_excluded_count = articles.filter(a => a.ai_decision === "Exclude").length;
+      session.ai_unsure_count = articles.filter(a => a.ai_decision === "Unsure").length;
+      session.articles_count = articles.length;
+      
+      // Update the session in the sessions array
+      updated[sessionIndex] = session;
+      return updated;
+    });
   });
 
   // Create a new session

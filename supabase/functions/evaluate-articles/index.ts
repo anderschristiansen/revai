@@ -23,29 +23,16 @@ Deno.serve(async () => {
   const invocationId = `inv-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   
   try {
-    logger.info('EdgeFunction', `Starting article evaluation process [${invocationId}]`);
-    
-    // First check for and recover any stuck sessions
-    const recoveredSessions = await supabaseUtils.recoverStuckSessions();
-    if (recoveredSessions > 0) {
-      logger.warning('EdgeFunction', `Recovered ${recoveredSessions} stuck sessions [${invocationId}]`);
-    }
+    logger.info('EdgeFunction', `Starting evaluation process`);
     
     // Find sessions awaiting evaluation
     const sessionIds = await supabaseUtils.getSessionsAwaitingEvaluation();
-    logger.info('EdgeFunction', `Found ${sessionIds.length} sessions awaiting evaluation`, { 
-      invocationId, 
-      count: sessionIds.length,
-      sessionIds
-    });
-
+    
     if (sessionIds.length === 0) {
-      logger.info('EdgeFunction', `No sessions to process, exiting [${invocationId}]`);
       return new Response(
         JSON.stringify({ 
           invocationId,
-          message: "No sessions awaiting evaluation found",
-          recoveredSessions,
+          message: "No sessions awaiting evaluation",
           sessionCount: 0,
           totalProcessedCount: 0
         }),
@@ -55,19 +42,15 @@ Deno.serve(async () => {
 
     // Process just the first session in the queue
     const sessionId = sessionIds[0];
-    logger.info('EdgeFunction', `Processing session ${sessionId} [${invocationId}]`);
+    logger.info('EdgeFunction', `Processing session ${sessionId}`);
     
     const startTime = Date.now();
     const result = await articleProcessor.processSession(sessionId);
     const processingTime = Date.now() - startTime;
     
-    logger.info('EdgeFunction', `Completed processing for session ${sessionId} [${invocationId}]`, {
-      invocationId,
-      sessionId,
+    logger.info('EdgeFunction', `Completed processing session ${sessionId}`, {
       processedCount: result.processedCount,
-      isCompleted: result.isCompleted,
-      processingTimeMs: processingTime,
-      remainingSessions: sessionIds.length - 1
+      isCompleted: result.isCompleted
     });
     
     // Return information about the processing
@@ -85,7 +68,7 @@ Deno.serve(async () => {
       { headers: { "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
-    logger.error('EdgeFunction', `Error in evaluation process [${invocationId}]`, error);
+    logger.error('EdgeFunction', `Error in evaluation process`, error);
     
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(

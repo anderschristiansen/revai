@@ -44,10 +44,7 @@ export class ArticleProcessor {
   ): Promise<{ success: boolean; error?: string }> {
     const startTime = Date.now();
     try {
-      logger.info('ArticleEval', `Processing article ${article.id}`, { 
-        articleId: article.id,
-        fileId: article.file_id
-      });
+      logger.info('ArticleEval', `Processing article ${article.id}`);
       
       const evaluation = await this.openaiUtils.evaluateArticle(
         article.title,
@@ -57,11 +54,8 @@ export class ArticleProcessor {
       );
 
       const processingTime = Date.now() - startTime;
-      logger.info('ArticleEval', `Completed evaluation for article ${article.id}`, {
-        articleId: article.id,
-        fileId: article.file_id,
-        decision: evaluation.decision,
-        processingTimeMs: processingTime
+      logger.info('ArticleEval', `Evaluated article ${article.id}`, {
+        decision: evaluation.decision
       });
 
       await this.supabaseUtils.updateArticleEvaluation(
@@ -72,15 +66,8 @@ export class ArticleProcessor {
 
       return { success: true };
     } catch (error) {
-      const processingTime = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      
-      logger.error('ArticleEval', `Failed to evaluate article ${article.id}`, error, {
-        articleId: article.id,
-        fileId: article.file_id,
-        processingTimeMs: processingTime
-      });
-      
+      logger.error('ArticleEval', `Failed to evaluate article ${article.id}`, error);
       return { success: false, error: errorMessage };
     }
   }
@@ -99,8 +86,7 @@ export class ArticleProcessor {
     }>;
     isCompleted: boolean;
   }> {
-    const sessionStartTime = Date.now();
-    logger.info('SessionEval', `Starting evaluation for session ${sessionId}`);
+    logger.info('SessionEval', `Starting session ${sessionId}`);
     
     // First, mark the session as running
     await this.supabaseUtils.markSessionEvaluationRunning(sessionId);
@@ -118,49 +104,29 @@ export class ArticleProcessor {
       // Get AI settings
       const settings = await this.supabaseUtils.getLatestAISettings();
       const batchSize = settings.batch_size || 10;
-      logger.info('SessionEval', `Using batch size ${batchSize}`, { sessionId, batchSize });
 
       // Get session details for criteria
       const session = await this.supabaseUtils.getReviewSession(sessionId);
       const criterias = JSON.stringify(session.criterias || []);
 
-      // Process articles in batches until max batch size is reached
-      // (Note: We're processing only one batch per run of the Edge Function)
+      // Process articles in batches
       const articles = await this.supabaseUtils.getArticlesForEvaluationBySession(sessionId, batchSize);
       
       if (!articles || articles.length === 0) {
         // No articles to process means we're done with this session
         await this.supabaseUtils.markSessionEvaluationCompleted(sessionId);
-        logger.info('SessionEval', `Session ${sessionId} has no articles to process, marking as completed`);
+        logger.info('SessionEval', `Session ${sessionId} completed (no articles)`);
         return { sessionId, processedCount: 0, results: [], isCompleted: true };
       }
       
-      logger.info('SessionEval', `Retrieved ${articles.length} articles for session ${sessionId}`, {
-        sessionId,
-        articleCount: articles.length
-      });
+      logger.info('SessionEval', `Processing ${articles.length} articles`);
       
       // Group articles by file
       const articlesByFile = this.groupArticlesByFile(articles);
-      const fileGroups = Object.keys(articlesByFile).length;
-      
-      logger.info('SessionEval', `Grouped articles into ${fileGroups} file groups`, {
-        sessionId,
-        fileCount: fileGroups,
-        filesWithCounts: Object.entries(articlesByFile).map(([fileId, articles]) => ({ 
-          fileId, 
-          count: articles.length 
-        }))
-      });
       
       // Process each file group
       for (const [fileId, fileArticles] of Object.entries(articlesByFile)) {
-        const fileStartTime = Date.now();
-        logger.info('SessionEval', `Processing file ${fileId} with ${fileArticles.length} articles`, {
-          sessionId,
-          fileId,
-          articleCount: fileArticles.length
-        });
+        logger.info('SessionEval', `Processing file ${fileId} (${fileArticles.length} articles)`);
         
         // Process each article in the file
         for (const article of fileArticles) {
@@ -177,16 +143,6 @@ export class ArticleProcessor {
             processedCount++;
           }
         }
-        
-        const fileProcessingTime = Date.now() - fileStartTime;
-        logger.info('SessionEval', `Completed processing file ${fileId}`, {
-          sessionId,
-          fileId,
-          processed: fileArticles.length,
-          successful: fileArticles.filter((_, i) => results[results.length - fileArticles.length + i].status === "success").length,
-          errors: fileArticles.filter((_, i) => results[results.length - fileArticles.length + i].status === "error").length,
-          processingTimeMs: fileProcessingTime
-        });
       }
       
       // Check if there are still more articles to process after this batch
@@ -196,13 +152,9 @@ export class ArticleProcessor {
       // Only mark the session as completed if all articles have been processed
       if (isCompleted) {
         await this.supabaseUtils.markSessionEvaluationCompleted(sessionId);
-        logger.info('SessionEval', `All articles processed for session ${sessionId}, marking as completed`);
+        logger.info('SessionEval', `Session ${sessionId} completed`);
       } else {
-        logger.info('SessionEval', `Batch completed for session ${sessionId}, more articles remain`, {
-          sessionId,
-          processedInBatch: processedCount,
-          hasMoreArticles
-        });
+        logger.info('SessionEval', `Batch completed for session ${sessionId}, more articles remain`);
       }
       
     } catch (error) {
@@ -211,22 +163,15 @@ export class ArticleProcessor {
       // Even if there's an error, try to mark the session as not running
       try {
         // We don't mark as completed, just reset the running state
-        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-        await this.supabaseUtils.markSessionEvaluationFailed(sessionId, errorMessage);
-        logger.info('SessionEval', `Marked session ${sessionId} as failed after error`);
+        await this.supabaseUtils.markSessionEvaluationFailed(sessionId);
       } catch (markError) {
-        logger.error('SessionEval', `Failed to mark session ${sessionId} as failed`, markError);
+        logger.error('SessionEval', `Failed to mark session as failed`, markError);
       }
     }
 
-    const sessionProcessingTime = Date.now() - sessionStartTime;
-    logger.info('SessionEval', `Session processing summary for ${sessionId}`, {
-      sessionId,
-      processedCount,
-      successCount: results.filter(r => r.status === "success").length,
-      errorCount: results.filter(r => r.status === "error").length,
-      isCompleted,
-      processingTimeMs: sessionProcessingTime
+    logger.info('SessionEval', `Session ${sessionId} summary`, {
+      processed: processedCount,
+      completed: isCompleted
     });
 
     return { sessionId, processedCount, results, isCompleted };

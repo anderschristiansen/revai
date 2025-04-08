@@ -66,16 +66,7 @@ Explanation: [Short explanation why you made this decision]
     const startTime = Date.now();
     try {
       const prompt = this.constructArticleEvaluationPrompt(title, abstract, criterias);
-      const promptLength = prompt.length;
       
-      logger.info('OpenAI', 'Sending article evaluation request to OpenAI', { 
-        model: settings.model,
-        temperature: settings.temperature,
-        titleLength: title.length,
-        abstractLength: abstract?.length || 0,
-        promptLength
-      });
-
       const response = await this.client.chat.completions.create({
         model: settings.model,
         messages: [
@@ -87,25 +78,12 @@ Explanation: [Short explanation why you made this decision]
         seed: settings.seed,
       });
 
-      const apiResponseTime = Date.now() - startTime;
       const responseContent = response.choices[0].message.content;
       
       if (!responseContent) {
-        logger.error('OpenAI', 'No content in OpenAI response', null, {
-          apiResponseTimeMs: apiResponseTime
-        });
+        logger.error('OpenAI', 'No content in OpenAI response');
         throw new Error("No content in OpenAI response");
       }
-      
-      const responseStats = {
-        model: response.model,
-        promptTokens: response.usage?.prompt_tokens,
-        completionTokens: response.usage?.completion_tokens,
-        totalTokens: response.usage?.total_tokens,
-        apiResponseTimeMs: apiResponseTime
-      };
-      
-      logger.info('OpenAI', 'Received response from OpenAI', responseStats);
       
       // Clean and parse the response
       const cleanedResponse = this.cleanResponse(responseContent);
@@ -113,33 +91,19 @@ Explanation: [Short explanation why you made this decision]
       const explanationMatch = cleanedResponse.match(/Explanation:\s*([\s\S]*)/i);
 
       if (!decisionMatch || !explanationMatch) {
-        logger.error('OpenAI', 'Invalid response format from OpenAI', null, {
-          response: cleanedResponse,
-          ...responseStats
-        });
+        logger.error('OpenAI', 'Invalid response format from OpenAI');
         throw new Error("Invalid response format from OpenAI");
       }
 
       const decision = decisionMatch[1] as DecisionType;
       const explanation = explanationMatch[1].trim();
-      
-      logger.info('OpenAI', 'Successfully parsed OpenAI response', {
-        decision,
-        explanationLength: explanation.length,
-        ...responseStats
-      });
 
       return {
         decision,
         explanation,
       };
     } catch (error) {
-      const apiErrorTime = Date.now() - startTime;
-      logger.error('OpenAI', 'Error during OpenAI evaluation', error, {
-        titleLength: title.length,
-        abstractLength: abstract?.length || 0,
-        apiErrorTimeMs: apiErrorTime
-      });
+      logger.error('OpenAI', 'Error during OpenAI evaluation', error);
       throw error;
     }
   }
