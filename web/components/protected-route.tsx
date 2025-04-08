@@ -3,7 +3,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
-import { toast } from "@/components/ui/sonner"
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -15,7 +14,6 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   useEffect(() => {
     if (!loading && !user) {
-      toast.error("You must be signed in to access this page")
       router.push("/login")
     }
   }, [user, loading, router])

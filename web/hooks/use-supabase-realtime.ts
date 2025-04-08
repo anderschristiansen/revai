@@ -13,7 +13,7 @@ export function useSupabaseRealtime(
 ) {
   useEffect(() => {
     if (!events.length) return;
-
+    
     const channel = supabase.channel(`${table}_realtime`);
 
     events.forEach(event => {

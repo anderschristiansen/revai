@@ -1,75 +1,57 @@
-import { createClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/ssr';
+import { type SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// Validation
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase public environment variables', {
-    urlExists: !!supabaseUrl,
-    keyExists: !!supabaseAnonKey,
-  });
+  console.error('Missing required Supabase environment variables');
 }
 
-if (!supabaseServiceRoleKey && typeof window === 'undefined') {
-  console.error('Missing Supabase Service Role Key for server-side');
-}
+// Store the client instance for reuse
+let browserClient: SupabaseClient | null = null;
 
-// =============================
-// Create public client (frontend)
-// =============================
-export const supabase = createClient(
-  supabaseUrl || '',
-  supabaseAnonKey || '',
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      storage: {
-        getItem: (key) => {
-          if (typeof document === 'undefined') return null;
-
-          const cookieString = document.cookie
-            .split('; ')
-            .find(row => row.startsWith(`${key}=`));
-
-          return cookieString ? cookieString.split('=')[1] : null;
-        },
-        setItem: (key, value) => {
-          if (typeof document === 'undefined') return;
-          document.cookie = `${key}=${value}; path=/; max-age=2592000; SameSite=Lax; secure`;
-        },
-        removeItem: (key) => {
-          if (typeof document === 'undefined') return;
-          document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; secure`;
-        },
-      },
-    },
-  }
-);
-
-// =============================
-// Create server-side client (backend trusted)
-// =============================
-export const supabaseServer = createClient(
-  supabaseUrl || '',
-  supabaseServiceRoleKey || ''
-);
-
-// =============================
-// Utility: Auto pick client
-// =============================
 /**
- * Picks the correct Supabase client depending on environment
- * - In the browser (client-side), uses public anon client
- * - In server (API route, cron, edge), uses service role client
+ * Get a Supabase client for browser usage with proper SSR support
  */
-export const getSupabase = () => {
+export function getSupabaseClient() {
   if (typeof window === 'undefined') {
-    // Server-side
-    return supabaseServer;
-  } else {
-    // Client-side (browser)
-    return supabase;
+    // Always create a new instance on the server to avoid sharing state
+    return createBrowserClient(supabaseUrl, supabaseAnonKey);
   }
-};
+  
+  // Reuse the client instance on the client-side
+  if (!browserClient) {
+    browserClient = createBrowserClient(supabaseUrl, supabaseAnonKey);
+  }
+  
+  return browserClient;
+}
+
+// Export a singleton instance for direct usage
+export const supabase = getSupabaseClient();
+
+// Re-export the client creation function for components that need their own instance
+export const createClient = () => getSupabaseClient();
+
+// For admin operations (server-side only)
+export function getSupabaseAdmin() {
+  if (typeof window !== 'undefined') {
+    console.warn('Admin client should only be used server-side');
+  }
+  
+  if (!supabaseServiceRoleKey) {
+    console.error('Missing Supabase Service Role Key');
+    throw new Error('Missing admin credentials');
+  }
+  
+  return createBrowserClient(supabaseUrl, supabaseServiceRoleKey);
+}
+
+// For backward compatibility
+export const supabaseServer = typeof window === 'undefined' 
+  ? getSupabaseAdmin() 
+  : supabase;
