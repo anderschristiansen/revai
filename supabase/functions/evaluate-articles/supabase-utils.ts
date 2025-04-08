@@ -287,6 +287,9 @@ export class SupabaseUtils {
   async getSessionsAwaitingEvaluation(limit = 1): Promise<string[]> {
     const startTime = Date.now();
     try {
+      // First recover any sessions that might be stuck
+      await this.recoverStuckSessions();
+      
       logger.info('Supabase', `Looking for sessions awaiting evaluation (limit: ${limit})`);
       
       const { data, error } = await this.supabase
@@ -333,7 +336,7 @@ export class SupabaseUtils {
         .from('review_sessions')
         .update({
           ai_evaluation_running: true,
-          awaiting_ai_evaluation: false,
+          // Keep awaiting_ai_evaluation true while processing
           last_evaluated_at: new Date().toISOString(),
         })
         .eq('id', sessionId);
@@ -406,18 +409,24 @@ export class SupabaseUtils {
   /**
    * Mark a session as evaluation failed (error occurred)
    */
-  async markSessionEvaluationFailed(sessionId: string): Promise<void> {
+  async markSessionEvaluationFailed(sessionId: string, errorMessage?: string): Promise<void> {
     const startTime = Date.now();
     try {
       logger.info('Supabase', `Marking session ${sessionId} as failed`);
       
+      const updateData: Record<string, any> = {
+        ai_evaluation_running: false,
+        // Keep awaiting_ai_evaluation true so it will be retried
+      };
+      
+      // Add error message if provided
+      if (errorMessage) {
+        updateData.last_error = errorMessage;
+      }
+      
       const { error } = await this.supabase
         .from('review_sessions')
-        .update({
-          ai_evaluation_running: false,
-          // Keep awaiting_ai_evaluation true so it can be retried
-          awaiting_ai_evaluation: true
-        })
+        .update(updateData)
         .eq('id', sessionId);
 
       const queryTime = Date.now() - startTime;
@@ -432,6 +441,7 @@ export class SupabaseUtils {
 
       logger.info('Supabase', `Successfully marked session ${sessionId} as failed (will retry)`, {
         sessionId,
+        hasErrorMessage: !!errorMessage,
         queryTimeMs: queryTime
       });
     } catch (error) {
@@ -542,6 +552,65 @@ export class SupabaseUtils {
       const queryTime = Date.now() - startTime;
       logger.error('Supabase', `Error fetching articles for session ${sessionId}`, error, {
         sessionId,
+        queryTimeMs: queryTime
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Recovers sessions that are stuck in a running state for too long
+   * This helps prevent sessions from getting permanently stuck if an edge function crashes
+   */
+  async recoverStuckSessions(timeoutMinutes = 30): Promise<number> {
+    const startTime = Date.now();
+    try {
+      logger.info('Supabase', `Looking for stuck sessions (timeout: ${timeoutMinutes} minutes)`);
+      
+      // Find sessions that have been in the running state for more than the timeout period
+      const timeoutThreshold = new Date();
+      timeoutThreshold.setMinutes(timeoutThreshold.getMinutes() - timeoutMinutes);
+      
+      const { data, error } = await this.supabase
+        .from('review_sessions')
+        .update({
+          ai_evaluation_running: false,
+          // Keep awaiting_ai_evaluation true so it will be processed again
+          last_error: `Recovered from stuck state after ${timeoutMinutes} minutes timeout`
+        })
+        .eq('ai_evaluation_running', true)
+        .lt('last_evaluated_at', timeoutThreshold.toISOString())
+        .select('id');
+
+      const queryTime = Date.now() - startTime;
+      
+      if (error) {
+        logger.error('Supabase', 'Failed to recover stuck sessions', error, {
+          timeoutMinutes,
+          queryTimeMs: queryTime
+        });
+        throw new Error(`Failed to recover stuck sessions: ${error.message}`);
+      }
+
+      const recoveredCount = data?.length || 0;
+      if (recoveredCount > 0) {
+        logger.warning('Supabase', `Recovered ${recoveredCount} stuck sessions`, {
+          timeoutMinutes,
+          sessionIds: data?.map(s => s.id),
+          queryTimeMs: queryTime
+        });
+      } else {
+        logger.info('Supabase', 'No stuck sessions found', {
+          timeoutMinutes,
+          queryTimeMs: queryTime
+        });
+      }
+
+      return recoveredCount;
+    } catch (error) {
+      const queryTime = Date.now() - startTime;
+      logger.error('Supabase', 'Error in recoverStuckSessions', error, {
+        timeoutMinutes,
         queryTimeMs: queryTime
       });
       throw error;

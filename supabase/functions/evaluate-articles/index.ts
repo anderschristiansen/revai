@@ -25,6 +25,12 @@ Deno.serve(async () => {
   try {
     logger.info('EdgeFunction', `Starting article evaluation process [${invocationId}]`);
     
+    // First check for and recover any stuck sessions
+    const recoveredSessions = await supabaseUtils.recoverStuckSessions();
+    if (recoveredSessions > 0) {
+      logger.warning('EdgeFunction', `Recovered ${recoveredSessions} stuck sessions [${invocationId}]`);
+    }
+    
     // Find sessions awaiting evaluation
     const sessionIds = await supabaseUtils.getSessionsAwaitingEvaluation();
     logger.info('EdgeFunction', `Found ${sessionIds.length} sessions awaiting evaluation`, { 
@@ -39,6 +45,7 @@ Deno.serve(async () => {
         JSON.stringify({ 
           invocationId,
           message: "No sessions awaiting evaluation found",
+          recoveredSessions,
           sessionCount: 0,
           totalProcessedCount: 0
         }),

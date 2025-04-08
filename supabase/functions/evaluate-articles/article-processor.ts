@@ -211,7 +211,8 @@ export class ArticleProcessor {
       // Even if there's an error, try to mark the session as not running
       try {
         // We don't mark as completed, just reset the running state
-        await this.supabaseUtils.markSessionEvaluationFailed(sessionId);
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        await this.supabaseUtils.markSessionEvaluationFailed(sessionId, errorMessage);
         logger.info('SessionEval', `Marked session ${sessionId} as failed after error`);
       } catch (markError) {
         logger.error('SessionEval', `Failed to mark session ${sessionId} as failed`, markError);
