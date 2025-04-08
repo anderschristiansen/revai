@@ -11,8 +11,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Missing required Supabase environment variables');
 }
 
-// Store the client instance for reuse
-let browserClient: SupabaseClient | null = null;
+// Store the client instance for reuse - use global to prevent module re-initialization
+// Using interface merging to properly type global browser client
+declare global {
+  // eslint-disable-next-line no-unused-vars
+  interface Window {
+    __supabaseClient: SupabaseClient | undefined;
+  }
+}
 
 /**
  * Get a Supabase client for browser usage with proper SSR support
@@ -23,19 +29,17 @@ export function getSupabaseClient() {
     return createBrowserClient(supabaseUrl, supabaseAnonKey);
   }
   
-  // Reuse the client instance on the client-side
-  if (!browserClient) {
-    browserClient = createBrowserClient(supabaseUrl, supabaseAnonKey);
+  // Reuse the client instance on the client-side using global window property
+  // This prevents multiple instances when module gets re-evaluated
+  if (!window.__supabaseClient) {
+    window.__supabaseClient = createBrowserClient(supabaseUrl, supabaseAnonKey);
   }
   
-  return browserClient;
+  return window.__supabaseClient;
 }
 
 // Export a singleton instance for direct usage
 export const supabase = getSupabaseClient();
-
-// Re-export the client creation function for components that need their own instance
-export const createClient = () => getSupabaseClient();
 
 // For admin operations (server-side only)
 export function getSupabaseAdmin() {
