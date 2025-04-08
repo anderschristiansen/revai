@@ -64,6 +64,7 @@ export default function SignupPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
                 placeholder="Enter your email"
+                autoComplete="email"
               />
             </div>
 
@@ -79,6 +80,7 @@ export default function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1"
                 placeholder="Create a password"
+                autoComplete="new-password"
               />
             </div>
           </div>

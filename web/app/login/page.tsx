@@ -66,6 +66,7 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
                 placeholder="Enter your email"
+                autoComplete="email"
               />
             </div>
 
@@ -81,6 +82,7 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1"
                 placeholder="Enter your password"
+                autoComplete="current-password"
               />
             </div>
           </div>
