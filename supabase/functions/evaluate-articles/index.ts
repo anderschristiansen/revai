@@ -19,10 +19,63 @@ const openaiUtils = new OpenAIUtils(Deno.env.get("OPENAI_API_KEY")!);
 
 const articleProcessor = new ArticleProcessor(supabaseUtils, openaiUtils);
 
-Deno.serve(async () => {
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
+Deno.serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   const invocationId = `inv-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   
   try {
+    // Parse the request body
+    const body = await req.json();
+    
+    // If this is a manual evaluation request
+    if (body.articleId && body.title && body.abstract && body.criteria) {
+      logger.info('EdgeFunction', `Processing manual evaluation for article ${body.articleId}`);
+      
+      // Get AI settings
+      const settings = await supabaseUtils.getLatestAISettings();
+      
+      // Evaluate the article
+      const evaluation = await openaiUtils.evaluateArticle(
+        body.title,
+        body.abstract,
+        body.criteria,
+        settings
+      );
+      
+      // Update the article in the database
+      await supabaseUtils.updateArticleEvaluation(
+        body.articleId,
+        evaluation.decision,
+        evaluation.explanation
+      );
+      
+      return new Response(
+        JSON.stringify({
+          invocationId,
+          decision: evaluation.decision,
+          explanation: evaluation.explanation
+        }),
+        { 
+          headers: { 
+            ...corsHeaders,
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
+    }
+    
+    // Otherwise, process the session queue as before
     logger.info('EdgeFunction', `Starting evaluation process`);
     
     // Find sessions awaiting evaluation
@@ -36,7 +89,12 @@ Deno.serve(async () => {
           sessionCount: 0,
           totalProcessedCount: 0
         }),
-        { headers: { "Content-Type": "application/json" } }
+        { 
+          headers: { 
+            ...corsHeaders,
+            'Content-Type': 'application/json' 
+          } 
+        }
       );
     }
 
@@ -65,9 +123,14 @@ Deno.serve(async () => {
         processingTimeMs: processingTime,
         results: result.results
       }),
-      { headers: { "Content-Type": "application/json" } }
+      { 
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        } 
+      }
     );
-  } catch (error: unknown) {
+  } catch (error) {
     logger.error('EdgeFunction', `Error in evaluation process`, error);
     
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
@@ -76,7 +139,13 @@ Deno.serve(async () => {
         invocationId,
         error: errorMessage 
       }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 500, 
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        } 
+      }
     );
   }
 })

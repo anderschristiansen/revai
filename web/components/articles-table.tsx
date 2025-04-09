@@ -11,7 +11,7 @@ import { toast } from "@/components/ui/sonner";
 import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Article, DecisionType } from "@/lib/types";
-import { updateArticleDecision, getSessionCriteriasBySessionId, getSessionIdByFileId } from "@/lib/utils/supabase-utils";
+import { updateArticleDecision } from "@/lib/utils/supabase-utils";
 
 // Regex to linkify URLs
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -100,39 +100,27 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
 
     setIsEvaluating(true);
     try {
-      let sessionId = selectedArticle.file_id;
-      let criterias;
-
-      try {
-        criterias = await getSessionCriteriasBySessionId(sessionId);;
-      } catch {
-        sessionId = await getSessionIdByFileId(selectedArticle.file_id);
-        criterias = await getSessionCriteriasBySessionId(sessionId);
-      }
-
-      const formattedCriteria = criterias.map((c: { text: string }) => c.text).join("\n");
-
       const response = await fetch(`/api/evaluates/${selectedArticle.id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: selectedArticle.title,
           abstract: selectedArticle.abstract,
-          criteria: formattedCriteria,
+          fileId: selectedArticle.file_id,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to evaluate article");
+        throw new Error(errorData.error || 'Failed to evaluate article');
       }
 
-      const result = await response.json();
+      const data = await response.json();
 
       setSelectedArticle({
         ...selectedArticle,
-        ai_decision: result.decision,
-        ai_explanation: result.explanation,
+        ai_decision: data.decision,
+        ai_explanation: data.explanation,
       });
 
       toast.success("Article evaluated successfully");

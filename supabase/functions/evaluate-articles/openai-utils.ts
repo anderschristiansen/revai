@@ -47,11 +47,18 @@ Explanation: [Short explanation why you made this decision]
   }
 
   /**
-   * Cleans the response from OpenAI by removing any extraneous text
+   * Cleans the raw OpenAI response to normalize common mistakes
    */
   private cleanResponse(response: string): string {
-    // Remove any markdown code block indicators
-    return response.replace(/```[a-z]*\n?/g, '').replace(/```\n?/g, '').trim();
+    return response
+      .replace(/Decision:\s*(Include|Exclude|Unsure)[\s\.]/gi, (match, p1) => {
+        const fixed = p1.trim().toLowerCase();
+        if (fixed === "include") return "Decision: Include";
+        if (fixed === "exclude") return "Decision: Exclude";
+        if (fixed === "unsure") return "Decision: Unsure";
+        return match;
+      })
+      .replace(/\s+$/, ''); // Remove trailing whitespace
   }
 
   /**
@@ -63,7 +70,6 @@ Explanation: [Short explanation why you made this decision]
     criterias: string,
     settings: AISettings
   ): Promise<Evaluation> {
-    const startTime = Date.now();
     try {
       const prompt = this.constructArticleEvaluationPrompt(title, abstract, criterias);
       
