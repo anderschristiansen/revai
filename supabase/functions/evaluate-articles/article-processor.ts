@@ -1,4 +1,4 @@
-import type { Article, ArticlesByFile, DecisionType, AISettings } from "./types.ts";
+import type { Article, ArticlesByFile, AISettings } from "./types.ts";
 import { SupabaseUtils } from "./supabase-utils.ts";
 import { OpenAIUtils } from "./openai-utils.ts";
 import { logger } from "./logger.ts";
@@ -42,7 +42,6 @@ export class ArticleProcessor {
     criterias: string,
     settings: AISettings
   ): Promise<{ success: boolean; error?: string }> {
-    const startTime = Date.now();
     try {
       logger.info('ArticleEval', `Processing article ${article.id}`);
       
@@ -53,7 +52,6 @@ export class ArticleProcessor {
         settings
       );
 
-      const processingTime = Date.now() - startTime;
       logger.info('ArticleEval', `Evaluated article ${article.id}`, {
         decision: evaluation.decision
       });
@@ -155,10 +153,10 @@ export class ArticleProcessor {
         logger.info('SessionEval', `Session ${sessionId} completed`);
       } else {
         logger.info('SessionEval', `Batch completed for session ${sessionId}, more articles remain`);
+        // Only set running to false if we're not completed
+        await this.supabaseUtils.markSessionEvaluationRunning(sessionId, false);
       }
 
-      await this.supabaseUtils.markSessionEvaluationRunning(sessionId, false);
-      
     } catch (error) {
       logger.error('SessionEval', `Error processing session ${sessionId}`, error);
       

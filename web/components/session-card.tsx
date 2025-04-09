@@ -149,7 +149,7 @@ export function SessionCard({
           )}
 
           {/* Upload in progress indicator */}
-          {upload_running && (
+          {upload_running && !ai_evaluation_running && (
             <div className="absolute top-0 right-0 mt-3 mr-3 z-10">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -196,7 +196,7 @@ export function SessionCard({
           )}
 
           {/* AI evaluation queued indicator */}
-          {!ai_evaluation_running && awaiting_ai_evaluation && (
+          {awaiting_ai_evaluation && !ai_evaluation_running && !upload_running && (
             <div className="absolute top-0 right-0 mt-3 mr-3 z-10">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}

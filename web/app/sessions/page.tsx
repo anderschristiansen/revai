@@ -108,10 +108,16 @@ export default function SessionsPage() {
       setSessions(prev => 
         prev.map(session => {
           if (session.id === (payload.new as ReviewSessionView | null)?.id) {
+            // Get the updated session data
+            const updatedSession = payload.new as ReviewSessionView;
+            
             // Preserve the derived counts and computed fields
             return {
               ...session,
-              ...(payload.new as ReviewSessionView),
+              ...updatedSession,
+              // Make sure these status flags are correctly updated
+              ai_evaluation_running: updatedSession.ai_evaluation_running,
+              awaiting_ai_evaluation: updatedSession.awaiting_ai_evaluation,
               // Don't overwrite session's computed fields with payload data that might be missing them
               reviewed_count: session.reviewed_count,
               excluded_count: session.excluded_count,

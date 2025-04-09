@@ -75,14 +75,25 @@ export default function ReviewPage() {
   });
 
   useSupabaseRealtime(["UPDATE"], "review_sessions", (payload) => {
+    console.log('OUTSIDE Session update received:', payload);
     if (payload.new?.id === sessionId) {
+      // Update entire session object
       setSession(prev => prev ? { ...prev, ...payload.new } : null);
+      
+      // Handle specific state updates with explicit checks
       if (payload.new?.ai_evaluation_running !== undefined) {
-        setBatchRunning(payload.new.ai_evaluation_running);
+        setBatchRunning(!!payload.new.ai_evaluation_running);
       }
+      
       if (payload.new?.awaiting_ai_evaluation !== undefined) {
-        setAwaitingEvaluation(payload.new.awaiting_ai_evaluation);
+        setAwaitingEvaluation(!!payload.new.awaiting_ai_evaluation);
       }
+      
+      // Log state changes to help with debugging
+      console.log('Session update received:', {
+        ai_running: payload.new?.ai_evaluation_running,
+        awaiting: payload.new?.awaiting_ai_evaluation
+      });
     }
   });
 
@@ -112,14 +123,20 @@ export default function ReviewPage() {
     setEvaluating(true);
 
     try {
+      // Immediately update UI to show "In Queue" state
+      setAwaitingEvaluation(true);
+      
       const response = await fetch("/api/evaluates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, articleIds: articles.filter(a => a.needs_ai_evaluation).map(a => a.id) }),
+        body: JSON.stringify({ sessionId, articleIds: articles.map(a => a.id) }),
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Failed to start evaluation");
+      if (!response.ok) {
+        setAwaitingEvaluation(false); // Reset if there was an error
+        throw new Error(result.error || "Failed to start evaluation");
+      }
       toast.success(`Started evaluation of ${result.count} articles`);
     } catch (error) {
       console.error("Error starting evaluation:", error);
@@ -211,15 +228,19 @@ export default function ReviewPage() {
           </TabsList>
 
           <Tooltip content="Start AI evaluation">
-            <Button onClick={handleEvaluateArticles} disabled={evaluating || batchRunning || awaitingEvaluation}>
+            <Button 
+              onClick={handleEvaluateArticles} 
+              disabled={evaluating || batchRunning || awaitingEvaluation}
+              className="transition-all duration-200"
+            >
               {batchRunning ? (
                 <Lottie animationData={coffeeAnimation} className="h-5 w-5" />
               ) : awaitingEvaluation ? (
-                <Clock8Icon className="h-4 w-4 mr-2 text-amber-500" />
+                <Clock8Icon className="h-4 w-4 mr-2 text-amber-500 animate-pulse" />
               ) : (
                 <BotIcon className="h-4 w-4 mr-2" />
               )}
-              {evaluating ? "Evaluating..." : 
+              {evaluating ? "Starting..." : 
                batchRunning ? "Brewing..." : 
                awaitingEvaluation ? "In Queue..." : 
                "Evaluate all"}

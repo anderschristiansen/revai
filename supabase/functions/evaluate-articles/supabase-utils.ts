@@ -244,6 +244,7 @@ export class SupabaseUtils {
         .from('review_sessions')
         .update({
           awaiting_ai_evaluation: false,
+          ai_evaluation_running: false,
           ai_evaluated: true,
         })
         .eq('id', sessionId);
