@@ -15,7 +15,7 @@ import { ReviewStats } from "@/components/review-stats";
 import { AIStats } from "@/components/ai-stats";
 import { toast } from "@/components/ui/sonner";
 import { ArrowLeftIcon, PencilIcon, CheckIcon, XIcon, FileTextIcon, ListChecks, FolderIcon, BotIcon, Clock8Icon } from "lucide-react";
-import { useSupabaseRealtime } from "@/hooks/use-supabase-realtime";
+import { useSupabaseRealtime, useSessionStatusRealtime } from "@/hooks/use-supabase-realtime";
 
 import { getSession, getFiles, getArticles, updateSessionTitle, updateArticleUserDecision } from "@/lib/utils/supabase-utils";
 import type { ReviewSession, Article, CriteriaList } from "@/lib/types";
@@ -74,28 +74,38 @@ export default function ReviewPage() {
     }
   });
 
+  // Keep existing realtime subscription as a fallback
   useSupabaseRealtime(["UPDATE"], "review_sessions", (payload) => {
-    console.log('OUTSIDE Session update received:', payload);
     if (payload.new?.id === sessionId) {
       // Update entire session object
       setSession(prev => prev ? { ...prev, ...payload.new } : null);
       
-      // Handle specific state updates with explicit checks
-      if (payload.new?.ai_evaluation_running !== undefined) {
-        setBatchRunning(!!payload.new.ai_evaluation_running);
-      }
-      
-      if (payload.new?.awaiting_ai_evaluation !== undefined) {
-        setAwaitingEvaluation(!!payload.new.awaiting_ai_evaluation);
-      }
-      
-      // Log state changes to help with debugging
-      console.log('Session update received:', {
-        ai_running: payload.new?.ai_evaluation_running,
-        awaiting: payload.new?.awaiting_ai_evaluation
-      });
+      // Log general session updates
+      console.log('General session update received:', payload.new);
     }
   });
+  
+  // Memoize the status change callback to prevent re-subscriptions
+  const handleStatusChange = useCallback((running: boolean, awaiting: boolean) => {
+    console.log(`Status update received: running=${running}, awaiting=${awaiting}`);
+    
+    // Update the status flags directly for UI state
+    setBatchRunning(running);
+    setAwaitingEvaluation(awaiting);
+    
+    // Update the session object atomically
+    setSession(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        ai_evaluation_running: running,
+        awaiting_ai_evaluation: awaiting
+      };
+    });
+  }, []);
+  
+  // Add dedicated status monitoring subscription
+  useSessionStatusRealtime(sessionId, handleStatusChange);
 
   // --- UI Actions ---
   async function handleUpdateTitle() {
@@ -171,15 +181,7 @@ export default function ReviewPage() {
   // --- Main Content ---
   return (
     <div className="container mx-auto py-8 space-y-8">
-      {/* Back button and title */}
-      <div className="flex justify-between items-start">
-        <Link href="/sessions">
-          <Button variant="ghost" size="sm" className="pl-0 gap-1 text-muted-foreground hover:text-foreground">
-            <ArrowLeftIcon className="h-4 w-4" /> Back to sessions
-          </Button>
-        </Link>
-
-        <div className="flex gap-2 items-center">
+       <div className="flex gap-2 items-center mb-0">
           {isEditingTitle ? (
             <>
               <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
@@ -193,6 +195,13 @@ export default function ReviewPage() {
             </>
           )}
         </div>
+      {/* Back button and title */}
+      <div className="flex justify-between items-start">
+        <Link href="/sessions">
+          <Button variant="ghost" size="sm" className="pl-0 gap-1 text-muted-foreground hover:text-foreground">
+            <ArrowLeftIcon className="h-4 w-4" /> Back to sessions
+          </Button>
+        </Link>
       </div>
 
       {/* Stats */}

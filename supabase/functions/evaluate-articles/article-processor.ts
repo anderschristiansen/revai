@@ -149,6 +149,8 @@ export class ArticleProcessor {
       
       // Only mark the session as completed if all articles have been processed
       if (isCompleted) {
+        // Add a small delay before final status update to ensure it's captured by realtime subscriptions
+        await new Promise(resolve => setTimeout(resolve, 100));
         await this.supabaseUtils.markSessionEvaluationCompleted(sessionId);
         logger.info('SessionEval', `Session ${sessionId} completed`);
       } else {
@@ -162,8 +164,13 @@ export class ArticleProcessor {
       
       // Even if there's an error, try to mark the session as not running
       try {
+        // Wait a moment to ensure clean state update
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         // We don't mark as completed, just reset the running state
         await this.supabaseUtils.markSessionEvaluationFailed(sessionId);
+        
+        logger.info('SessionEval', `Session ${sessionId} marked as failed`);
       } catch (markError) {
         logger.error('SessionEval', `Failed to mark session as failed`, markError);
       }
