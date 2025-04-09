@@ -1,116 +1,136 @@
-import { OpenAI } from "https://deno.land/x/openai@v4.16.1/mod.ts";
 import { logger } from "./logger.ts";
-import type { DecisionType, Evaluation, AISettings } from "./types.ts";
+import type { AISettings, DecisionType, Evaluation } from "./types.ts";
 
 export class OpenAIUtils {
-  private client: OpenAI;
+  private apiKey: string;
 
   constructor(apiKey: string) {
     if (!apiKey) {
       throw new Error("OpenAI API key is required");
     }
-    this.client = new OpenAI({
-      apiKey,
-    });
-    logger.info("OpenAIUtils", "OpenAI client initialized");
+    this.apiKey = apiKey;
+    logger.info("OpenAIUtils", "OpenAI fetch client initialized");
   }
 
   /**
-   * Constructs a prompt for article evaluation
+   * Constructs a strong article evaluation prompt
    */
   private constructArticleEvaluationPrompt(
     title: string,
     abstract: string,
-    criterias: string
+    criterias: string,
   ): string {
     return `
-You are given a list of inclusion criteria and an article (title and abstract).
+You are a scientific reviewer evaluating research articles for a systematic review.
 
-Evaluate the article according to the criteria.
+Given:
+- A list of inclusion criteria.
+- An article's title and abstract (if available).
+
+Task:
+1. Carefully assess whether the article might meet the inclusion criteria.
+2. If the article appears potentially eligible (even if information is incomplete), choose "Include".
+3. If the article clearly does NOT meet one or more criteria, choose "Exclude".
+4. If unsure based on limited or unclear information, choose "Unsure".
+
+Respond ONLY with a valid JSON object in this exact format:
+
+{
+  "decision": "Include" | "Exclude" | "Unsure",
+  "explanation": "A concise explanation (2–5 sentences) justifying the decision. Be specific."
+}
+
+Important Rules:
+- Do not explain the inclusion criteria again; only assess the article.
+- If no abstract is provided, base your judgment only on the title.
+- Always use double quotes for JSON keys and values.
+- Do NOT add any text outside the JSON object.
 
 ---
+
 INCLUSION CRITERIA:
 ${criterias}
----
 
 ARTICLE TITLE:
 ${title}
 
 ARTICLE ABSTRACT:
 ${abstract || "(No abstract available)"}
----
-
-Respond in the following format:
-Decision: [Include | Exclude | Unsure]
-Explanation: [Short explanation why you made this decision]
 `.trim();
   }
 
   /**
-   * Cleans the raw OpenAI response to normalize common mistakes
-   */
-  private cleanResponse(response: string): string {
-    return response
-      .replace(/Decision:\s*(Include|Exclude|Unsure)[\s\.]/gi, (match, p1) => {
-        const fixed = p1.trim().toLowerCase();
-        if (fixed === "include") return "Decision: Include";
-        if (fixed === "exclude") return "Decision: Exclude";
-        if (fixed === "unsure") return "Decision: Unsure";
-        return match;
-      })
-      .replace(/\s+$/, ''); // Remove trailing whitespace
-  }
-
-  /**
-   * Evaluates an article using OpenAI
+   * Evaluates an article using OpenAI's fetch endpoint
    */
   async evaluateArticle(
     title: string,
     abstract: string,
     criterias: string,
-    settings: AISettings
+    settings: AISettings,
   ): Promise<Evaluation> {
     try {
-      const prompt = this.constructArticleEvaluationPrompt(title, abstract, criterias);
-      
-      const response = await this.client.chat.completions.create({
-        model: settings.model,
-        messages: [
-          { role: "system", content: settings.instructions },
-          { role: "user", content: prompt },
-        ],
-        temperature: settings.temperature,
-        max_tokens: settings.max_tokens,
-        seed: settings.seed,
-      });
+      const prompt = this.constructArticleEvaluationPrompt(
+        title,
+        abstract,
+        criterias,
+      );
 
-      const responseContent = response.choices[0].message.content;
-      
-      if (!responseContent) {
-        logger.error('OpenAI', 'No content in OpenAI response');
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: settings.model,
+            messages: [
+              { role: "system", content: settings.instructions },
+              { role: "user", content: prompt },
+            ],
+            temperature: settings.temperature,
+            max_tokens: settings.max_tokens,
+            seed: settings.seed,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        logger.error("OpenAI", "Fetch failed", errorText);
+        throw new Error(
+          `OpenAI API error: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const data = await response.json();
+      const message = data.choices?.[0]?.message?.content;
+
+      if (!message) {
         throw new Error("No content in OpenAI response");
       }
-      
-      // Clean and parse the response
-      const cleanedResponse = this.cleanResponse(responseContent);
-      const decisionMatch = cleanedResponse.match(/Decision:\s*(Include|Exclude|Unsure)/i);
-      const explanationMatch = cleanedResponse.match(/Explanation:\s*([\s\S]*)/i);
 
-      if (!decisionMatch || !explanationMatch) {
-        logger.error('OpenAI', 'Invalid response format from OpenAI');
-        throw new Error("Invalid response format from OpenAI");
+      logger.info("OpenAI", "Raw OpenAI response", message);
+
+      // Try to safely parse the response
+      const parsed = JSON.parse(message);
+
+      if (!parsed.decision || !parsed.explanation) {
+        logger.error("OpenAI", "Invalid parsed response", parsed);
+        throw new Error("Invalid OpenAI response structure");
       }
 
-      const decision = decisionMatch[1] as DecisionType;
-      const explanation = explanationMatch[1].trim();
+      const decision = parsed.decision as DecisionType;
+      const explanation = parsed.explanation as string;
 
       return {
         decision,
-        explanation,
+        explanation: explanation.trim(),
       };
     } catch (error) {
-      logger.error('OpenAI', 'Error during OpenAI evaluation', error);
+      logger.error("OpenAI", "Error during article evaluation", error);
       throw error;
     }
   }
-} 
+}
