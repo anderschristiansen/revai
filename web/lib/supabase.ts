@@ -14,7 +14,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Store the client instance for reuse - use global to prevent module re-initialization
 // Using interface merging to properly type global browser client
 declare global {
-  // eslint-disable-next-line no-unused-vars
   interface Window {
     __supabaseClient: SupabaseClient | undefined;
   }
