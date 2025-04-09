@@ -11,7 +11,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { PlusIcon, X, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +43,6 @@ export function UploadForm({ sessionId }: UploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [articlesFiles, setArticlesFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
-  const router = useRouter();
 
   const form = useForm<FileFormValues>({
     resolver: zodResolver(formSchema),
@@ -187,7 +185,9 @@ export function UploadForm({ sessionId }: UploadFormProps) {
       }
 
       toast.success(`Successfully processed ${totalArticlesCount} articles from ${articlesFiles.length} files`);
-      router.push(`/review/${sessionId}`);
+      
+      // Force a full page reload to ensure all data is refreshed
+      window.location.href = `/review/${sessionId}`;
       
     } catch (error) {
       console.error('Upload error:', error);

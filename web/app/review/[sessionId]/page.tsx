@@ -42,6 +42,20 @@ export default function ReviewPage() {
       const articlesData = await getArticles(filesData.map(f => f.id));
 
       setSession(sessionData);
+      
+      // Make sure all articles are loaded
+      if (articlesData.length < sessionData.articles_count) {
+        console.log(`Articles count mismatch: loaded ${articlesData.length} but session reports ${sessionData.articles_count}`);
+        // Try loading articles again after a short delay
+        setTimeout(async () => {
+          const refreshedArticlesData = await getArticles(filesData.map(f => f.id));
+          if (refreshedArticlesData.length > articlesData.length) {
+            console.log(`Refreshed articles data: ${refreshedArticlesData.length} articles loaded`);
+            setArticles(refreshedArticlesData);
+          }
+        }, 1000);
+      } 
+      
       setArticles(articlesData);
       setCriteria(sessionData.criterias || []);
       setNewTitle(sessionData.title || "");
@@ -76,9 +90,29 @@ export default function ReviewPage() {
 
   // Keep existing realtime subscription as a fallback
   useSupabaseRealtime(["UPDATE"], "review_sessions", (payload) => {
+    console.log('Session update received:', payload);
     if (payload.new?.id === sessionId) {
       // Update entire session object
       setSession(prev => prev ? { ...prev, ...payload.new } : null);
+      
+      // If files_processed state changed to true, refresh articles data
+      const newData = payload.new as Partial<ReviewSession>;
+      const oldData = payload.old as Partial<ReviewSession>;
+      
+      if (newData.files_processed && (!oldData?.files_processed || newData.articles_count !== oldData.articles_count)) {
+        console.log('Files processed state changed, refreshing article data');
+        const fetchUpdatedArticles = async () => {
+          try {
+            const filesData = await getFiles(sessionId);
+            const articlesData = await getArticles(filesData.map(f => f.id));
+            console.log(`Refreshed ${articlesData.length} articles after files_processed update`);
+            setArticles(articlesData);
+          } catch (error) {
+            console.error('Error refreshing articles:', error);
+          }
+        };
+        fetchUpdatedArticles();
+      }
       
       // Log general session updates
       console.log('General session update received:', payload.new);
