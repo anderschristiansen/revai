@@ -149,6 +149,8 @@ export default function ReviewPage() {
     }
     try {
       await updateSessionTitle(sessionId, newTitle);
+      // Update local session state to reflect the title change
+      setSession(prev => prev ? { ...prev, title: newTitle } : null);
       toast.success("Title updated");
       setIsEditingTitle(false);
     } catch (error) {
