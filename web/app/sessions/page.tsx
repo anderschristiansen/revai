@@ -245,13 +245,13 @@ export default function SessionsPage() {
 
   return (
     <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <h1 className="text-3xl font-bold">Review Sessions</h1>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           {sessions.length > 0 && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="text-muted-foreground hover:text-destructive">
+                <Button variant="outline" className="text-muted-foreground hover:text-destructive w-full sm:w-auto">
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete All
                 </Button>
