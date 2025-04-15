@@ -8,9 +8,9 @@ import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/sonner";
-import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2, ListChecks } from "lucide-react";
+import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Article, DecisionType, CriteriaList } from "@/lib/types";
+import { Article, DecisionType } from "@/lib/types";
 import { updateArticleDecision } from "@/lib/utils/supabase-utils";
 
 // Regex to linkify URLs
@@ -44,10 +44,9 @@ function TextWithLinks({ text }: { text: string }) {
 interface ArticlesTableProps {
   articles: Article[];
   onReviewArticle: (id: string, decision: DecisionType) => Promise<void>;
-  criteria?: CriteriaList;
 }
 
-export function ArticlesTable({ articles, onReviewArticle, criteria = [] }: ArticlesTableProps) {
+export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps) {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -310,94 +309,54 @@ export function ArticlesTable({ articles, onReviewArticle, criteria = [] }: Arti
 
               {/* Content Area */}
               <div className="flex-1 overflow-y-auto py-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  {/* Main content */}
-                  <div className="md:col-span-3 space-y-6">
-                    {/* AI Assessment */}
-                    {selectedArticle.ai_decision && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Bot className="h-4 w-4 text-primary" />
-                          <h3 className="text-base font-medium">AI Assessment</h3>
+                <div className="space-y-6">
+                  {/* AI Assessment */}
+                  {selectedArticle.ai_decision && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Bot className="h-4 w-4 text-primary" />
+                        <h3 className="text-base font-medium">AI Assessment</h3>
+                      </div>
+                      <div className="border rounded-md overflow-hidden">
+                        <div className={cn(
+                          "px-4 py-3 font-medium flex items-center gap-2",
+                          selectedArticle.ai_decision === "Include"
+                            ? "bg-[#00b380]/10 text-[#00b380]"
+                            : selectedArticle.ai_decision === "Exclude"
+                            ? "bg-[#ff1d42]/10 text-[#ff1d42]"
+                            : "bg-[#f59e0b]/10 text-[#f59e0b]"
+                        )}>
+                          Recommendation: {selectedArticle.ai_decision}
                         </div>
-                        <div className="border rounded-md overflow-hidden">
-                          <div className={cn(
-                            "px-4 py-3 font-medium flex items-center gap-2",
-                            selectedArticle.ai_decision === "Include"
-                              ? "bg-[#00b380]/10 text-[#00b380]"
-                              : selectedArticle.ai_decision === "Exclude"
-                              ? "bg-[#ff1d42]/10 text-[#ff1d42]"
-                              : "bg-[#f59e0b]/10 text-[#f59e0b]"
-                          )}>
-                            Recommendation: {selectedArticle.ai_decision}
-                          </div>
-                          <div className="px-4 py-3 bg-muted/5 border-t">
-                            <div className="text-[14px] leading-relaxed">
-                              {selectedArticle.ai_explanation}
-                            </div>
+                        <div className="px-4 py-3 bg-muted/5 border-t">
+                          <div className="text-[14px] leading-relaxed">
+                            {selectedArticle.ai_explanation}
                           </div>
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
 
-                    {/* Abstract */}
+                  {/* Abstract */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-primary" />
+                      <h3 className="text-base font-medium">Abstract</h3>
+                    </div>
+                    <div className="border rounded-md p-4 bg-muted/5">
+                      <p className="text-[14px] leading-relaxed">{selectedArticle.abstract}</p>
+                    </div>
+                  </div>
+
+                  {/* Full text */}
+                  {selectedArticle.full_text && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-primary" />
-                        <h3 className="text-base font-medium">Abstract</h3>
+                        <h3 className="text-base font-medium">Full text</h3>
                       </div>
-                      <div className="border rounded-md p-4 bg-muted/5">
-                        <p className="text-[14px] leading-relaxed">{selectedArticle.abstract}</p>
-                      </div>
-                    </div>
-
-                    {/* Full text */}
-                    {selectedArticle.full_text && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-primary" />
-                          <h3 className="text-base font-medium">Full text</h3>
-                        </div>
-                        <div className="border rounded-md p-4 bg-muted/5 whitespace-pre-line">
-                          <TextWithLinks text={selectedArticle.full_text} />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Criteria Sidebar */}
-                  {criteria.length > 0 && (
-                    <div className="md:col-span-1">
-                      <div className="bg-muted/10 border rounded-md p-4 space-y-4 sticky top-4">
-                        <h3 className="text-sm font-semibold flex items-center gap-2">
-                          <ListChecks className="h-4 w-4 text-primary" /> Screening Criteria
-                        </h3>
-                        
-                        {criteria.filter(c => c.type === 'inclusion').length > 0 && (
-                          <div>
-                            <h4 className="text-xs font-medium mb-2 uppercase text-green-700">Inclusion</h4>
-                            <ul className="list-disc pl-5 space-y-2 text-xs">
-                              {criteria
-                                .filter(c => c.type === 'inclusion')
-                                .map(c => (
-                                  <li key={c.id} className="text-muted-foreground">{c.text}</li>
-                                ))}
-                            </ul>
-                          </div>
-                        )}
-                        
-                        {criteria.filter(c => c.type === 'exclusion').length > 0 && (
-                          <div>
-                            <h4 className="text-xs font-medium mb-2 uppercase text-red-700">Exclusion</h4>
-                            <ul className="list-disc pl-5 space-y-2 text-xs">
-                              {criteria
-                                .filter(c => c.type === 'exclusion')
-                                .map(c => (
-                                  <li key={c.id} className="text-muted-foreground">{c.text}</li>
-                                ))}
-                            </ul>
-                          </div>
-                        )}
+                      <div className="border rounded-md p-4 bg-muted/5 whitespace-pre-line">
+                        <TextWithLinks text={selectedArticle.full_text} />
                       </div>
                     </div>
                   )}

@@ -11,12 +11,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ArticlesTable } from "@/components/articles-table";
 import { UploadForm } from "@/components/upload-form";
 import { ReviewStats } from "@/components/review-stats";
 import { AIStats } from "@/components/ai-stats";
 import { toast } from "@/components/ui/sonner";
-import { ArrowLeftIcon, PencilIcon, CheckIcon, XIcon, FileTextIcon, ListChecks, FolderIcon, BotIcon, Clock8Icon, PlusIcon } from "lucide-react";
+import { ArrowLeftIcon, PencilIcon, CheckIcon, XIcon, FileTextIcon, ListChecks, FolderIcon, BotIcon, Clock8Icon, PlusIcon, MenuIcon } from "lucide-react";
 import { useSupabaseRealtime, useSessionStatusRealtime } from "@/hooks/use-supabase-realtime";
 
 import { getSession, getFiles, getArticles, updateSessionTitle, updateArticleUserDecision, updateSessionCriteria } from "@/lib/utils/supabase-utils";
@@ -301,294 +302,374 @@ export default function ReviewPage() {
 
   // --- Main Content ---
   return (
-    <div className="container mx-auto py-8 space-y-8">
-       <div className="flex gap-2 items-center mb-0">
-          {isEditingTitle ? (
-            <>
-              <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
-              <Button size="icon" variant="ghost" onClick={handleUpdateTitle}><CheckIcon className="h-4 w-4" /></Button>
-              <Button size="icon" variant="ghost" onClick={cancelTitleEdit}><XIcon className="h-4 w-4" /></Button>
-            </>
-          ) : (
-            <>
-              <h1 className="text-2xl font-bold">{session.title || "Systematic Review"}</h1>
-              <Button size="icon" variant="ghost" onClick={() => setIsEditingTitle(true)}><PencilIcon className="h-4 w-4" /></Button>
-            </>
-          )}
-        </div>
-      {/* Back button and title */}
-      <div className="flex justify-between items-start">
-        <Link href="/sessions">
-          <Button variant="ghost" size="sm" className="pl-0 gap-1 text-muted-foreground hover:text-foreground">
-            <ArrowLeftIcon className="h-4 w-4" /> Back to sessions
-          </Button>
-        </Link>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        <ReviewStats
-          total={articles.length}
-          reviewed={reviewed}
-          included={included}
-          excluded={excluded}
-          unsure={unsure}
-          pending={articles.length - reviewed}
-          inCard
-        />
-        <AIStats
-          total={articles.length}
-          evaluated={aiReviewed}
-          included={aiIncluded}
-          excluded={aiExcluded}
-          unsure={aiUnsure}
-          isRunning={batchRunning}
-          isQueued={awaitingEvaluation}
-          inCard
-        />
-      </div>
-
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="flex justify-between mb-4">
-          <TabsList>
-            <TabsTrigger value="articles"><FileTextIcon className="h-4 w-4" /> Articles</TabsTrigger>
-            <TabsTrigger value="criteria"><ListChecks className="h-4 w-4" /> Criteria</TabsTrigger>
-            <TabsTrigger value="files"><FolderIcon className="h-4 w-4" /> Files</TabsTrigger>
-          </TabsList>
-
-          <Tooltip content="Start AI evaluation">
-            <Button 
-              onClick={handleEvaluateArticles} 
-              disabled={evaluating || batchRunning || awaitingEvaluation}
-              className="transition-all duration-200"
-            >
-              {batchRunning ? (
-                <Lottie animationData={coffeeAnimation} className="h-5 w-5" />
-              ) : awaitingEvaluation ? (
-                <Clock8Icon className="h-4 w-4 mr-2 text-amber-500 animate-pulse" />
-              ) : (
-                <BotIcon className="h-4 w-4 mr-2" />
-              )}
-              {evaluating ? "Starting..." : 
-               batchRunning ? "Brewing..." : 
-               awaitingEvaluation ? "In Queue..." : 
-               "Evaluate all"}
+    <div className="flex flex-col min-h-screen">
+      {/* Mobile Criteria Drawer */}
+      <div className="lg:hidden sticky top-0 z-10 bg-background border-b p-2">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm" className="w-full flex items-center justify-between">
+              <div className="flex items-center">
+                <ListChecks className="h-4 w-4 mr-2 text-primary" />
+                <span>View Screening Criteria</span>
+              </div>
+              <MenuIcon className="h-4 w-4" />
             </Button>
-          </Tooltip>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[85vw] max-w-md pt-6">
+            <SheetHeader className="text-left mb-4">
+              <SheetTitle className="flex items-center gap-2">
+                <ListChecks className="h-4 w-4 text-primary" /> 
+                Screening Criteria
+              </SheetTitle>
+            </SheetHeader>
+            <div className="space-y-5">
+              {criteria.filter(c => c.type === 'inclusion').length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm mb-1 text-green-700 px-2">Inclusion Criteria</h4>
+                  <div className="bg-muted/30 rounded-md py-3 px-2">
+                    <ul className="list-disc pl-6 pr-2 space-y-3 text-sm">
+                      {criteria
+                        .filter(c => c.type === 'inclusion')
+                        .map(c => (
+                          <li key={c.id} className="text-foreground">{c.text}</li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+              
+              {criteria.filter(c => c.type === 'exclusion').length > 0 && (
+                <div className="space-y-2 mt-6">
+                  <h4 className="font-medium text-sm mb-1 text-red-700 px-2">Exclusion Criteria</h4>
+                  <div className="bg-muted/30 rounded-md py-3 px-2">
+                    <ul className="list-disc pl-6 pr-2 space-y-3 text-sm">
+                      {criteria
+                        .filter(c => c.type === 'exclusion')
+                        .map(c => (
+                          <li key={c.id} className="text-foreground">{c.text}</li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+              
+              {criteria.length === 0 && (
+                <div className="bg-muted/30 rounded-md p-4 text-sm text-muted-foreground">
+                  <p>No criteria defined yet.</p>
+                </div>
+              )}
+              
+              <div className="px-2 pt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    setActiveTab("criteria");
+                    document.querySelector('.SheetClose')?.dispatchEvent(new Event('click', { bubbles: true }));
+                  }}
+                >
+                  <PencilIcon className="h-3 w-3 mr-2" />
+                  Edit Criteria
+                </Button>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+      
+      {/* Desktop Layout */}
+      <div className="flex flex-1">
+        {/* Desktop Criteria Sidebar - Fixed to the left */}
+        <div className="hidden lg:block w-72 bg-background border-r shrink-0 overflow-y-auto h-screen sticky top-0 pt-6 pb-20 px-4">
+          <div className="space-y-5">
+            <h3 className="font-medium text-base flex items-center gap-2 px-2">
+              <ListChecks className="h-4 w-4 text-primary" /> Screening Criteria
+            </h3>
+            
+            {criteria.filter(c => c.type === 'inclusion').length > 0 && (
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm mb-1 text-green-700 px-2">Inclusion Criteria</h4>
+                <div className="bg-muted/30 rounded-md py-3 px-2">
+                  <ul className="list-disc pl-6 pr-2 space-y-3 text-sm">
+                    {criteria
+                      .filter(c => c.type === 'inclusion')
+                      .map(c => (
+                        <li key={c.id} className="text-foreground">{c.text}</li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            
+            {criteria.filter(c => c.type === 'exclusion').length > 0 && (
+              <div className="space-y-2 mt-6">
+                <h4 className="font-medium text-sm mb-1 text-red-700 px-2">Exclusion Criteria</h4>
+                <div className="bg-muted/30 rounded-md py-3 px-2">
+                  <ul className="list-disc pl-6 pr-2 space-y-3 text-sm">
+                    {criteria
+                      .filter(c => c.type === 'exclusion')
+                      .map(c => (
+                        <li key={c.id} className="text-foreground">{c.text}</li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            
+            {criteria.length === 0 && (
+              <div className="bg-muted/30 rounded-md p-4 text-sm text-muted-foreground">
+                <p>No criteria defined yet.</p>
+              </div>
+            )}
+            
+            <div className="px-2 pt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => setActiveTab("criteria")}
+              >
+                <PencilIcon className="h-3 w-3 mr-2" />
+                Edit Criteria
+              </Button>
+            </div>
+          </div>
         </div>
 
-        {/* Articles Tab */}
-        <TabsContent value="articles">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Criteria sidebar */}
-            <div className="md:col-span-1 space-y-6">
-              <Card className="sticky top-4">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <ListChecks className="h-4 w-4" /> Screening Criteria
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {criteria.filter(c => c.type === 'inclusion').length > 0 && (
-                    <div>
-                      <h3 className="font-medium text-sm mb-2 text-green-700">Inclusion Criteria</h3>
-                      <ul className="list-disc pl-5 space-y-2 text-sm">
-                        {criteria
-                          .filter(c => c.type === 'inclusion')
-                          .map(c => (
-                            <li key={c.id} className="text-muted-foreground">{c.text}</li>
-                          ))}
-                      </ul>
-                    </div>
-                  )}
-                  
-                  {criteria.filter(c => c.type === 'exclusion').length > 0 && (
-                    <div>
-                      <h3 className="font-medium text-sm mb-2 text-red-700">Exclusion Criteria</h3>
-                      <ul className="list-disc pl-5 space-y-2 text-sm">
-                        {criteria
-                          .filter(c => c.type === 'exclusion')
-                          .map(c => (
-                            <li key={c.id} className="text-muted-foreground">{c.text}</li>
-                          ))}
-                      </ul>
-                    </div>
-                  )}
-                  
-                  {criteria.length === 0 && (
-                    <div className="text-sm text-muted-foreground">
-                      <p>No criteria defined yet.</p>
-                    </div>
-                  )}
-                  
-                  <div className="pt-2 border-t">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
-                      onClick={() => setActiveTab("criteria")}
-                    >
-                      <PencilIcon className="h-3 w-3 mr-2" />
-                      Edit Criteria
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="container mx-auto py-8 space-y-8">
+            <div className="flex gap-2 items-center mb-0">
+              {isEditingTitle ? (
+                <>
+                  <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
+                  <Button size="icon" variant="ghost" onClick={handleUpdateTitle}><CheckIcon className="h-4 w-4" /></Button>
+                  <Button size="icon" variant="ghost" onClick={cancelTitleEdit}><XIcon className="h-4 w-4" /></Button>
+                </>
+              ) : (
+                <>
+                  <h1 className="text-2xl font-bold">{session.title || "Systematic Review"}</h1>
+                  <Button size="icon" variant="ghost" onClick={() => setIsEditingTitle(true)}><PencilIcon className="h-4 w-4" /></Button>
+                </>
+              )}
             </div>
-            
-            {/* Articles table */}
-            <div className="md:col-span-3">
-              <ArticlesTable 
-                articles={articles}
-                criteria={criteria}
-                onReviewArticle={async (articleId, decision) => {
-                  try {
-                    await updateArticleUserDecision(articleId, decision);
+            {/* Back button and title */}
+            <div className="flex justify-between items-start">
+              <Link href="/sessions">
+                <Button variant="ghost" size="sm" className="pl-0 gap-1 text-muted-foreground hover:text-foreground">
+                  <ArrowLeftIcon className="h-4 w-4" /> Back to sessions
+                </Button>
+              </Link>
+            </div>
 
-                    // Update local UI immediately
-                    setArticles(prev => prev.map(a => 
-                      a.id === articleId ? { ...a, user_decision: decision } : a
-                    ));
-                  } catch (error) {
-                    console.error("Error updating decision:", error);
-                    toast.error("Could not save decision");
-                  }
-                }}
+            {/* Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              <ReviewStats
+                total={articles.length}
+                reviewed={reviewed}
+                included={included}
+                excluded={excluded}
+                unsure={unsure}
+                pending={articles.length - reviewed}
+                inCard
+              />
+              <AIStats
+                total={articles.length}
+                evaluated={aiReviewed}
+                included={aiIncluded}
+                excluded={aiExcluded}
+                unsure={aiUnsure}
+                isRunning={batchRunning}
+                isQueued={awaitingEvaluation}
+                inCard
               />
             </div>
-          </div>
-        </TabsContent>
 
-        {/* Criteria Tab */}
-        <TabsContent value="criteria">
-          <div className="space-y-6">
-            {isEditingCriteria ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Edit Criteria</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {editedCriteria.map((criterion) => (
-                    <div key={criterion.id} className="flex items-start gap-2">
-                      <Select
-                        value={criterion.type}
-                        onValueChange={(value) => updateCriterionType(criterion.id, value as 'inclusion' | 'exclusion')}
-                      >
-                        <SelectTrigger className="w-28">
-                          <SelectValue placeholder="Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="inclusion">Inclusion</SelectItem>
-                          <SelectItem value="exclusion">Exclusion</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Textarea
-                        value={criterion.text}
-                        onChange={(e) => updateCriterionText(criterion.id, e.target.value)}
-                        placeholder="Enter a criterion..."
-                        className="flex-1 min-h-[80px] font-mono text-sm"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 mt-2"
-                        onClick={() => removeCriterion(criterion.id)}
-                      >
-                        <XIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => addCriterion('inclusion')}
-                    >
-                      <PlusIcon className="h-4 w-4 mr-2" />
-                      Add Inclusion
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => addCriterion('exclusion')}
-                    >
-                      <PlusIcon className="h-4 w-4 mr-2" />
-                      Add Exclusion
-                    </Button>
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={cancelCriteriaEdit}
-                    disabled={savingCriteria}
+            {/* Tabs */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <div className="flex justify-between mb-4">
+                <TabsList>
+                  <TabsTrigger value="articles"><FileTextIcon className="h-4 w-4" /> Articles</TabsTrigger>
+                  <TabsTrigger value="criteria"><ListChecks className="h-4 w-4" /> Criteria</TabsTrigger>
+                  <TabsTrigger value="files"><FolderIcon className="h-4 w-4" /> Files</TabsTrigger>
+                </TabsList>
+
+                <Tooltip content="Start AI evaluation">
+                  <Button 
+                    onClick={handleEvaluateArticles} 
+                    disabled={evaluating || batchRunning || awaitingEvaluation}
+                    className="transition-all duration-200"
                   >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={saveCriteria}
-                    disabled={savingCriteria}
-                  >
-                    {savingCriteria ? (
-                      <>Saving...</>
+                    {batchRunning ? (
+                      <Lottie animationData={coffeeAnimation} className="h-5 w-5" />
+                    ) : awaitingEvaluation ? (
+                      <Clock8Icon className="h-4 w-4 mr-2 text-amber-500 animate-pulse" />
                     ) : (
-                      <>Save Criteria</>
+                      <BotIcon className="h-4 w-4 mr-2" />
                     )}
+                    {evaluating ? "Starting..." : 
+                    batchRunning ? "Brewing..." : 
+                    awaitingEvaluation ? "In Queue..." : 
+                    "Evaluate all"}
                   </Button>
-                </CardFooter>
-              </Card>
-            ) : (
-              <>
-                <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-medium">Inclusion & Exclusion Criteria</h2>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={startEditingCriteria}
-                  >
-                    <PencilIcon className="h-4 w-4 mr-2" />
-                    Edit Criteria
-                  </Button>
+                </Tooltip>
+              </div>
+
+              {/* Articles Tab */}
+              <TabsContent value="articles">
+                <div>
+                  <ArticlesTable 
+                    articles={articles}
+                    onReviewArticle={async (articleId, decision) => {
+                      try {
+                        await updateArticleUserDecision(articleId, decision);
+
+                        // Update local UI immediately
+                        setArticles(prev => prev.map(a => 
+                          a.id === articleId ? { ...a, user_decision: decision } : a
+                        ));
+                      } catch (error) {
+                        console.error("Error updating decision:", error);
+                        toast.error("Could not save decision");
+                      }
+                    }}
+                  />
                 </div>
-                <Card>
-                  <CardHeader><CardTitle>Inclusion Criteria</CardTitle></CardHeader>
-                  <CardContent>
-                    {criteria.filter(c => c.type === 'inclusion').length > 0 ? (
-                      <ul className="list-disc pl-4 space-y-2">
-                        {criteria.filter(c => c.type === 'inclusion').map(c => <li key={c.id}>{c.text}</li>)}
-                      </ul>
-                    ) : (
-                      <p className="text-muted-foreground">No inclusion criteria defined.</p>
-                    )}
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader><CardTitle>Exclusion Criteria</CardTitle></CardHeader>
-                  <CardContent>
-                    {criteria.filter(c => c.type === 'exclusion').length > 0 ? (
-                      <ul className="list-disc pl-4 space-y-2">
-                        {criteria.filter(c => c.type === 'exclusion').map(c => <li key={c.id}>{c.text}</li>)}
-                      </ul>
-                    ) : (
-                      <p className="text-muted-foreground">No exclusion criteria defined.</p>
-                    )}
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </div>
-        </TabsContent>
+              </TabsContent>
 
-        {/* Files Tab */}
-        <TabsContent value="files">
-          <UploadForm sessionId={sessionId} />
-        </TabsContent>
-      </Tabs>
+              {/* Criteria Tab */}
+              <TabsContent value="criteria">
+                <div className="space-y-6">
+                  {isEditingCriteria ? (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Edit Criteria</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {editedCriteria.map((criterion) => (
+                          <div key={criterion.id} className="flex items-start gap-2">
+                            <Select
+                              value={criterion.type}
+                              onValueChange={(value) => updateCriterionType(criterion.id, value as 'inclusion' | 'exclusion')}
+                            >
+                              <SelectTrigger className="w-28">
+                                <SelectValue placeholder="Type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="inclusion">Inclusion</SelectItem>
+                                <SelectItem value="exclusion">Exclusion</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Textarea
+                              value={criterion.text}
+                              onChange={(e) => updateCriterionText(criterion.id, e.target.value)}
+                              placeholder="Enter a criterion..."
+                              className="flex-1 min-h-[80px] font-mono text-sm"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 mt-2"
+                              onClick={() => removeCriterion(criterion.id)}
+                            >
+                              <XIcon className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => addCriterion('inclusion')}
+                          >
+                            <PlusIcon className="h-4 w-4 mr-2" />
+                            Add Inclusion
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => addCriterion('exclusion')}
+                          >
+                            <PlusIcon className="h-4 w-4 mr-2" />
+                            Add Exclusion
+                          </Button>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={cancelCriteriaEdit}
+                          disabled={savingCriteria}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={saveCriteria}
+                          disabled={savingCriteria}
+                        >
+                          {savingCriteria ? (
+                            <>Saving...</>
+                          ) : (
+                            <>Save Criteria</>
+                          )}
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ) : (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <h2 className="text-lg font-medium">Inclusion & Exclusion Criteria</h2>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={startEditingCriteria}
+                        >
+                          <PencilIcon className="h-4 w-4 mr-2" />
+                          Edit Criteria
+                        </Button>
+                      </div>
+                      <Card>
+                        <CardHeader><CardTitle>Inclusion Criteria</CardTitle></CardHeader>
+                        <CardContent>
+                          {criteria.filter(c => c.type === 'inclusion').length > 0 ? (
+                            <ul className="list-disc pl-4 space-y-2">
+                              {criteria.filter(c => c.type === 'inclusion').map(c => <li key={c.id}>{c.text}</li>)}
+                            </ul>
+                          ) : (
+                            <p className="text-muted-foreground">No inclusion criteria defined.</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardHeader><CardTitle>Exclusion Criteria</CardTitle></CardHeader>
+                        <CardContent>
+                          {criteria.filter(c => c.type === 'exclusion').length > 0 ? (
+                            <ul className="list-disc pl-4 space-y-2">
+                              {criteria.filter(c => c.type === 'exclusion').map(c => <li key={c.id}>{c.text}</li>)}
+                            </ul>
+                          ) : (
+                            <p className="text-muted-foreground">No exclusion criteria defined.</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </>
+                  )}
+                </div>
+              </TabsContent>
+
+              {/* Files Tab */}
+              <TabsContent value="files">
+                <UploadForm sessionId={sessionId} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
