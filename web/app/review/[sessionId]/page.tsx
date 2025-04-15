@@ -439,7 +439,7 @@ export default function ReviewPage() {
 
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto">
-          <div className="container mx-auto py-8 space-y-8">
+          <div className="container mx-auto p-8 space-y-8">
             <div className="flex gap-2 items-center mb-0">
               {isEditingTitle ? (
                 <>
