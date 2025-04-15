@@ -380,22 +380,84 @@ export default function ReviewPage() {
 
         {/* Articles Tab */}
         <TabsContent value="articles">
-        <ArticlesTable 
-          articles={articles}
-          onReviewArticle={async (articleId, decision) => {
-            try {
-              await updateArticleUserDecision(articleId, decision);
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {/* Criteria sidebar */}
+            <div className="md:col-span-1 space-y-6">
+              <Card className="sticky top-4">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <ListChecks className="h-4 w-4" /> Screening Criteria
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {criteria.filter(c => c.type === 'inclusion').length > 0 && (
+                    <div>
+                      <h3 className="font-medium text-sm mb-2 text-green-700">Inclusion Criteria</h3>
+                      <ul className="list-disc pl-5 space-y-2 text-sm">
+                        {criteria
+                          .filter(c => c.type === 'inclusion')
+                          .map(c => (
+                            <li key={c.id} className="text-muted-foreground">{c.text}</li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {criteria.filter(c => c.type === 'exclusion').length > 0 && (
+                    <div>
+                      <h3 className="font-medium text-sm mb-2 text-red-700">Exclusion Criteria</h3>
+                      <ul className="list-disc pl-5 space-y-2 text-sm">
+                        {criteria
+                          .filter(c => c.type === 'exclusion')
+                          .map(c => (
+                            <li key={c.id} className="text-muted-foreground">{c.text}</li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {criteria.length === 0 && (
+                    <div className="text-sm text-muted-foreground">
+                      <p>No criteria defined yet.</p>
+                    </div>
+                  )}
+                  
+                  <div className="pt-2 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => setActiveTab("criteria")}
+                    >
+                      <PencilIcon className="h-3 w-3 mr-2" />
+                      Edit Criteria
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Articles table */}
+            <div className="md:col-span-3">
+              <ArticlesTable 
+                articles={articles}
+                criteria={criteria}
+                onReviewArticle={async (articleId, decision) => {
+                  try {
+                    await updateArticleUserDecision(articleId, decision);
 
-              // Update local UI immediately
-              setArticles(prev => prev.map(a => 
-                a.id === articleId ? { ...a, user_decision: decision } : a
-              ));
-            } catch (error) {
-              console.error("Error updating decision:", error);
-              toast.error("Could not save decision");
-            }
-          }}
-        />
+                    // Update local UI immediately
+                    setArticles(prev => prev.map(a => 
+                      a.id === articleId ? { ...a, user_decision: decision } : a
+                    ));
+                  } catch (error) {
+                    console.error("Error updating decision:", error);
+                    toast.error("Could not save decision");
+                  }
+                }}
+              />
+            </div>
+          </div>
         </TabsContent>
 
         {/* Criteria Tab */}
