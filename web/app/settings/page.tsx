@@ -26,6 +26,7 @@ type AiSettings = {
   seed: number;
   model: string;
   batch_size: number;
+  prompt_template: string;
 };
 
 export default function Settings() {
@@ -38,7 +39,8 @@ export default function Settings() {
     max_tokens: 500,
     seed: 12345,
     model: 'gpt-3.5-turbo',
-    batch_size: 10
+    batch_size: 10,
+    prompt_template: ''
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +57,8 @@ export default function Settings() {
           max_tokens: data.max_tokens,
           seed: data.seed,
           model: data.model,
-          batch_size: data.batch_size || 10
+          batch_size: data.batch_size,
+          prompt_template: data.prompt_template
         });
       }
     } catch (error) {
@@ -134,23 +137,87 @@ export default function Settings() {
                 <p className="text-sm text-muted-foreground">Loading AI settings...</p>
               </div>
             ) : (
-              <div className="space-y-8">
-                <div>
-                  <Label htmlFor="ai-instructions" className="text-base font-medium">AI Review Instructions</Label>
+              <div className="space-y-12">
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-5 mb-6">
+                  <h3 className="text-lg font-medium text-blue-900 mb-3">Understanding Instructions vs. Prompt Template</h3>
+                  <div className="space-y-3 text-sm text-blue-800">
+                    <p>
+                      The AI evaluation system uses two separate components to guide its behavior:
+                    </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white/50 p-4 rounded-md border border-blue-100">
+                        <p className="font-semibold mb-1">System Instructions</p>
+                        <p>Set the AI&apos;s overall behavior, perspective, and evaluation approach. Think of this as briefing the AI on its role.</p>
+                        <p className="mt-2 border-t border-blue-100 pt-2 text-blue-700 text-xs">Example: &ldquo;You are a scientific reviewer with expertise in medical research...&rdquo;</p>
+                      </div>
+                      
+                      <div className="bg-white/50 p-4 rounded-md border border-blue-100">
+                        <p className="font-semibold mb-1">Prompt Template</p>
+                        <p>Structures how each article is presented to the AI, with specific evaluation instructions and expected response format.</p>
+                        <p className="mt-2 border-t border-blue-100 pt-2 text-blue-700 text-xs">Example: &ldquo;Evaluate if this article meets these criteria... Return JSON with your decision.&rdquo;</p>
+                      </div>
+                    </div>
+                    
+                    <p>
+                      <span className="font-medium">How they work together:</span> The system instructions establish the AI&apos;s mindset, while the prompt template provides the specific task structure for each article evaluation.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <Label htmlFor="ai-instructions" className="text-base font-medium">AI System Instructions</Label>
                   <Textarea
                     id="ai-instructions"
                     placeholder="Enter instructions for the AI reviewer..."
-                    className="mt-3 h-[350px] font-mono text-sm p-4 leading-relaxed"
+                    className="mt-3 h-[250px] font-mono text-sm p-4 leading-relaxed"
                     value={aiSettings.instructions}
                     onChange={(e) => handleInputChange('instructions', e.target.value)}
                   />
-                  <p className="text-xs text-muted-foreground mt-2">
-                    These instructions will be used by the AI when evaluating articles against inclusion criteria.
-                  </p>
+                  <div className="text-sm text-muted-foreground mt-3 space-y-2 bg-slate-50 p-4 rounded-md border">
+                    <p className="font-medium">About System Instructions</p>
+                    <p>
+                      These instructions are sent as the <span className="font-mono bg-slate-100 px-1 rounded">system</span> message to the AI model. They set the overall behavior and role
+                      of the AI when evaluating articles.
+                    </p>
+                    <p>
+                      Good system instructions should define how strict or lenient the AI should be when evaluating criteria, 
+                      what perspective to take (e.g., domain expert), and any special considerations for your field.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
+                <div className="space-y-4">
+                  <Label htmlFor="prompt-template" className="text-base font-medium">AI Prompt Template</Label>
+                  <Textarea
+                    id="prompt-template"
+                    placeholder="Enter template for the AI article evaluation prompt..."
+                    className="mt-3 h-[350px] font-mono text-sm p-4 leading-relaxed"
+                    value={aiSettings.prompt_template}
+                    onChange={(e) => handleInputChange('prompt_template', e.target.value)}
+                  />
+                  <div className="text-sm text-muted-foreground mt-3 space-y-2 bg-slate-50 p-4 rounded-md border">
+                    <p className="font-medium">About Prompt Template</p>
+                    <p>
+                      This template is used to construct the actual prompt sent to the AI for each article evaluation. It determines 
+                      the format and instructions for how the AI should process and respond to each article.
+                    </p>
+                    <p>
+                      The template must include these placeholders that will be replaced with actual content:
+                    </p>
+                    <ul className="list-disc ml-5 space-y-1">
+                      <li><span className="font-mono bg-slate-100 px-1 rounded">${'{title}'}</span> - Will be replaced with the article title</li>
+                      <li><span className="font-mono bg-slate-100 px-1 rounded">${'{abstract}'}</span> - Will be replaced with the article abstract</li>
+                      <li><span className="font-mono bg-slate-100 px-1 rounded">${'{criterias}'}</span> - Will be replaced with the inclusion/exclusion criteria</li>
+                    </ul>
+                    <p className="mt-2">
+                      Ensure your template clearly instructs the AI to return a valid JSON response with a decision and explanation.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4 border-t">
+                  <div className="space-y-3">
                     <Label htmlFor="model">Model</Label>
                     <Select 
                       value={aiSettings.model} 
@@ -170,7 +237,7 @@ export default function Settings() {
                     </p>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label htmlFor="max-tokens">Max Tokens</Label>
                     <Input
                       id="max-tokens"
@@ -185,7 +252,7 @@ export default function Settings() {
                     </p>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label htmlFor="seed">Seed</Label>
                     <Input
                       id="seed"
@@ -198,7 +265,7 @@ export default function Settings() {
                     </p>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label htmlFor="batch-size">Batch Size</Label>
                     <Input
                       id="batch-size"
@@ -213,7 +280,7 @@ export default function Settings() {
                     </p>
                   </div>
 
-                  <div className="space-y-2 md:col-span-3">
+                  <div className="space-y-3 md:col-span-3">
                     <div className="flex justify-between items-center">
                       <Label htmlFor="temperature">Temperature: {aiSettings.temperature.toFixed(2)}</Label>
                     </div>

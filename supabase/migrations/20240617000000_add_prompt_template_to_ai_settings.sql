@@ -1,22 +1,10 @@
--- Insert default AI settings
-INSERT INTO ai_settings (
-    instructions,
-    temperature,
-    max_tokens,
-    seed,
-    model,
-    batch_size,
-    prompt_template,
-    created_at,
-    updated_at
-) VALUES (
-    'Please evaluate the following article against the inclusion criteria. Provide a clear decision (include/exclude) and explain your reasoning.',
-    0.1,
-    500,
-    12345,
-    'gpt-3.5-turbo',
-    10,
-    'You are a scientific reviewer evaluating research articles for a systematic review.
+-- Add prompt_template column to ai_settings table
+ALTER TABLE public.ai_settings ADD COLUMN IF NOT EXISTS prompt_template TEXT;
+COMMENT ON COLUMN public.ai_settings.prompt_template IS 'Custom prompt template for article evaluation';
+
+-- Set a default value for existing records
+UPDATE public.ai_settings SET prompt_template = 
+'You are a scientific reviewer evaluating research articles for a systematic review.
 
 Given:
 - A list of inclusion criteria (positive criteria) if provided.
@@ -52,7 +40,5 @@ ARTICLE TITLE:
 ${title}
 
 ARTICLE ABSTRACT:
-${abstract}',
-    NOW(),
-    NOW()
-); 
+${abstract}'
+WHERE prompt_template IS NULL; 

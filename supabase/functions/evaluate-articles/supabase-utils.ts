@@ -80,7 +80,7 @@ export class SupabaseUtils {
     try {
       const { data: aiSettings, error } = await this.supabase
         .from('ai_settings')
-        .select('instructions, temperature, max_tokens, seed, model, batch_size')
+        .select('instructions, temperature, max_tokens, seed, model, batch_size, prompt_template')
         .order('created_at', { ascending: false })
         .limit(1)
         .single();

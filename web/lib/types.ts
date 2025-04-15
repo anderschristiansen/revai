@@ -78,7 +78,8 @@ export type AISettings = {
   max_tokens: number;
   seed: number;
   model: string;
-  batch_size?: number;
+  batch_size: number;
+  prompt_template: string;
 };
 
 // API-specific types

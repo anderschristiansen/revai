@@ -19,46 +19,19 @@ export class OpenAIUtils {
     title: string,
     abstract: string,
     criterias: string,
+    promptTemplate?: string,
   ): string {
-    return `
-You are a scientific reviewer evaluating research articles for a systematic review.
-
-Given:
-- A list of inclusion criteria (positive criteria) if provided.
-- A list of exclusion criteria (negative criteria) if provided.
-- An article's title and abstract (if available).
-
-Task:
-1. If inclusion criteria are provided, check if the article meets them.
-2. If exclusion criteria are provided, check if the article matches any exclusion criteria.
-3. The decision rules are:
-   - INCLUDE: If the article meets all inclusion criteria (or none were provided) AND doesn't match any exclusion criteria (or none were provided).
-   - EXCLUDE: If the article fails to meet any inclusion criteria OR matches any exclusion criteria.
-   - UNSURE: If there isn't enough information to determine whether the article meets the criteria.
-
-Respond ONLY with a valid JSON object in this exact format:
-
-{
-  "decision": "Include" | "Exclude" | "Unsure",
-  "explanation": "A concise explanation (2–5 sentences) justifying the decision. Be specific."
-}
-
-Important Rules:
-- Do not explain the criteria again; only assess the article.
-- If no abstract is provided, base your judgment only on the title.
-- Always use double quotes for JSON keys and values.
-- Do NOT add any text outside the JSON object.
-
----
-
-${criterias}
-
-ARTICLE TITLE:
-${title}
-
-ARTICLE ABSTRACT:
-${abstract || "(No abstract available)"}
-`.trim();
+    // Require prompt template, throw error if not provided
+    if (!promptTemplate) {
+      throw new Error("Prompt template is required but was not provided in AI settings");
+    }
+    
+    // Replace placeholders in the template
+    return promptTemplate
+      .replace(/\${title}/g, title)
+      .replace(/\${abstract}/g, abstract || "(No abstract available)")
+      .replace(/\${criterias}/g, criterias)
+      .trim();
   }
 
   /**
@@ -75,6 +48,7 @@ ${abstract || "(No abstract available)"}
         title,
         abstract,
         criterias,
+        settings.prompt_template,
       );
 
       const response = await fetch(
