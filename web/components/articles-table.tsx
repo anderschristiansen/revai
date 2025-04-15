@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Table } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
@@ -12,6 +12,8 @@ import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2 }
 import { cn } from "@/lib/utils";
 import { Article, DecisionType } from "@/lib/types";
 import { updateArticleDecision } from "@/lib/utils/supabase-utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 // Regex to linkify URLs
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -51,6 +53,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [tableInstance, setTableInstance] = useState<Table<Article> | null>(null);
 
   function openArticleDialog(article: Article) {
     setSelectedArticle(article);
@@ -158,7 +161,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       ),
       cell: ({ row }) => {
         const title = row.getValue("title") as string;
-        const { ai_decision, user_decision, id } = row.original;
+        const { user_decision, id, ai_decision, abstract } = row.original;
         return (
           <div className={cn(
             "flex items-start gap-3 py-2 pl-4 border-l-2 group relative",
@@ -168,38 +171,46 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
             "border-l-transparent"
           )}>
             <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <div className="text-[14px] font-medium">{title}</div>
-                {user_decision && (
-                  <Badge
-                    variant="outline"
-                    className={cn(
-                      "h-5 text-xs",
-                      user_decision === "Include" ? "bg-[#00b380]/10 text-[#00b380] border-[#00b380]/30" :
-                      user_decision === "Exclude" ? "bg-[#ff1d42]/10 text-[#ff1d42] border-[#ff1d42]/30" :
-                      "bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/30"
-                    )}
-                  >
-                    {user_decision}
-                  </Badge>
-                )}
-              </div>
-              <div className="text-[14px] text-muted-foreground mt-1">
-                {row.original.abstract}
-              </div>
-            </div>
-            {ai_decision && (
-              <Tooltip content={`AI recommendation: ${ai_decision}`}>
-                <div className={cn(
-                  "text-[11px] px-1.5 py-0.5 rounded border-[0.5px] flex items-center whitespace-nowrap mt-1",
-                  ai_decision === "Include" ? "border-[#00b380]/30 text-[#00b380]" :
-                  ai_decision === "Exclude" ? "border-[#ff1d42]/30 text-[#ff1d42]" :
-                  "border-[#f59e0b]/30 text-[#f59e0b]"
-                )}>
-                  AI
+              <Tooltip 
+                delayDuration={300}
+                content={
+                  <div className="max-w-md p-3 space-y-2">
+                    <h3 className="font-medium">{title}</h3>
+                    <div className="flex gap-2 items-center pt-1">
+                      <div className="text-sm space-x-1">
+                        <span className="text-muted-foreground">User:</span>
+                        <span className={cn(
+                          user_decision === "Include" ? "text-[#00b380]" :
+                          user_decision === "Exclude" ? "text-[#ff1d42]" :
+                          user_decision === "Unsure" ? "text-[#f59e0b]" :
+                          "text-muted-foreground"
+                        )}>
+                          {user_decision || "Not reviewed"}
+                        </span>
+                      </div>
+                      <div className="text-sm space-x-1">
+                        <span className="text-muted-foreground">AI:</span>
+                        <span className={cn(
+                          ai_decision === "Include" ? "text-[#00b380]" :
+                          ai_decision === "Exclude" ? "text-[#ff1d42]" :
+                          ai_decision === "Unsure" ? "text-[#f59e0b]" :
+                          "text-muted-foreground"
+                        )}>
+                          {ai_decision || "Not evaluated"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-xs text-muted-foreground max-h-[100px] overflow-y-auto pt-1 border-t">
+                      <p className="pt-2">{abstract?.substring(0, 200)}{abstract?.length > 200 ? "..." : ""}</p>
+                    </div>
+                  </div>
+                }
+              >
+                <div className="flex items-center gap-2 cursor-help">
+                  <div className="text-[14px] font-medium">{title}</div>
                 </div>
               </Tooltip>
-            )}
+            </div>
             
             {/* Quick Action Buttons */}
             <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-background/90 backdrop-blur-sm p-1 rounded shadow-sm border quick-action-buttons" onClick={(e) => e.stopPropagation()}>
@@ -239,19 +250,167 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           </div>
         );
       },
+    },
+    {
+      accessorKey: "abstract",
+      header: "Abstract",
+      cell: ({ row }) => {
+        const abstract = row.getValue("abstract") as string;
+        // Limit abstract preview to 100 characters
+        const previewText = abstract ? 
+          (abstract.length > 100 ? abstract.substring(0, 100) + "..." : abstract) : 
+          "No abstract available";
+        
+        return (
+          <Tooltip
+            delayDuration={300}
+            content={
+              <div className="max-w-md max-h-[300px] overflow-y-auto p-3">
+                <p className="text-sm leading-relaxed whitespace-normal">{abstract || "No abstract available"}</p>
+              </div>
+            }
+          >
+            <div className="text-[14px] text-muted-foreground max-w-md truncate cursor-help">
+              {previewText}
+            </div>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      accessorKey: "user_decision",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="whitespace-nowrap font-medium"
+        >
+          User Decision
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const decision = row.getValue("user_decision") as DecisionType | undefined;
+        if (!decision) return <div className="text-muted-foreground text-sm">Not reviewed</div>;
+        
+        return (
+          <Badge
+            variant="outline"
+            className={cn(
+              "h-5 text-xs",
+              decision === "Include" ? "bg-[#00b380]/10 text-[#00b380] border-[#00b380]/30" :
+              decision === "Exclude" ? "bg-[#ff1d42]/10 text-[#ff1d42] border-[#ff1d42]/30" :
+              "bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/30"
+            )}
+          >
+            {decision}
+          </Badge>
+        );
+      },
+      filterFn: (row, id, value) => {
+        return value.includes(row.getValue(id));
+      },
+    },
+    {
+      accessorKey: "ai_decision",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="whitespace-nowrap font-medium"
+        >
+          AI Decision
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const decision = row.getValue("ai_decision") as DecisionType | undefined;
+        if (!decision) return <div className="text-muted-foreground text-sm">Not evaluated</div>;
+        
+        return (
+          <div className="flex items-center gap-2">
+            <div className={cn(
+              "text-[11px] px-1.5 py-0.5 rounded border-[0.5px] flex items-center whitespace-nowrap",
+              decision === "Include" ? "border-[#00b380]/30 text-[#00b380]" :
+              decision === "Exclude" ? "border-[#ff1d42]/30 text-[#ff1d42]" :
+              "border-[#f59e0b]/30 text-[#f59e0b]"
+            )}>
+              <Bot className="h-3 w-3 mr-1" />
+              {decision}
+            </div>
+          </div>
+        );
+      },
+      filterFn: (row, id, value) => {
+        return value.includes(row.getValue(id));
+      },
     }
   ];
 
   return (
     <div>
+      <div className="flex flex-wrap gap-4 mb-4">
+        <div>
+          <Input
+            placeholder="Search articles by title..."
+            value={(tableInstance?.getColumn("title")?.getFilterValue() as string) ?? ""}
+            onChange={(e) => tableInstance?.getColumn("title")?.setFilterValue(e.target.value)}
+            className="w-[240px]"
+          />
+        </div>
+        <div>
+          <Select
+            onValueChange={(value) => {
+              if (value === "all") {
+                tableInstance?.getColumn("user_decision")?.setFilterValue(undefined);
+              } else {
+                tableInstance?.getColumn("user_decision")?.setFilterValue([value]);
+              }
+            }}
+            defaultValue="all"
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by user decision" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All user decisions</SelectItem>
+              <SelectItem value="Include">Include</SelectItem>
+              <SelectItem value="Exclude">Exclude</SelectItem>
+              <SelectItem value="Unsure">Unsure</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div>
+          <Select
+            onValueChange={(value) => {
+              if (value === "all") {
+                tableInstance?.getColumn("ai_decision")?.setFilterValue(undefined);
+              } else {
+                tableInstance?.getColumn("ai_decision")?.setFilterValue([value]);
+              }
+            }}
+            defaultValue="all"
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by AI decision" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All AI decisions</SelectItem>
+              <SelectItem value="Include">Include</SelectItem>
+              <SelectItem value="Exclude">Exclude</SelectItem>
+              <SelectItem value="Unsure">Unsure</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      
       <DataTable
         columns={columns}
         data={articles}
-        filterColumn="title"
-        filterPlaceholder="Search articles by title..."
         initialSorting={[{ id: "title", desc: false }]}
-        pageSize={10}
-        pageSizeOptions={[5, 10, 25, 50, 100]}
+        pageSize={20}
+        pageSizeOptions={[10, 20, 50, 100]}
         getRowClassName={() => "hover:bg-muted/5 transition-colors cursor-pointer"}
         onRowClick={(row) => {
           // For type safety, we're not using the event parameter directly
@@ -259,6 +418,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           // element with class 'quick-action-buttons' and won't trigger onRowClick
           openArticleDialog(row.original);
         }}
+        onTableInstanceChange={setTableInstance}
       />
 
       {/* Article Details Dialog */}

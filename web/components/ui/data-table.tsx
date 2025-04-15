@@ -14,6 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
   Row,
+  Table as TableInstance,
 } from "@tanstack/react-table"
 
 import {
@@ -54,6 +55,7 @@ interface DataTableProps<TData, TValue> {
   pageSizeOptions?: number[]
   getRowClassName?: (row: TData) => string
   onRowClick?: (row: Row<TData>) => void
+  onTableInstanceChange?: (table: TableInstance<TData>) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -67,6 +69,7 @@ export function DataTable<TData, TValue>({
   pageSizeOptions = [5, 10, 20, 50, 100],
   getRowClassName,
   onRowClick,
+  onTableInstanceChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>(initialSorting)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -105,6 +108,13 @@ export function DataTable<TData, TValue>({
       pagination,
     },
   })
+  
+  // Provide table instance to parent component if needed
+  React.useEffect(() => {
+    if (onTableInstanceChange) {
+      onTableInstanceChange(table);
+    }
+  }, [table, onTableInstanceChange]);
 
   return (
     <div className="space-y-4">
