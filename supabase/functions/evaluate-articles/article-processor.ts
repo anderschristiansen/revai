@@ -37,7 +37,7 @@ export class ArticleProcessor {
   /**
    * Processes a single article
    */
-  private async processArticle(
+  public async processArticle(
     article: Article,
     criterias: string,
     settings: AISettings

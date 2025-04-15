@@ -42,37 +42,62 @@ Deno.serve(async (req) => {
     if (body.articleId && body.title && body.abstract && body.criteria) {
       logger.info('EdgeFunction', `Processing manual evaluation for article ${body.articleId}`);
       
-      // Get AI settings
-      const settings = await supabaseUtils.getLatestAISettings();
-      
-      // Evaluate the article
-      const evaluation = await openaiUtils.evaluateArticle(
-        body.title,
-        body.abstract,
-        body.criteria,
-        settings
-      );
-      
-      // Update the article in the database
-      await supabaseUtils.updateArticleEvaluation(
-        body.articleId,
-        evaluation.decision,
-        evaluation.explanation
-      );
-      
-      return new Response(
-        JSON.stringify({
-          invocationId,
-          decision: evaluation.decision,
-          explanation: evaluation.explanation
-        }),
-        { 
-          headers: { 
-            ...corsHeaders,
-            'Content-Type': 'application/json' 
-          } 
+      try {
+        // Get AI settings
+        const settings = await supabaseUtils.getLatestAISettings();
+        
+        // Create a temporary Article object to use with the ArticleProcessor
+        const article = {
+          id: body.articleId,
+          title: body.title,
+          abstract: body.abstract,
+          file_id: body.fileId || 'manual-evaluation' // Default value in case fileId is not provided
+        };
+        
+        // Use the same article processing logic for consistency
+        const result = await articleProcessor.processArticle(
+          article, 
+          body.criteria,
+          settings
+        );
+        
+        if (!result.success) {
+          throw new Error(result.error || "Unknown error during article evaluation");
         }
-      );
+        
+        // Get the evaluation results from the database to ensure we return exactly what was stored
+        const articleData = await supabaseUtils.getArticleById(body.articleId);
+        
+        return new Response(
+          JSON.stringify({
+            invocationId,
+            decision: articleData.ai_decision,
+            explanation: articleData.ai_explanation
+          }),
+          { 
+            headers: { 
+              ...corsHeaders,
+              'Content-Type': 'application/json' 
+            } 
+          }
+        );
+      } catch (error) {
+        logger.error('EdgeFunction', `Error processing manual evaluation for article ${body.articleId}`, error);
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        return new Response(
+          JSON.stringify({ 
+            invocationId,
+            error: errorMessage 
+          }),
+          { 
+            status: 500, 
+            headers: { 
+              ...corsHeaders,
+              'Content-Type': 'application/json' 
+            } 
+          }
+        );
+      }
     }
     
     // Otherwise, process the session queue as before

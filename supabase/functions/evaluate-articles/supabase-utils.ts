@@ -342,4 +342,31 @@ export class SupabaseUtils {
       throw error;
     }
   }
+
+  /**
+   * Retrieves a single article by ID with AI evaluation data
+   */
+  async getArticleById(articleId: string): Promise<Article & { ai_decision: string; ai_explanation: string }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('articles')
+        .select('id, title, abstract, file_id, ai_decision, ai_explanation')
+        .eq('id', articleId)
+        .single();
+      
+      if (error) {
+        logger.error('Supabase', `Failed to get article by ID: ${articleId}`, error);
+        throw new Error(`Failed to get article: ${error.message}`);
+      }
+
+      if (!data) {
+        throw new Error(`Article not found: ${articleId}`);
+      }
+
+      return data as Article & { ai_decision: string; ai_explanation: string };
+    } catch (error) {
+      logger.error('Supabase', `Error getting article by ID: ${articleId}`, error);
+      throw error;
+    }
+  }
 } 

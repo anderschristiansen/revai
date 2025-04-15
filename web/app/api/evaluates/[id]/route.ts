@@ -64,6 +64,9 @@ export async function POST(
       formattedCriteria += `EXCLUSION CRITERIA: None provided`;
     }
 
+    // Trim to match the exact formatting in the batch evaluation
+    formattedCriteria = formattedCriteria.trim();
+
     // Call the Supabase Edge Function
     const { data, error } = await supabase.functions.invoke('evaluate-articles', {
       body: {
