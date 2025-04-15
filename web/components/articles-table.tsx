@@ -77,6 +77,17 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           decision === "Exclude" ? "Article excluded" :
           "Article marked as unsure";
         toast.success(message);
+      } else {
+        // Show a minimal toast for quick actions
+        const message = 
+          decision === "Include" ? "✓ Included" : 
+          decision === "Exclude" ? "✗ Excluded" : 
+          "? Marked as unsure";
+          
+        toast.info(message, {
+          duration: 1500,
+          position: "bottom-right"
+        });
       }
 
       if (selectedArticle && selectedArticle.id === targetArticle.id) {
@@ -147,10 +158,10 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       ),
       cell: ({ row }) => {
         const title = row.getValue("title") as string;
-        const { ai_decision, user_decision } = row.original;
+        const { ai_decision, user_decision, id } = row.original;
         return (
           <div className={cn(
-            "flex items-start gap-3 py-2 pl-4 border-l-2",
+            "flex items-start gap-3 py-2 pl-4 border-l-2 group relative",
             user_decision === "Include" ? "border-l-[#00b380]" :
             user_decision === "Exclude" ? "border-l-[#ff1d42]" :
             user_decision === "Unsure" ? "border-l-[#f59e0b]" :
@@ -189,6 +200,42 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                 </div>
               </Tooltip>
             )}
+            
+            {/* Quick Action Buttons */}
+            <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-background/90 backdrop-blur-sm p-1 rounded shadow-sm border quick-action-buttons" onClick={(e) => e.stopPropagation()}>
+              <Tooltip content="Include">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-7 w-7 text-[#00b380] hover:text-[#00b380] hover:bg-[#00b380]/10"
+                  onClick={() => handleArticleDecision("Include", id, false)}
+                >
+                  <CheckCircle className="h-4 w-4" />
+                </Button>
+              </Tooltip>
+              
+              <Tooltip content="Unsure">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-7 w-7 text-[#f59e0b] hover:text-[#f59e0b] hover:bg-[#f59e0b]/10"
+                  onClick={() => handleArticleDecision("Unsure", id, false)}
+                >
+                  <HelpCircle className="h-4 w-4" />
+                </Button>
+              </Tooltip>
+              
+              <Tooltip content="Exclude">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-7 w-7 text-[#ff1d42] hover:text-[#ff1d42] hover:bg-[#ff1d42]/10"
+                  onClick={() => handleArticleDecision("Exclude", id, false)}
+                >
+                  <XCircle className="h-4 w-4" />
+                </Button>
+              </Tooltip>
+            </div>
           </div>
         );
       },
@@ -206,7 +253,12 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         pageSize={10}
         pageSizeOptions={[5, 10, 25, 50, 100]}
         getRowClassName={() => "hover:bg-muted/5 transition-colors cursor-pointer"}
-        onRowClick={(row) => openArticleDialog(row.original)}
+        onRowClick={(row) => {
+          // For type safety, we're not using the event parameter directly
+          // The DataTable component itself will check if the click was on an
+          // element with class 'quick-action-buttons' and won't trigger onRowClick
+          openArticleDialog(row.original);
+        }}
       />
 
       {/* Article Details Dialog */}

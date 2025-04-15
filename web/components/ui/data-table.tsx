@@ -186,7 +186,16 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   className={getRowClassName ? getRowClassName(row.original as TData) : undefined}
-                  onClick={() => onRowClick && onRowClick(row)}
+                  onClick={(e) => {
+                    if (onRowClick) {
+                      // Check if click was on or within quick action buttons
+                      const target = e.target as HTMLElement;
+                      const isQuickAction = target.closest('.quick-action-buttons');
+                      if (!isQuickAction) {
+                        onRowClick(row);
+                      }
+                    }
+                  }}
                   style={onRowClick ? { cursor: 'pointer' } : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
