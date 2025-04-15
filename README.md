@@ -115,3 +115,45 @@ create table articles (
   needs_ai_evaluation boolean default true,
   created_at timestamp with time zone default now()
 );
+```
+
+## Criteria Types
+
+The system supports two types of criteria:
+
+1. **Inclusion Criteria**: Positive criteria that articles must match to be included (e.g., "Studies must include human subjects").
+2. **Exclusion Criteria**: Negative criteria that articles must NOT match to be included (e.g., "Studies with patients with head issues").
+
+When evaluating articles, the AI will:
+- Include articles that meet all inclusion criteria AND don't match any exclusion criteria
+- Exclude articles that either fail to meet any inclusion criteria OR match any exclusion criteria
+- Mark as "Unsure" when there isn't enough information to decide
+
+### Migration
+
+To migrate existing criteria, run the SQL migration script:
+
+```sql
+DO $$
+DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN (SELECT id, criterias FROM review_sessions WHERE criterias IS NOT NULL) LOOP
+        -- Update each criterion to add type if it doesn't have one
+        IF (jsonb_typeof(r.criterias) = 'array') THEN
+            UPDATE review_sessions
+            SET criterias = (
+                SELECT jsonb_agg(
+                    CASE
+                        WHEN jsonb_typeof(elem -> 'type') = 'null' THEN 
+                            jsonb_set(elem, '{type}', '"inclusion"')
+                        ELSE elem
+                    END
+                )
+                FROM jsonb_array_elements(r.criterias) elem
+            )
+            WHERE id = r.id;
+        END IF;
+    END LOOP;
+END $$;
+```

@@ -5,6 +5,7 @@ export type DecisionType = "Include" | "Exclude" | "Unsure";
 export type Criterion = {
   id: string;
   text: string;
+  type: 'inclusion' | 'exclusion';
 };
 
 export type CriteriaList = Criterion[];

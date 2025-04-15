@@ -1,0 +1,785 @@
+FN Clarivate Analytics Web of Science
+VR 1.0
+PT J
+AU Di Roio, C
+   Jourdan, C
+   Terrier, A
+   Artru, F
+AF Di Roio, C
+   Jourdan, C
+   Terrier, A
+   Artru, F
+TI Sickle cell disease and internal cerebral vein thrombosis.
+SO ANNALES FRANCAISES D ANESTHESIE ET DE REANIMATION
+AB Cerebrovascular disorders are frequently associated with sickle cell disease, mainly in homozygous children. We report the case a 25-old-patient with known sickle cell disease who presented with coma inaugurated by manifestations of intracranial hypertension. CT revealed bilateral thalamic infarcts and angiography confirmed the thrombosis of internal cerebral veins. Treatment included heparin and blood transfusion. Severe cerebral oedema resulted in the lethal outcome three days later.
+SN 0750-7658
+PY 1997
+VL 16
+IS 8
+BP 967
+EP 969
+DI 10.1016/S0750-7658(97)82146-6
+UT WOS:000072088500008
+PM 9750646
+ER
+
+PT J
+AU Hayward, R
+AF Hayward, R
+TI Venous hypertension and craniosynostosis
+SO CHILDS NERVOUS SYSTEM
+AB Introduction: This article addresses the relevance of venous hypertension to children born with, in particular, the "syndromic" forms of craniosynostosis. The development of the human cerebral venous system is summarised and the patterns of anomalous venous drainage seen in children with complex forms of craniosynostosis associated with raised intracranial pressure are described. Aetology: The aetiology of these abnormal patterns is discussed under the general headings of "The constriction theory", "A primary role for FGFR mutations" and "Persistence of the foetal pattern of intracranial venous drainage."Venous hypertension (along with hydrocephalus, cranio-cerebral disproportion and airway obstruction) has an important role in the aetiology of raised intracranial pressure in severely affected children. Treatment: The inter-relationship between these factors is explained and then the treatment of those children whose raised intracranial pressure is considered to be due predominantly to venous hypertension is described.
+SN 0256-7040
+PD OCT
+PY 2005
+VL 21
+IS 10
+BP 880
+EP 888
+DI 10.1007/s00381-004-1114-0
+UT WOS:000231948300005
+PM 15834728
+ER
+
+PT J
+AU Yakovlev, SB
+   Bocharov, AV
+   Mikeladze, K
+   Gasparian, SS
+   Serova, NK
+   Shakhnovich, AR
+AF Yakovlev, Sergey Borisovich
+   Bocharov, Aleksei Vasilievich
+   Mikeladze, Ketevan
+   Gasparian, Sergey Surenovich
+   Serova, Natalia Konstantinovna
+   Shakhnovich, Alexander Romanovich
+TI Endovascular Treatment of Acute Thrombosis of Cerebral Veins and Sinuses
+SO NEURORADIOLOGY JOURNAL
+AB Acute thrombosis of cerebral veins and sinuses (ATCVS) is a multifactorial disease with grave consequences. Because of its rare occurrence there are no proven treatment guidelines. Sixteen patients with ATCVS were treated. The final diagnosis was confirmed by digital subtraction angiography. Sinus catheterization was performed via transfemoral venous access. Treatment included mechanical manipulation of thrombi and thrombolytic therapy. A regression of clinical symptoms with a concomitant decrease of intracranial hypertension was achieved in all patients. Long-term results were studied in eight patients: none presented clinical signs of intracranial hypertension. Endovascular transvenous recanalization is an effective treatment for acute thrombosis of cerebral veins and sinuses. Along with the local thrombolysis, significant potential in the treatment of this complex pathology lies in the transvenous endovascular techniques of mechanical thrombus extraction, especially in patients with intracranial hemorrhage for whom the use of thrombolytic agents is restricted.
+RI mikeladze, ketevan/AAU-1361-2020; Serova, Natalia/ABB-5451-2020
+SN 1971-4009
+EI 2385-1996
+PD AUG
+PY 2014
+VL 27
+IS 4
+BP 471
+EP 478
+DI 10.15274/NRJ-2014-10066
+UT WOS:000218618100015
+PM 25196622
+ER
+
+PT J
+AU ULRICH, K
+   KUSCHINSKY, W
+AF ULRICH, K
+   KUSCHINSKY, W
+TI INVIVO EFFECTS OF ALPHA-ADRENOCEPTOR AGONISTS AND ANTAGONISTS ON PIAL
+   VEINS OF CATS
+SO STROKE
+AB Cerebral blood volume and intracranial pressure may be modified by influences on cerebral veins. The known adrenergic innervation of cerebral veins and their sensitivity to norepinephrine raised the question, whether pial veins can be selected influenced through adrenoceptors in vivo. Therefore, alpha1 and alpha2 adrenoceptor agonists and antagonists were locally injected into the perivascular space of pial veins using the microapplication technique. The alpha1 and alpha2 adrenoceptor antagonists, prazosin and yohimbine, had only minor effects on pial veins. Both antagonists blocked constrictions induced by norepinephrine (10-5M) in a concentration dependent manner (10-7-10-4M). The alpha1 adrenoceptor agonist phenylephrine caused significant (10-7-10-3M) constriction of pial veins, with a maximum of 11.6% of initial diameter at 10-3M. Oxymetazoline, an alpha2 receptor agonist, induced a significant constriction only at 10-3M (5.1%). Since both alpha1 and  alpha2 adrenoceptor agonists are less potent constrictors of pial veins than norepinephrine in vivo, a preferential use of alpha1 or alpha2 adrenoceptor agonists cannot be recommended from these experiments, if a therapeutic reduction of intracranial pressure or blood volume is desired.
+SN 0039-2499
+EI 1524-4628
+PY 1985
+VL 16
+IS 5
+BP 880
+EP 884
+DI 10.1161/01.STR.16.5.880
+UT WOS:A1985ARY0900025
+PM 2864755
+ER
+
+PT J
+AU Peralta, AR
+   Canhao, P
+AF Peralta, Ana Rita
+   Canhao, Patricia
+TI Hypothyroidism and cerebral vein thrombosis - a possible association
+SO JOURNAL OF NEUROLOGY
+AB Background There are many systemic illnesses that constitute risk factors for cerebral vein thrombosis (CVT). Hypothyroidism was never associated with CVT, despite growing evidence supporting a possible etiopathogenic link. We report two patients with CVT in whom hypothyroidism was concomitantly diagnosed. Clinical cases Cases were women 21 and 52 years old. They both presented with intracranial hypertension syndrome and symptomatic focal epilepsy. CVT was diagnosed with MRI and MR venography. Hypothyroidism was diagnosed in the acute phase of CVT. Both had an autoimmune thyroiditis. None of the patients had diffuse goitre. Other risk factors for CVT were oral contraceptives and elevated homocysteine in one and hormonal replacement therapy in the other. Both were treated with anticoagulation, anti-epileptic drugs and thyroid replacement therapy, with good clinical outcome. Conclusions The association found between untreated hypothyroidism and CVT in these patients may result from chance. However, several haemostatic and fibrinolytic parameters have been demonstrated to be disturbed in hypothyroidism suggesting a possible role of this disease in CVT pathogenesis. In addition, indirect evidence also supports possible endothelial dysfunction and venous stasis in hypothyroidism, further emphasizing the physiopathological link between the two conditions. More research is needed to determine a possible causal role of hypothyroidism on CVT. We suggest that thyroid function should be included in the usual workup of CVT patients.
+RI Peralta, Ana/AAM-3670-2021; Canhao, Patricia/KPY-2217-2024
+OI Peralta, Ana Rita/0000-0001-9449-431X; Canhao,
+   Patricia/0000-0003-3816-0416
+SN 0340-5354
+PD JUL
+PY 2008
+VL 255
+IS 7
+BP 962
+EP 966
+DI 10.1007/s00415-008-0746-5
+UT WOS:000258025000002
+PM 18560795
+ER
+
+PT J
+AU Ratkovic, M
+   Basic-Jukic, N
+   Gledovic, B
+   Radunovic, D
+AF Ratkovic, Marina
+   Basic-Jukic, Nikolina
+   Gledovic, Branka
+   Radunovic, Danilo
+TI Thrombosis of the great cerebral vein in a hemodialysis patient
+SO HEMODIALYSIS INTERNATIONAL
+AB Cerebral venous thrombosis is a rare condition with various clinical presentations which may delay diagnosis. It is frequently associated with severe consequences. We present the first documented case of thrombosis of the great cerebral vein in a hemodialysis patient. A 29-year-old female patient with end-stage renal disease of unknown etiology was admitted to a hospital with altered consciousness and nausea. Severe headache in the right parietal area had started 2 days before. On examination, she was in the poor overall condition, dysartric, with a severe nystagmus. Urgent brain multislice computerized tomography and magnetic resonance imaging revealed thrombosis of the great cerebral vein with hypodense zones in hypothalamus, thalamus and basal ganglia. She was treated with heparin bolus of 25000 IU with a favorable outcome. Detailed examination demonstrated increased lupus anticoagulant (LA) 1 and LA2 and increased LA1/LA2. Control magnetic resonance imaging performed 1 year later revealed multiple vascular lesions within the brain. Acetylsalicylate was introduced in therapy. Thrombosis of the cerebral veins should be suspected in patients with end-stage renal disease, altered neurological status and signs of increased intracranial pressure.
+RI Basic-Jukic, Nikolina/AFR-5138-2022
+OI Basic-Jukic, Nikolina/0000-0002-0221-2758
+SN 1492-7535
+EI 1542-4758
+PD JAN
+PY 2014
+VL 18
+IS 1
+BP 209
+EP 211
+DI 10.1111/hdi.12080
+UT WOS:000334518900031
+PM 23998712
+ER
+
+PT J
+AU Kasischke, KA
+   Peguero, EN
+   Sriaroon, C
+   Moreo, N
+   Ren, ZG
+   Mokin, MV
+   Rose, DZ
+AF Kasischke, Karl A.
+   Peguero, Edwin N.
+   Sriaroon, Chakrapol
+   Moreo, Natalie
+   Ren, Zeguang
+   Mokin, Maxim, V
+   Rose, David Z.
+TI Immediate Transfer for Clot Extraction in a Young Woman With Leukemia
+   and Asparaginase-Associated Acute Cerebral Vein Thrombosis
+SO NEUROHOSPITALIST
+AB We present the case of an 18-year-old woman with B-cell acute lymphoblastic leukemia (ALL) who developed hemorrhagic stroke and epilepsia partialis continua due to acute cerebral vein thrombosis (CVT). The patient had 10 risk factors for CVT (including use of asparaginase chemotherapy for the ALL) and also unfortunately had 4 biomarkers for poor prognosis for outcome post-CVT diagnosis. Immediate transfer to a Comprehensive Stroke Center allowed for hyperacute neurointerventional clot extraction with rapid restoration of the patency of the superior sagittal sinus. This resulted in an unexpectedly favorable neurological outcome and simultaneously allowed for early resumption of chemotherapy for ALL after only a 5-day hiatus. Our case highlights the importance of immediate transfer of highest risk patients with multiple biomarkers for poor prognosis to a Comprehensive Stroke Center with endovascular and neurosurgical capabilities and the possibility of overcoming the odds of a poor outcome with venous clot extraction if medical management fails. Neurological deterioration due to escalating intracranial pressure with impending herniation may occur rapidly, and treatment at such facilities can be life-saving.
+RI Rose, David Z./AAE-7437-2022
+OI Rose, David Z./0000-0002-9449-6494; Kasischke, Karl/0000-0003-0582-4319
+SN 1941-8744
+EI 1941-8752
+PD JAN
+PY 2020
+VL 10
+IS 1
+BP 58
+EP 63
+DI 10.1177/1941874419852196
+UT WOS:000501722200011
+PM 31839868
+ER
+
+PT J
+AU Arbeille, P
+   Zuj, KA
+   Macias, BR
+   Ebert, DJ
+   Laurie, SS
+   Sargsyan, AE
+   Martin, DS
+   Lee, SMC
+   Dulchavsky, SA
+   Stenger, MB
+   Hargens, AR
+AF Arbeille, P.
+   Zuj, K. A.
+   Macias, B. R.
+   Ebert, D. J.
+   Laurie, S. S.
+   Sargsyan, A. E.
+   Martin, D. S.
+   Lee, S. M. C.
+   Dulchavsky, S. A.
+   Stenger, M. B.
+   Hargens, A. R.
+TI Lower body negative pressure reduces jugular and portal vein volumes and
+   counteracts the elevation of middle cerebral vein velocity during
+   long-duration spaceflight
+SO JOURNAL OF APPLIED PHYSIOLOGY
+AB Cephalad fluid shifts in space have been hypothesized to cause the spaceflight-associated neuro-ocular syndrome (SANS) by increasing the intracranial-ocular translaminal pressure gradient. Lower body negative pressure (LBNP) can be used to shift upper-body blood and other fluids toward the legs during spaceflight. We hypothesized that microgravity would increase jugular vein volume (JVvol), portal vein cross-sectional area (PV), and intracranial venous blood velocity (MCV) and that LBNP application would return these variables toward preflight levels. Data were collected from 14 subjects (11 males) before and during long-duration International Space Station (ISS) spaceflights. Ultrasound measures of JVvol, PV, and MCV were acquired while seated and supine before flight and early during spaceflight at day 45 (FD45) and late at day 150 (FD150) with and without LBNP. JVvol increased from preflight supine and seated postures (46 +/- 48% and 646 +/- 595% on FD45 and 43 +/- 43% and 702 +/- 631% on FD150, P < 0.05), MCV increased from preflight supine (44 +/- 31% on FD45 and 115 +/- 116% on FD150, P < 0.05), and PV increased from preflight supine and seated (51 +/- 56% on FD45 and 100 +/- 74% on FD150, P < 0.05). lnflight LBNP of 25 mmHg restored JVvol and MCV to preflight supine level and PV to preflight seated level. Elevated JVvol confirms the sustained neck-head blood engorgement inflight, whereas increased PV area supports the fluid shift at the splanchnic level. Also, MCV increased potentially due to reduced lumen diameter. LBNP, returning variables to preflight levels, may be an effective countermeasure.
+   NEW & NOTEWORTHY Microgravity-induced fluid shifts markedly enlarge jugular and portal veins and increase cerebral vein velocity. These findings demonstrate a marked flow engorgement at neck and splanchnic levels and may suggest compression of the cerebral veins by the brain tissue in space. LBNP (-25 mmHg for 30 min) returns these changes to preflight levels and, thus, reduces the associated flow and tissue disturbances.
+OI Sargsyan, Ashot/0000-0002-8718-2796; Lee, Stuart/0000-0001-7065-5182
+SN 8750-7587
+EI 1522-1601
+PD SEP
+PY 2021
+VL 131
+IS 3
+BP 1080
+EP 1087
+DI 10.1152/japplphysiol.00231.2021
+UT WOS:000697330500009
+PM 34323592
+ER
+
+PT J
+AU Ferro, JM
+   Canhao, C
+   Bousser, MG
+   Stam, J
+   Barinagarrementeria, F
+AF Ferro, JM
+   Canhao, C
+   Bousser, MG
+   Stam, J
+   Barinagarrementeria, F
+CA ISCVT Investigators
+TI Cerebral vein and dural sinus thrombosis in elderly patients
+SO STROKE
+AB Backgound and Purpose - The clinical features and prognosis of cerebral vein and dural sinus thrombosis (CVT) in elderly patients have not been previously described.
+   Methods - In a multicenter prospective observational study, we compared clinical and imaging features, risk factors, and outcome of adult patients aged <65 (young and middle-aged patients) and >= 65 years (elderly patients).
+   Results - A total of 624 adult patients with CVT were registered and followed-up for a median of 16 months. Fifty-one (8.2%) were aged >= 65 years. Presentation as an isolated intracranial hypertension syndrome was less frequent in elderly patients (4/51 versus 139/573, P=0.008), whereas depressed consciousness (17 versus 97, P=0.005), and mental status changes (22 versus 115, P=0.001) were more frequent in the elderly. The prognosis of elderly patients was considerably worse than that of younger patients, as only 49% of elderly patients made a complete recovery (versus 82% in younger patients), whereas 27% died and 22% were dependent at the end of follow-up (versus 7 and 2% respectively in younger patients). Carcinoma (5 cases) was more frequent as a risk factor for CVT in elderly patients (P=0.017). During follow-up, elderly patients were more likely to experience thrombotic events (HR=4.8, 95% CI=1.9 to 11.9) and were less likely to experience severe headaches (HR=0.2, 95% CI=0.02, 0.97).
+   Conclusions - Elderly patients with CVT have a distinctive clinical presentation: isolated intracranial hypertension is uncommon, whereas mental status and alertness disturbances are common. The prognosis of CVT is worse in elderly patients.
+RI Stam, JAN/KJL-3923-2024; Ferro, José/ABA-1779-2021; Canhao,
+   Patricia/KPY-2217-2024
+OI Canhao, Patricia/0000-0003-3816-0416; Stam, Jan/0000-0001-7250-9744;
+   Ferro, Jose/0000-0002-2343-9097
+SN 0039-2499
+EI 1524-4628
+PD SEP
+PY 2005
+VL 36
+IS 9
+BP 1927
+EP 1932
+DI 10.1161/01.STR.0000177894.05495.54
+UT WOS:000231441200030
+PM 16100024
+ER
+
+PT S
+AU Ganz, JC
+AF Ganz, Jeremy C.
+BE Ganz, JC
+TI Intracranial dural A-V fistulae
+SO RECENT ADVANCES AND CONTROVERSIES IN GAMMA KNIFE NEUROSURGERY
+SE Progress in Brain Research
+AB Dural Arteriovenous Malformations (DAVFs) are rare vascular malformations involving the dura and cerebral veins. They occur in a variety of locations but in general the cavernous sinus lesion is more frequent among Asian patients while the transverse sinus is more usual among western patients. Treatments include microsurgery, endovascular embolization and GKNS. The dangerous concomitant of DAVFs is retrograde flow into the cerebral veins (CVR). Patients with CVR are at risk for bleeding, neurological deficit and in some cases death. They require treatment with the aim of occluding the fistula. Patients without CVR may or may not require therapy, depending on the severity of the symptoms associated with the fistula. These patients require reduction of symptoms more than occlusion. GKNS may often be associated with embolization.
+RI Ganz, Jeremy/HMO-6683-2023
+SN 0079-6123
+BN 978-0-12-823564-5
+PY 2022
+VL 268
+BP 99
+EP 114
+DI 10.1016/bs.pbr.2021.10.028
+UT WOS:000893184800008
+PM 35074098
+ER
+
+PT J
+AU Ferro, JM
+   Correia, M
+   Pontes, C
+   Baptista, MV
+   Pita, F
+AF Ferro, JM
+   Correia, M
+   Pontes, C
+   Baptista, MV
+   Pita, F
+CA Cerebral Venous Thrombosis Port
+TI Cerebral vein and dural sinus thrombosis in Portugal: 1980-1998
+SO CEREBROVASCULAR DISEASES
+AB There is insufficient information on the prognosis and safety of anticoagulation in acute cerebral vein and dural sinus thrombosis (CVDST). To describe the clinical aspects and medical management of CVDST in Portuguese hospitals, to evaluate the safety of anticoagulation in this setting, and to identify subgroups of CVDST patients with different prognoses, we registered symptomatic CVDST patients admitted to Portuguese hospitals since 1980, Cases were collected from file review up to 6/95 and from consecutively admitted patients from 6/95 to 6/98, One hundred and forty-two patients were included from 20 centers (51 retrospectively and 91 prospectively). One hundred and twelve patients (79%) were anticoagulated. There were only 6 new intracranial hemorrhages (4 in anticoagulated patients) and 2 systemic hemorrhages, Nine (6%) patients died. At discharge, 96 [68%), had recovered completely and only 6 (4%) were dependent (Rankin greater than or equal to 3). Significant multivariate predictors of death/dependency were central nervous system infection as a predisposing cause (odds ratio, OR = 15.4; 95% confidence interval Cl = 111-1.1), encephalopathy on admission (OR = 5.2; 95% Cl = 18.7-1.5) and hemorrhage on admission CT/MR (OR = 3.6; 95% Cl = 12.9-1). Significant predictors of complete recovery were no encephalopathy on admission (OR = 5; 95% Cl = 12.5-2.1), age <45 years (OR = 3.8; 95% Cl = 9.2-1.6) and anticoagulation (OR = 3.8; 95% Cl = 9.6-1.5). It is possible to identify CVDST patients with potential bad or good prognosis in the acute phase. Anticoagulation was safe and a predictor of complete recovery in acute CVDST, Copyright <(c)> 2001 S. KargerAG, Basel.
+RI Ferro, José/ABA-1779-2021
+OI Ferro, Jose/0000-0002-2343-9097
+SN 1015-9770
+PY 2001
+VL 11
+IS 3
+BP 177
+EP 182
+DI 10.1159/000047635
+UT WOS:000168120600006
+PM 11306764
+ER
+
+PT B
+AU Ferro, JM
+   Canhao, P
+AF Ferro, Jose M.
+   Canhao, Patricia
+BE Pezzini, A
+   Padovani, A
+TI Venous Infarcts in Young Adults
+SO CEREBRAL ISCHEMIA IN YOUNG ADULTS: PATHOGENIC AND CLINICAL PERSPECTIVES
+SE Neurology Laboratory and Clinical Research Series
+AB Thrombosis of the dural sinus and cerebral veins (CVT) are an uncommon cause of stroke in the young adult, accounting for less than 5% of the cases in most series. CVT predominantly affect young females and are associated with oral contraceptive use, pregnancy and puerperium, genetic and acquired prothrombotic conditions such as the antiphospholipid syndrome, and several other systemic conditions. The confirmation of the diagnosis of CVT and venous infarct is based on MRI, including T2*SE sequences combined with MR-venography. In half of the young adults with CVT a venous infarct is present in the admission CT or MRI. Venous infarcts are often multiple, and they can be combined with hemorrhagic lesions. They may undergo hemorrhagic transformation or disappear in subsequent scans. Venous infarcts are due to increased venous and capillary pressure with blood-brain barrier disruption, vasogenic oedema, venous hemorrhage and eventually decreased perfusion pressure with infarct. The most corm-non clinical presentation in young patients with venous infarcts is a combination of headache with a focal syndrome (motor deficit, aphasia) with or without seizures. Mental status disturbances and decreased alertness are present in about 1/4 of these patients. The prognosis of patients with venous infarcts is similar to that of CVT subjects without venous infarcts, with complete recovery in 87%, but with 7% mortality.
+   Treatment of venous infarcts includes treatment of the underlying condition, antithrombotic treatment (heparin followed by oral anti coagulants), treatment of intracranial hypertension and of infarcts producing impending herniation, and treatment and prevention of seizures.
+RI Ferro, José/ABA-1779-2021
+OI Ferro, Jose/0000-0002-2343-9097
+BN 978-1-60741-627-2
+PY 2009
+BP 509
+EP 523
+UT WOS:000275556300018
+ER
+
+PT J
+AU Modan-Moses, D
+   Ben-Zeev, B
+   Feldman, Z
+AF Modan-Moses, D
+   Ben-Zeev, B
+   Feldman, Z
+TI Langerhans' cell histiocytosis presenting as intracranial hypertension
+SO JOURNAL OF CHILD NEUROLOGY
+AB Benign intracranial hypertension is known to be associated with obesity, endocrine abnormalities, various medications, and cerebral venous sinus thrombosis. We report a patient presenting with headaches and vomiting attributed to benign intracranial hypertension. The diagnostic work-up revealed Langerhans' cell histiocytosis of the occipital bone. There was no evidence for cerebral vein thrombosis by cranial computed tomography scan, Doppler ultrasonography, planar and single photon emission computed tomography technetium 99m-labelled red blood cell scintigraphy, and magnetic resonance angiography. Excision of the occipital bone lesion and a short course of acetazolamide and prednisone were curative. We hypothesize that cytokines secreted by the tumor were responsible for the development of intracranial hypertension.
+OI Feldman, Zeev/0000-0002-9719-3894
+SN 0883-0738
+PD JUN
+PY 2001
+VL 16
+IS 6
+BP 414
+EP 416
+DI 10.2310/7010.2001.7124
+UT WOS:000171025800005
+PM 11417606
+ER
+
+PT J
+AU ENEVOLDSON, TP
+   RUSSELL, RWR
+AF ENEVOLDSON, TP
+   RUSSELL, RWR
+TI CEREBRAL VENOUS THROMBOSIS - NEW CAUSES FOR AN OLD SYNDROME
+SO QUARTERLY JOURNAL OF MEDICINE
+AB The range of disorders affecting the cerebral veins and sinuses is increasing and now includes blood disorders, abnormalities in the patterns of blood flow, and infiltrative or inflammatory conditions, all of which may promote thrombosis. We describe 10 patients with cerebral venous thrombosis: two had protein S deficiency, one had protein C deficiency, one was in early pregnancy, and there was a single case of each of the following: dural arteriovenous malformation, intracerebral arteriovenous malformation, bilateral glomus tumours, systemic lupus erythematosus, Wegener's granulomatosis, non-Hodgkin's lymphoma. The recognition of such diverse aetiology may be importance since clinical features are non-specific, and may consist only of raised intracranial pressure, allowing confusion with 'benign intracranial hypertension'. The existence of effective treatment both for the thrombosis and for many of the underlying disorders makes early diagnosis essential. The prognosis of treated patients may be favourable.
+SN 0033-5622
+PD DEC
+PY 1990
+VL 77
+IS 284
+BP 1255
+EP 1275
+DI 10.1093/qjmed/77.3.1255
+UT WOS:A1990EQ31500006
+PM 2149767
+ER
+
+PT J
+AU EASTON, JD
+AF EASTON, JD
+TI TREATMENT OF CEREBRAL VENOUS THROMBOSIS
+SO CEREBROVASCULAR DISEASES
+SN 1015-9770
+PD SEP-OCT
+PY 1993
+VL 3
+IS 5
+BP 329
+EP 332
+UT WOS:A1993LZ71700012
+ER
+
+PT J
+AU Hsieh, YL
+   Liu, X
+   Dai, F
+   Wang, SJ
+   Gao, XL
+   Wen, DY
+   Wang, WQ
+AF Hsieh, Yue-Lin
+   Liu, Xu
+   Dai, Fei
+   Wang, Shenjiang
+   Gao, Xiuli
+   Wen, Deyuan
+   Wang, Wuqing
+TI Aberrant Sylvian Vein Diverticulum and Tegmen Dehiscence-Induced Venous
+   Pulsatile Tinnitus Phenotype Can Be Treated Via Transtemporal Surgery: A
+   Case Report with 4D-Flow Magnetic Resonance Imaging
+SO OTOLOGY & NEUROTOLOGY
+AB ObjectiveTo report the first successful surgical treatment of a rare subtype of venous pulsatile tinnitus (PT) caused by aberrant sylvian vein and tegmen dehiscence (SVTD) with a diverticulum and soft tissue enclosing the middle ear ossicles.PatientsA 35-year-old female participant presented with more than 10-year left-side PT due to SVTD diverticulum.Intervention(s)The participant underwent transtemporal surgery with a lateral minimally invasive approach to the epitympanum and aditus ad antrum after finding SVTD and diverticulum.Main Outcome MeasuresContrast-enhanced CT, various magnetic resonance (MR) techniques, including the 4D-flow MR method, and transcanal recording examinations were utilized. The Tinnitus Handicap Inventory (THI) was employed to quantify the surgical efficacy in treating PT.ResultsPT was successfully resolved following resurfacing of the diverticulum located on the medial wall of the epitympanic space, with the patient achieving a THI score of 0. The 4D-flow MR indicated that the mean and largest velocities at the dehiscence area were 20.8 cm/s and 54.9 cm/s, respectively. The main frequency of PT fluctuated below 750 hz.ConclusionSVTD diverticulum-induced venous PT can be successfully treated via the transtemporal pathway. Additionally, this finding underscores the importance to carefully examine tegmen dehiscence and the exposed vasculature when managing venous PT.
+SN 1531-7129
+EI 1537-4505
+PD JAN
+PY 2025
+VL 46
+IS 1
+BP e28
+EP e33
+DI 10.1097/MAO.0000000000004383
+UT WOS:001376674600001
+PM 39627900
+ER
+
+PT J
+AU Chen, L
+   Xu, MJ
+   Yan, SQ
+   Luo, ZY
+   Tong, LS
+   Lou, M
+AF Chen, Lin
+   Xu, Mengjun
+   Yan, Shenqiang
+   Luo, Zhongyu
+   Tong, Lusha
+   Lou, Min
+TI Insufficient cerebral venous drainage predicts early edema in acute
+   intracerebral hemorrhage
+SO NEUROLOGY
+AB Objectives
+   To explore the relationship between insufficient ipsilateral cerebral venous drainage and the development of perihematomal edema (PHE) and functional outcome in patients with acute intracerebral hemorrhage (ICH).
+   Methods
+   We retrospectively reviewed our prospectively collected database for patients with acute spontaneous supratentorial ICH and analyzed patients who underwent baseline CT perfusion (CTP) within 6 hours of onset and noncontrast CT at 24 hours. Absence of filling of 1 or more of the ipsilateral superficial middle cerebral vein, vein of Trolard, vein of Labbe, basal vein of Rosenthal, and internal cerebral vein, evaluated on venous maps generated from baseline CTP, was identified as absent ipsilateral venous filling (AIVF). Relative PHE (rPHE) was calculated as the ratio of PHE volume to hematoma volume on follow-up CT.
+   Results
+   A total of 138 patients were included. Median absolute PHE volume on follow-up CT was 3.5 (1.0-9.3) mL and rPHE was 24.3% (9.0%-49.4%). One absent ipsilateral vein was observed in 38 (27.5%) patients, and 2 absent veins were observed in 5 (3.6%) patients. Multivariate analysis showed that AIVF was independently associated with large rPHE at 24 hours (odds ratio [OR] 4.032, 95% confidence interval [CI] 1.739-9.347, p < 0.001). Large PHE volume was independently associated with poor outcome (OR 1.109, 95% CI 1.009-1.218, p = 0.031).
+   Conclusion
+   AIVF was observed in about one-third of patients with acute ICH, which might be attributed to hypoperfusion after ICH and was strongly related to the development of PHE. Identification of cerebral venous filling status might be a promising imaging marker for PHE and a potential therapeutic target in ICH.
+SN 0028-3878
+EI 1526-632X
+PD OCT 8
+PY 2019
+VL 93
+IS 15
+BP E1463
+EP E1473
+DI 10.1212/WNL.0000000000008242
+UT WOS:000512608400006
+PM 31492719
+ER
+
+PT J
+AU Mehta, TI
+   Arun, A
+   Heiberger, C
+   Cognetti, D
+   Ray, TR
+   Amans, MR
+   Fargen, K
+   Huisman, TAGM
+   Hui, FRA
+AF Mehta, Tej Ishaan
+   Arun, Anirudh
+   Heiberger, Caleb
+   Cognetti, David
+   Ray, Tyler R.
+   Amans, Matthew R.
+   Fargen, Kyle
+   Huisman, Thierry A. G. M.
+   Hui, Ferdinand
+TI Venous Pathologies and Interventions of the Head
+SO SEMINARS IN NEUROLOGY
+AB Intracranial venous pathologies are a historically underrecognized group of disorders that can have a devastating impact on patients. Despite advancements in peripheral venous disorders and arterial neurointerventions, intracranial venous pathologies have received comparatively little attention. Understanding the anatomy, physiology, clinical relevance, and treatment options of intracranial venous pathologies is fundamental to evolving therapies and research priorities. This article provides an overview of major intracranial venous pathologies, the respective pathophysiologies, and treatment options.
+RI Ray, Tyler/H-7614-2017; Huisman, Thierry/GYD-4734-2022
+OI Ray, Tyler/0000-0001-7047-9676
+SN 0271-8235
+EI 1098-9021
+PD JUN
+PY 2023
+VL 43
+IS 03
+BP 439
+EP 453
+DI 10.1055/s-0043-1771512
+EA AUG 2023
+UT WOS:001045991800005
+PM 37562454
+ER
+
+PT J
+AU Stolz, E
+   Fox, BC
+   Hoffmann, O
+   Gerriets, T
+   Blaes, F
+   Kraus, J
+   Kaps, M
+AF Stolz, Erwin
+   Fox, Bettina C.
+   Hoffmann, Oskar
+   Gerriets, Tibo
+   Blaes, Franz
+   Kraus, Joerg
+   Kaps, Manfred
+TI Cranial Venous Outflow Under Lower Body Positive and Negative Pressure
+   Conditions and Head-Up and -Down Tilts
+SO JOURNAL OF NEUROIMAGING
+AB Although there exists a large body of knowledge on the regulation of arterial cerebral hemodynamics, little is known about the cerebral venous outflow (CVO).
+   In 19 healthy volunteers, the middle cerebral artery and the straight sinus were examined using transcranial Doppler sonography. Arterial and venous mean flow velocities (aFV(mean), vFV(mean), respectively) were registered continuously while applying lower body positive (LBPP) or negative (LBNP) pressure of 30 mmHg and performing head-down (-20 degrees, HDT) and -up (+30 degrees, HUT) tilt manoeuvres. The arterial blood pressure was registered simultaneously with a noninvasive finger blood pressure monitor. Relative changes in parameters compared to the proceeding no-pressure, no-tilt baseline were used for analysis.
+   While aFV(mean) did not change significantly, vFV(mean) inc reased during LBPP by 10.5 +/- 2.9% and decreased during LBNP by 15.1 +/- 3.5% (mean +/- standard error of mean [SEM], P < .01). HUT resulted in a decrease in vFV(mean) by 25.5 +/- 3.3% and HDT, in an increase by 7.8 +/- 3.2% (P < .01) without alteration in aFV(mean). This may imply a decrease of cerebral blood volume (CBV) during LBPP and HDT and an increase during LBNP and HUT.
+   CVO cannot be neglected when studying cerebral hemodynamics because it might affect the CBV.
+   J Neuroimaging 2009;19:31-36.
+SN 1051-2284
+EI 1552-6569
+PD JAN
+PY 2009
+VL 19
+IS 1
+BP 31
+EP 36
+DI 10.1111/j.1552-6569.2008.00250.x
+UT WOS:000262283700008
+PM 18798778
+ER
+
+PT J
+AU Nilsson, F
+   Nilsson, T
+   Edvinsson, L
+   Bjorkman, S
+   Nordstrom, CH
+AF Nilsson, F
+   Nilsson, T
+   Edvinsson, L
+   Bjorkman, S
+   Nordstrom, CH
+TI Effects of dihydroergotamine and sumatriptan on isolated human cerebral
+   and peripheral arteries and veins
+SO ACTA ANAESTHESIOLOGICA SCANDINAVICA
+AB Background: Pharmacological cerebral vasoconstriction has recently been suggested as treatment for patients with increased intracranial pressure (ICP) after severe traumatic brain lesions. Hypothetically, a moderate constriction of precapillary resistance vessels might be advantageous since it decreases intracapillary blood pressure, and a contraction of cerebral veins might effectively reduce intracranial blood volume and ICP. This report examines the in vitro effects of two vasoconstrictors, dihydroergotamine (DHE) and sumatriptan, which may be considered for treatment of increased ICP.
+   Methods: The reactivity of isolated small human cerebral, subcutaneous and omental arteries and veins were studied during exposure to different concentrations of DHE and sumatriptan.
+   Results: Both sumatriptan and DHE induced concentration-dependent contractions in human cerebral arteries and veins and 50% of maximum contractions were obtained at significantly lower concentrations of DHE than of sumatriptan. The maximum contraction of cerebral arteries was significantly higher with sumatriptan than with DHE. Both drugs caused contractions of subcutaneous arteries at concentrations of 10(-7)-10(-6)M, which is within the therapeutic concentration range of sumatriptan, while no effect was obtained in omental vessels.
+   Conclusions: Both DHE and sumatriptan cause contraction of isolated human cortical arteries and veins at very low concentrations. The differences observed between the two drugs may be explained by the fact that DHE is an or-adrenergic as well as a 5-HT agonist while sumatriptan acts specifically on 5-HT receptors. The study supports the hypothesis underlying the use of DHE for the treatment of increased ICP in patients with severe traumatic brain lesions.
+OI Edvinsson, Lars/0000-0002-1805-1346
+SN 0001-5172
+PD NOV
+PY 1997
+VL 41
+IS 10
+BP 1257
+EP 1262
+DI 10.1111/j.1399-6576.1997.tb04641.x
+UT WOS:A1997YJ91500005
+PM 9422289
+ER
+
+PT J
+AU Alonso-Cánovas, A
+   Masjuan, J
+   González-Valcárcel, I
+   Matute-Lozano, MC
+   Garcia-Caldentey, J
+   Alonso-Arias, MA
+   Garcia-Avello, A
+AF Alonso-Canovas, A.
+   Masjuan, J.
+   Gonzalez-Valcarcel, I.
+   Matute-Lozano, M. C.
+   Garcia-Caldentey, J.
+   Alonso-Arias, M. A.
+   Garcia-Avello, A.
+TI Cerebral venous thrombosis: when etiology makes the difference
+SO NEUROLOGIA
+AB Objectives. To make a retrospective study of the clinical, etiological, diagnostic and prognostic features of cerebral vein and sinus thrombosis (CVST) diagnosed at our University Hospital.
+   Methods. We performed a systematic research of the clinical records of our University Hospital's electronic database (19772009) using the key words "cerebral vein or sinus thrombosis".
+   Results. Ninety-five possible cases were found, and 16 were excluded due to alternative or uncertain diagnosis. Seventy-nine patients (43 females), median age of 46 years (2-82), were studied. Hereditary or acquired thrombophilia was detected in 22 patients (27.8%): prothrombin G20210A mutation (10), factor V Leyden (3), protein C deficiency (2), homozygous MTHFR C677T mutation (1), antiphospholipid syndrome (7) and hematological conditions (3). CVST was associated with infection in 17 cases, intracranial neoplasm in 9, malignancy in 13, treatment with prothrombotic drugs in 20 (including substitutive/antineoplastic hormones and oral contraceptives) and other causes in 8. Thirteen cases were idiopathic. Clinical presentation was intracranial hypertension in 83.5%, focal deficits in 45.6% and seizures in 12.6%. Transverse (57%) and superior sagittal sinus (49.4%) were the most commonly involved. Seizures occurred in 25.3%, venous infarction in 41% and severe intracranial hypertension in 22.8%. Up to 31.6% required surgical drainage, decompressive craniectomy or ventricular drainage. Nine cases associated peripheral venous thromboembolism and 4 CVST recurred. Evolution was favorable (modified Rankin scale 0-2 at 3 months) in 74.7%. Mortality rate was 13.9% (11 patients). Neoplastic and infectious origin was significantly associated with mortality and disability.
+   Conclusion. We describe a large retrospective series of CVST where infectious and neoplastic etiologies were linked to an unfavorable outcome.
+RI masjuan, Jaime/DIW-6614-2022; Alonso-Canovas, Araceli/J-6790-2019
+SN 0213-4853
+EI 1578-1968
+PD SEP
+PY 2009
+VL 24
+IS 7
+BP 439
+EP 445
+UT WOS:000273844800002
+PM 19921552
+ER
+
+PT J
+AU Donato, UM Jr
+   Donato, S
+   Galligan, A
+AF Donato, Umberto M., Jr.
+   Donato, Sebastian
+   Galligan, Andrew
+TI Case Report of a 13-Year-Old Female With Trauma Secondary to a Fall From
+   a Golf Cart, Found to Have Intraparenchymal & Subarachnoid Hemorrhages
+   With Transverse Sinus Thrombosis
+SO CUREUS JOURNAL OF MEDICAL SCIENCE
+AB Cerebral venous sinus thrombosis (CVST) is the occlusion of cerebral veins of the brain secondary to blood clot formation. These can result in increased intracranial pressure, cerebral edema, and may even have fatal consequences such as a stroke. Despite CVSTs being considered a rare pathology, these are said to have an increased incidence in the pediatric population. These individuals with CVST are often asymptomatic causing physicians to often overlook and delay possibly life-saving interventions. The current literature is lacking on CVST examples in the "older" range of the pediatric population, specifically teenagers. Here we present the case of a 13-year-old female with trauma secondary to a fall from a golf cart, who was found to have intraparenchymal and subarachnoid hemorrhages with transverse sinus thrombosis.
+OI Donato, Umberto/0000-0002-7311-5736
+EI 2168-8184
+PD JUL 25
+PY 2022
+VL 14
+IS 7
+AR e27251
+DI 10.7759/cureus.27251
+UT WOS:000863356600035
+PM 36039220
+ER
+
+PT J
+AU Lobo, S
+   Ferro, JM
+   Barinagarrementeria, F
+   Bousser, MG
+   Canhao, P
+   Stam, J
+AF Lobo, S.
+   Ferro, J. M.
+   Barinagarrementeria, F.
+   Bousser, M. G.
+   Canhao, P.
+   Stam, J.
+CA ISCVT Investigators
+TI Shunting in Acute Cerebral Venous Thrombosis: A Systematic Review
+SO CEREBROVASCULAR DISEASES
+AB Background and Purpose: The efficacy of cerebrospinal fluid shunting to reduce intracranial hypertension and prevent fatal brain herniation in acute cerebral venous thrombosis (CVT) is unknown. Method: From the International Study on Cerebral Vein and Dural Sinus Thrombosis (ISCVT) and a systematic literature review, we retrieved acute CVT patients treated only with shunting (external ventricular drain, ventriculoperitoneal or ventriculojugular shunt). Outcome was classified at 6 months and final follow-up by the modified Rankin Scale (mRS). Results: 15 patients were collected (9 from the ISCVT and 6 from the review) who were treated with a shunt (external ventricular drain in 6 patients, a ventriculoperitoneal shunt in 8 patients or an unspecified type of shunt in another one). Eight patients (53.3%) regained independence (mRS 0-2), while 2 patients (13.3%) were left with a severe handicap (mRS 4-6) and 4 (26.7%) died despite treatment. Five patients with parenchymal lesions were shunted within 48 h from admission deterioration, 4 with an external ventricular drain: 2 (40%) recovered to independence, 2 (40%) had a severe handicap and 1 (20%) died. In contrast, all 3 patients with intracranial hypertension and no parenchymal lesions receiving a ventriculoperitoneal shunt later than 48 h regained independence. Conclusion and Implications: A quarter of acute CVT patients treated with a shunt died, and only half regained independence. With the limitation of the small number of subjects, this review suggests that shunting does not appear to be effective in preventing death from brain herniation in acute CVT. We cannot exclude that shunting may benefit patients with sustained intracranial hypertension and no parenchymal lesions. (C) 2013 S. Karger AG, Basel
+RI Stam, JAN/KJL-3923-2024; Canhao, Patricia/KPY-2217-2024
+OI Canhao, Patricia/0000-0003-3816-0416; Stam, Jan/0000-0001-7250-9744
+SN 1015-9770
+EI 1421-9786
+PY 2014
+VL 37
+IS 1
+BP 38
+EP 42
+DI 10.1159/000356524
+UT WOS:000330857800006
+PM 24356100
+ER
+
+PT J
+AU Akioka, N
+   Kuwayama, N
+   Kuroda, S
+AF Akioka, Naoki
+   Kuwayama, Naoya
+   Kuroda, Satoshi
+TI Sphenoid Wing Dural Arteriovenous Fistulas
+SO JOURNAL OF NEUROENDOVASCULAR THERAPY
+AB The sphenoid wing dural arteriovenous fistulas (DAVFs) are clinically rare. They often present as non-sinus-type arteriovenous fistulas (AVFs) and may be associated with focal neurological deficits, intracranial venous hypertension, and intracranial hemorrhage. These cases are classified as lesser or greater sphenoid wing lesions. We searched the PubMed databases for studies evaluating the clinical presentation, surgical treatment, and endovascular treatment of these lesions and analyzed 37 cases from 22 papers. A total of 17 cases had lesser sphenoid wing AVFs, and the localization of the shunts could be divided into the sinus of the lesser sphenoid wing (SLSW) or the superficial middle cerebral vein (SMCV). Most SLSW AVFs drained into the cavernous sinus, but two cases drained directly into the deep middle cerebral vein via a bridging vein. All cases with shunts directly into the SMCV had reflux into the SMCV with varices. A total of 20 cases had shunts in the greater sphenoid wing, and the localization of the shunts varied, with shunt localization, and venous return morphology dependent on variations in middle fossa venous return. Most cases had shunts in the sphenobasal vein near the foramen ovale. However, some cases had shunts in the superior ophthalmic vein, sphenopetrosal vein, and laterocavernous sinus. Many were associated with cortical venous reflux. These lesions have been treated by surgical ligation of the drainage vein and transarterial or transvenous embolization. Recently, embolization has become the standard treatment for DAVFs due to advances in endovascular techniques. This paper reviewed and discussed the angioarchitecture, clinical presentation, and treatment of these lesions to clarify the characteristics of sphenoid wing DAVFs.
+SN 1882-4072
+EI 2186-2494
+PY 2025
+VL 19
+IS 1
+AR 0034
+DI 10.5797/jnet.ra.2023-0034
+UT WOS:001425213300005
+PM 40018285
+ER
+
+PT J
+AU Ferro, JM
+   Lopes, MG
+   Rosas, MJ
+   Fontes, J
+AF Ferro, JM
+   Lopes, MG
+   Rosas, MJ
+   Fontes, J
+CA VENOPORT Investigators
+TI Delay in hospital admission of patients with cerebral vein and dural
+   sinus thrombosis
+SO CEREBROVASCULAR DISEASES
+AB Factors influencing early hospital admission have been described for several stroke types but not for cerebral vein and dural sinus thrombosis (CVT). CVT is more difficult to diagnose than arterial stroke; delay in hospital admission may postpone CVT treatment. The purposes of this study were: (1) to describe the delay between the onset of symptoms and hospital admission of patients with CVT, and (2) to identify the variables that influence that delay. We registered the interval (days) between the onset of symptoms and hospital admission in 91 consecutive patients admitted to 20 Portuguese hospitals between June 1995 and June 1998. We also studied the impact of admission delay on treatments (prescription of anticoagulants and the number of days elapsed between the onset of symptoms and start of anticoagulation and admission). Median admission delay was 4 days. Twenty-two (25%) patients were admitted within 24 h. Two thirds of the patients were admitted within 7 days and 75% within 13 days. In multiple logistic regression analysis, admission within 24 h was positively associated with mental status disorder (delirium or abulia; OR = 4.59; 95% CI = 1.41-14.89) and negatively associated with headache ( OR = 0.03; 95% CI = 0.00-0.32). Presentation as isolated intracranial hypertension was associated with admission delay of more than 4 days (OR = 2.63; 95% CI = 0.97-7.14). Papilloedema was associated with an admission delay of more than 13 days (OR = 4.69; 95% CI = 1.61-13.61). There was no association between admission delay and the proportion of anticoagulated patients. The interval between onset of symptoms and start of anticoagulation was shorter in patients admitted earlier (p = 0.0001, for either admission within 24 h, 4 or 13 days). There is a considerable delay until the clinical picture associated with CVT is recognised as justifying hospital admission, especially when patients present with symptoms identical to isolated intracranial hypertension syndrome. Copyright (C) 2005 S. Karger AG, Basel.
+RI Ferro, José/ABA-1779-2021
+OI Lopes, Mario G./0000-0002-2855-5118; Ferro, Jose/0000-0002-2343-9097
+SN 1015-9770
+EI 1421-9786
+PY 2005
+VL 19
+IS 3
+BP 152
+EP 156
+DI 10.1159/000083248
+UT WOS:000227490300003
+PM 15644627
+ER
+
+PT J
+AU YAMADA, H
+   NAKAMURA, S
+   TAJIMA, M
+   KAGEYAMA, N
+AF YAMADA, H
+   NAKAMURA, S
+   TAJIMA, M
+   KAGEYAMA, N
+TI NEUROLOGICAL MANIFESTATIONS OF PEDIATRIC ACHONDROPLASIA
+SO JOURNAL OF NEUROSURGERY
+AB The neurological and neuroradiological manifestations of pediatric achondroplasia are analyzed on the basis of 10 cases. In addition to the classical symptomatology of an enlarging head, with or without increased intracranial pressure, several patients presented symptoms related to a small foramen magnum. Respiratory problems and quadriparesis were also observed in these patients. Six patients who were treated by foramen magnum decompression showed remarkable improvement. Neuroradiological evaluation revealed a significant number of patients with dilated cortical sulci and basal cisterns, and mild dilatation of the ventricles on computerized tomography (CT) and/or ventriculography. Two patients showed signs of obstruction at the 4th ventricle outlets. Some exhibited anomalous dilatation of cerebral veins and dural sinuses, narrowing of the sinuses at the jugular foramen and enlarged emissary veins. Ventriculoperitoneal or ventriculoatrial shunts were placed in 3 patients. In the other children with a large head and dilated ventricles, head growth curves paralleled the normal slope, and there was no significant clinical evidence of increased intracranial pressure or enlarging ventricles on follow-up CT scan.
+SN 0022-3085
+EI 1933-0693
+PY 1981
+VL 54
+IS 1
+BP 49
+EP 57
+DI 10.3171/jns.1981.54.1.0049
+UT WOS:A1981KX41600008
+PM 7463120
+ER
+
+PT J
+AU Ferro, JM
+   de Sousa, DA
+AF Ferro, Jose M.
+   de Sousa, Diana Aguiar
+TI Cerebral Venous Thrombosis: an Update
+SO CURRENT NEUROLOGY AND NEUROSCIENCE REPORTS
+AB Purpose of Review The purpose of this update is to summarize the recent advances on the management of cerebral venous thrombosis (CVT). Recent Findings There is a trend in declining frequency of CVT patients presenting with focal deficits or coma and a decrease in mortality over time. Anemia and obesity were identified as risk factors for CVT. During pregnancy and puerperium, the higher risk of CVT occurs in the first months post-delivery. With appropriate management, 1/3 of comatose CVT patients can have a full recovery. The management of CVT patients includes treatment of associated conditions, anticoagulation with parenteral heparin, prevention of recurrent seizures, and decompressive neurosurgery in patients with large venous infarcts/hemorrhages with impending herniation. After the acute phase, patients should be anticoagulated for 3-12 months. Results of recently completed randomized controlled trials on endovascular treatment and comparing dabigatran with warfarin will improve the treatment of CVT.
+RI Ferro, José/ABA-1779-2021; Aguiar de Sousa, Diana/J-4105-2013
+OI Aguiar de Sousa, Diana/0000-0002-6702-7924
+SN 1528-4042
+EI 1534-6293
+PD OCT
+PY 2019
+VL 19
+IS 10
+AR 74
+DI 10.1007/s11910-019-0988-x
+UT WOS:000482394400005
+PM 31440838
+ER
+
+PT C
+AU Tsai, FY
+   Nguyen, B
+   Lin, WC
+   Hsueh, CJ
+   Yen, A
+   Meng, K
+   Kostanian, V
+AF Tsai, F. Y.
+   Nguyen, B.
+   Lin, W. -C
+   Hsueh, C. -J
+   Yen, A.
+   Meng, K.
+   Kostanian, V.
+BE Chiu, WT
+   Kao, MC
+   Hung, CC
+   Lin, SZ
+   Chen, HJ
+   Tang, SFT
+   Hoffer, B
+   Chiang, YH
+TI Endovascular procedures for cerebrovenous disorders
+SO RECONSTRUCTIVE NEUROSURGERY
+SE Acta Neurochirurgica Supplementum
+CT 5th Scientific Meeting of the Neurorehabilitation and Reconstructive
+   Neurosurgery Committee of the
+   World-Federation-of-Neurosurgical-Societies
+CY SEP 13-16, 2007
+CL Taipei, TAIWAN
+SP World Federat Neurosurg Soc, Neurorehabilitat & Reconstruct Neurosurg Comm, Int Soc Reconstruct Neurosurg
+AB Cerebral venous anomalies may have a variety of clinical consequences. MR or CT venogram can assist the imaging diagnosis, yet, cerebral angiogram may be required to confirm or establish the correct diagnosis. Venous anomalies pridsposing venous hypertension may be categorized into three major entities such as congenital variations, outflow obstruction and increased blood flow. The degree of clinical presentations of venous hypertentsion depends upon the chronicity or acuteness. Venous hypertension may lead to venous congestion with edema, hemorhage and encephalopathy. Endovascular therapeutic Procedures may be employed to relieve venous congestion either from reducing blood flow or relieving obstruction. Those endovascular treatment options include embolizaton, thrombolysis and angioplasic stentings.
+RI Hsueh, Chun-Jen/F-7319-2017; Chen, Po/B-9725-2009
+SN 0065-1419
+BN 978-3-211-78204-0
+PY 2008
+VL 101
+BP 83
+EP +
+UT WOS:000258497500014
+PM 18642639
+ER

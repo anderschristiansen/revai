@@ -105,8 +105,7 @@ export class ArticleProcessor {
 
       // Get session details for criteria
       const session = await this.supabaseUtils.getReviewSession(sessionId);
-      const criterias = JSON.stringify(session.criterias || []);
-
+      
       // Process articles in batches
       const articles = await this.supabaseUtils.getArticlesForEvaluationBySession(sessionId, batchSize);
       
@@ -119,6 +118,38 @@ export class ArticleProcessor {
       
       logger.info('SessionEval', `Processing ${articles.length} articles`);
       
+      // Format criteria for the session
+      let formattedCriterias: string;
+      if (Array.isArray(session.criterias) && session.criterias.length > 0 && typeof session.criterias[0] === 'object') {
+        const inclusionCriteria = session.criterias
+          .filter((c: any) => c.type === 'inclusion')
+          .map((c: any) => c.text);
+          
+        const exclusionCriteria = session.criterias
+          .filter((c: any) => c.type === 'exclusion')
+          .map((c: any) => c.text);
+          
+        // Format the criteria string
+        let criteriaString = '';
+        
+        if (inclusionCriteria.length > 0) {
+          criteriaString += `INCLUSION CRITERIA:\n${inclusionCriteria.join('\n')}\n\n`;
+        } else {
+          criteriaString += `INCLUSION CRITERIA: None provided\n\n`;
+        }
+        
+        if (exclusionCriteria.length > 0) {
+          criteriaString += `EXCLUSION CRITERIA:\n${exclusionCriteria.join('\n')}`;
+        } else {
+          criteriaString += `EXCLUSION CRITERIA: None provided`;
+        }
+        
+        formattedCriterias = criteriaString.trim();
+      } else {
+        // Handle legacy format for backwards compatibility
+        formattedCriterias = JSON.stringify(session.criterias || []);
+      }
+      
       // Group articles by file
       const articlesByFile = this.groupArticlesByFile(articles);
       
@@ -128,7 +159,7 @@ export class ArticleProcessor {
         
         // Process each article in the file
         for (const article of fileArticles) {
-          const result = await this.processArticle(article, criterias, settings);
+          const result = await this.processArticle(article, formattedCriterias, settings);
           
           results.push({
             articleId: article.id,

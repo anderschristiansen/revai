@@ -41,7 +41,28 @@ export async function POST(
       );
     }
 
-    const formattedCriteria = criterias.map((c: { text: string }) => c.text).join("\n");
+    // Format the criteria string
+    let formattedCriteria = '';
+    
+    const inclusionCriteria = criterias
+      .filter((c: { text: string, type: string }) => c.type === 'inclusion')
+      .map((c: { text: string }) => c.text);
+      
+    const exclusionCriteria = criterias
+      .filter((c: { text: string, type: string }) => c.type === 'exclusion')
+      .map((c: { text: string }) => c.text);
+    
+    if (inclusionCriteria.length > 0) {
+      formattedCriteria += `INCLUSION CRITERIA:\n${inclusionCriteria.join('\n')}\n\n`;
+    } else {
+      formattedCriteria += `INCLUSION CRITERIA: None provided\n\n`;
+    }
+    
+    if (exclusionCriteria.length > 0) {
+      formattedCriteria += `EXCLUSION CRITERIA:\n${exclusionCriteria.join('\n')}`;
+    } else {
+      formattedCriteria += `EXCLUSION CRITERIA: None provided`;
+    }
 
     // Call the Supabase Edge Function
     const { data, error } = await supabase.functions.invoke('evaluate-articles', {

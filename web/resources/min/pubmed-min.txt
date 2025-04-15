@@ -1,0 +1,902 @@
+<1>
+Unique Identifier
+  40024373
+Title
+  Case report: Central venous stenosis-induced intracranial hypertension.
+Source
+  Neurocirugia (English Edition). 500652, 2025 Feb 28.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Cardona-Collazos S; Arias A; Torres-Figueroa S; Meneses CA; Varon CA
+Authors Full Name
+  Cardona-Collazos, Santiago; Arias, Ashly; Torres-Figueroa, Sofia; Meneses, Carlos Alberto; Varon, Carlos Andres.
+Institution
+  Cardona-Collazos, Santiago. Surgical Sciences Interest Group, Pontificia Universidad Javeriana Cali, Cali, Colombia. Electronic address: scardonac@javerianacali.edu.co.
+   Arias, Ashly. Surgical Sciences Interest Group, Pontificia Universidad Javeriana Cali, Cali, Colombia.
+   Torres-Figueroa, Sofia. ICESI University, Cali, Colombia.
+   Meneses, Carlos Alberto. Neurosurgery Department, Clinica Nueva de Cali, Cali, Colombia.
+   Varon, Carlos Andres. Neurosurgery Department, Clinica Nueva de Cali, Cali, Colombia.
+Keyword Heading
+    Central venous stenosis
+   Doctrina de Monro-Kellie
+   Estenosis venosa Central
+   Hemodialysis
+   Hemodialisis
+   Hipertension intracraneal
+   Intracranial hypertension
+   Monro-Kellie doctrine
+   Renal replacement therapy
+   Terapia de reemplazo renal
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Intracranial hypertension due to central venous stenosis (CVS) is an under-recognized but potentially morbid complication of central venous catheters that can have a benign course if recognized and treated early. Here we report a case of a 23-year-old woman requiring hemodialysis via right subclavian catheter who presented with an intracranial hypertension syndrome and sudden visual loss secondary to right innominate vein thrombosis that improved after angioplasty treatment. This case illustrates how CVS can alter the pressure gradient between the subarachnoid space and the cerebral venous sinuses by increasing venous pressure, affecting cerebrospinal fluid drainage. Since CVS is a common finding in patients receiving hemodialysis, intracranial hypertension due to central venous stenosis is a differential diagnosis to consider in patients of this type who present with intracranial hypertension syndrome. Copyright © 2025 Sociedad Espanola de Neurocirugia. Published by Elsevier Espana, S.L.U. All rights reserved.
+Publication Type
+  Case Reports. Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1016%2fj.neucie.2025.500652
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:40024373&id=doi:10.1016%2Fj.neucie.2025.500652&issn=2529-8496&isbn=&volume=&issue=&spage=500652&pages=500652&date=2025&title=Neurocirugia+%28English+Edition%29&atitle=Case+report%3A+Central+venous+stenosis-induced+intracranial+hypertension.&aulast=Cardona-Collazos&pid=%3Cauthor%3ECardona-Collazos+S%3BArias+A%3BTorres-Figueroa+S%3BMeneses+CA%3BVaron+CA%3C%2Fauthor%3E%3CAN%3E40024373%3C%2FAN%3E%3CDT%3ECase+Reports%3C%2FDT%3E
+
+<2>
+Unique Identifier
+  40017235
+Title
+  A Case Series Study of Airway Pressure Release Ventilation in Patients with Intracranial Pathologies and Acute Respiratory Failure.
+Source
+  Journal of Intensive Care Medicine. 8850666251320550, 2025 Feb 27.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Schmidt L; Lamb K; Jankovic D; Kalasauskas D; Kosterhon M; Ringel F; Kerz T
+Author NameID
+  Schmidt, Leon; ORCID: https://orcid.org/0000-0002-8830-0002
+   Ringel, Florian; ORCID: https://orcid.org/0000-0003-3132-7543
+   Kerz, Thomas; ORCID: https://orcid.org/0000-0003-3983-3969
+Authors Full Name
+  Schmidt, Leon; Lamb, Keith; Jankovic, Dragan; Kalasauskas, Darius; Kosterhon, Michael; Ringel, Florian; Kerz, Thomas.
+Institution
+  Schmidt, Leon. Department of Neurosurgery, University Medical Center Mainz, Mainz, Germany.
+   Lamb, Keith. Respiratory Therapy Services, University of Virginia Medical Center, Charlottesville, Virginia, USA.
+   Jankovic, Dragan. Department of Neurosurgery, University Medical Center Mainz, Mainz, Germany.
+   Kalasauskas, Darius. Department of Neurosurgery, University Medical Center Mainz, Mainz, Germany.
+   Kosterhon, Michael. Department of Neurosurgery, University Medical Center Mainz, Mainz, Germany.
+   Ringel, Florian. Department of Neurosurgery, University Medical Center Mainz, Mainz, Germany.
+   Kerz, Thomas. Department of Neurosurgery, University Medical Center Mainz, Mainz, Germany.
+Keyword Heading
+    acute respiratory failure
+   airway pressure release ventilation
+   brain injuries
+   intracranial pressure
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Background: Airway Pressure Release Ventilation (APRV) is an alternate mode of ventilation in acute respiratory failure (ARF), but there is inconsistent data to support its use over other modes of ventilation. Because of increased intrathoracic pressure for most of the respiratory cycle, a negative impact of APRV on intracranial pressure (ICP) and cerebral perfusion pressure (CPP) has been hypothesized. We evaluated the effects of APRV ventilation, with particular attention to ICP, CPP and ICP-directed therapy, in a real-world cohort of neuro-ICU patients. Methods: Retrospective single-center analysis from January 2021 to December 2023 of neurosurgical ICU patients with ICP monitoring. APRV was used as a rescue mode at the physician's discretion when the Horovitz index (PaO2/FIO2 ratio) fell below 150 despite optimized conventional ventilation. Results: Between 2021 and 2023, APRV was utilized in 29 patients undergoing a total of 60 episodes. Forty patients (66.7%) were female, median age was 49.5 (Q1 34; Q3 61.25) years.After transition to APRV, mean FiO2 decreased by 4.3% (t = 3.5, p < .001) and mean PaO2 increased by 22.7 mm Hg (t = 4.2, p < .001). The Horovitz index improved by 44.6 mm Hg (t = 4.9, p < .001). Mean compliance did not differ after transition to APRV (-1.5 ml/mbar, t = -0.9, p = .4). During the APRV episode, mean ICP was 1.2 mm Hg lower (t = 2.6, p = .01), while mean CPP was 1.6 mm Hg higher (t = -0.9, p = .4) and the intensity of ICP-directed therapy (TIL) was significantly lower (X2 = 92.771, p < .001). Conclusion:  APRV was hemodynamically tolerated in 29 out of 33 patients, and was safe with regard to ICP, CPP, and the intensity of ICP-directed therapy. Oxygenation was increased by APRV. 4 out of 33 patients would not tolerate APRV for hemodynamic reasons, APRV therefore was stopped immediately.
+Publication Type
+  Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f08850666251320550
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:40017235&id=doi:10.1177%2F08850666251320550&issn=0885-0666&isbn=&volume=&issue=&spage=8850666251320550&pages=8850666251320550&date=2025&title=Journal+of+Intensive+Care+Medicine&atitle=A+Case+Series+Study+of+Airway+Pressure+Release+Ventilation+in+Patients+with+Intracranial+Pathologies+and+Acute+Respiratory+Failure.&aulast=Schmidt&pid=%3Cauthor%3ESchmidt+L%3BLamb+K%3BJankovic+D%3BKalasauskas+D%3BKosterhon+M%3BRingel+F%3BKerz+T%3C%2Fauthor%3E%3CAN%3E40017235%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<3>
+Unique Identifier
+  39988546
+Title
+  Intracranial hypertension in a patient with Hutchinson-Gilford progeria syndrome.
+Source
+  Archives de Pediatrie.  2025 Feb 22.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Bonneau L; Rupin-Mas M; Descamps M; Vincent M; Romefort B; Van Bogaert P
+Authors Full Name
+  Bonneau, Lea; Rupin-Mas, Mailys; Descamps, Magali; Vincent, Marie; Romefort, Benedicte; Van Bogaert, Patrick.
+Institution
+  Bonneau, Lea. Department of Pediatric Neurology, Angers University Hospital, 4 rue Larrey, 49100 Angers, France. Electronic address: lea.bonneau@chu-rennes.fr.
+   Rupin-Mas, Mailys. Department of Pediatric Neurology, Angers University Hospital, 4 rue Larrey, 49100 Angers, France. Electronic address: mailys.rupin@chu-angers.fr.
+   Descamps, Magali. Pediatric ophtalmology, department of Pediatry, Angers University Hospital, 4 rue Larrey, 49100 Angers, France. Electronic address: magali.descamps@chu-angers.fr.
+   Vincent, Marie. Department of Genetics, Nantes University Hospital, 38 bd Jean-Monnet rez-de-chaussee 44093 Nantes, France. Electronic address: marie.vincent@chu-nantes.fr.
+   Romefort, Benedicte. Department of Pediatric Cardiology, Nantes University Hospital, 38 bd Jean-Monnet rez-de-chaussee 44093 Nantes, France. Electronic address: benedicte.romefort@chu-nantes.fr.
+   Van Bogaert, Patrick. Department of Pediatric Neurology, Angers University Hospital, 4 rue Larrey, 49100 Angers, France; Laboratoire Angevin de Recherche en Ingenierie des Systemes (LARIS), University of Angers, 62 avenue Notre Dame du Lac 49000 Angers, France. Electronic address: patrick.vanbogaert@chu-angers.fr.
+Keyword Heading
+    Hutchinson-Gilford syndrome
+   Intracranial hypertension
+   Progeria
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Hutchinson-Gilford syndrome, also known as progeria, is a rare genetic disorder that causes premature and accelerated ageing from the neonatal period. The disease is caused by de novo mutations in the LMNA gene. Patients present with a range of symptoms, including skin, bone, joint and cardiac disorders, as well as characteristic facial dysmorphia. Intracranial hypertension is not a known symptom of this disease. To the best of our knowledge, no case of a patient with Hutchinson-Gilford syndrome presenting with intracranial hypertension without a traumatic context has been reported in the literature to date. This report presents the case of a child diagnosed with Hutchinson-Gilford syndrome who presented with intracranial hypertension at the age of three years, with no secondary cause identified. Long-term treatment with acetazolamide was required to control the intracranial hypertension. We hypothesise that the intracranial hypertension may be related to vascular abnormalities observed in Hutchinson-Gilford syndrome, which may cause a venous drainage dysfunction. To support the hypothesis of a non-random association between intracranial hypertension and Hutchinson-Gilford syndrome, further reports of similar cases in children with the syndrome are required. Copyright © 2025. Published by Elsevier Masson SAS.
+Publication Type
+  Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1016%2fj.arcped.2024.12.006
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39988546&id=doi:10.1016%2Fj.arcped.2024.12.006&issn=0929-693X&isbn=&volume=&issue=&spage=&pages=&date=2025&title=Archives+de+Pediatrie&atitle=Intracranial+hypertension+in+a+patient+with+Hutchinson-Gilford+progeria+syndrome.&aulast=Bonneau&pid=%3Cauthor%3EBonneau+L%3BRupin-Mas+M%3BDescamps+M%3BVincent+M%3BRomefort+B%3BVan+Bogaert+P%3C%2Fauthor%3E%3CAN%3E39988546%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<4>
+Unique Identifier
+  39970391
+Title
+  Mechanical Ventilation in Patients with Acute Brain Injuries - A Pathophysiology-based Approach.
+Source
+  American Journal of Respiratory & Critical Care Medicine.  2025 Feb 19.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Georgopoulos D; Taran S; Bolaki M; Akoumianaki E
+Authors Full Name
+  Georgopoulos, Dimitrios; Taran, Shaurya; Bolaki, Maria; Akoumianaki, Evangelia.
+Institution
+  Georgopoulos, Dimitrios. University Hospital of Heraklion, Department of Intensive Care Medicine, Heraklion, Greece; georgopd@uoc.gr.
+   Taran, Shaurya. University of Toronto Faculty of Medicine, Division of Critical Care Medicine, Toronto, Ontario, Canada.
+   Bolaki, Maria. University of Crete, Intensive Care Medicine, Heraklion University Hospital, Rethimno, Crete, Greece.
+   Akoumianaki, Evangelia. University General Hospital of Heraklion, Intensive Care Unit, Heraklion, Greece.
+   Akoumianaki, Evangelia. University of Crete School of Medicine, Heraklion, Greece.
+Keyword Heading
+    Intracranial pressure, Intracranial volume, Pleural pressure, central venous pressure, arterial pressure
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Applying mechanical ventilation and selecting ventilatory strategies in patients with acute brain injuries, especially those with lung damage, is challenging. Static (positive-end-expiratory-pressure) and dynamic (intra-tidal) changes in ventilator pressure, via complex pathways, influence cerebral arterial inflow and cerebral venous pressure and thus, cerebral blood volume and intracranial pressure. In this process, the relationship between airway pressure and pleural and trans-alveolar pressures, heavily affected by elastance of chest wall and lung, respectively, plays a central role. This relationship determines the extent to which a static and dynamic increase in airway pressure affect the cardiac function and venous return curves, which govern the static and dynamic arterial and central venous pressures. The integrity of cerebral autoregulation determines whether static changes in arterial pressure alter cerebral arterial inflow. Conversely, dynamic changes in arterial pressure during the breath are followed by corresponding changes in cerebral arterial inflow, due to inability of autoregulation to control rapid arterial pressure fluctuations. The flow dynamics in the jugular veins and the relationship between intracranial and sagittal sinus pressures determine whether static and dynamic changes in central venous pressure alter cerebral venous pressure. Setting the ventilator and planning strategies should be individualized and guided by the complex, interactive effects among central nervous, respiratory and cardiovascular systems on cerebral blood volume and cerebral perfusion and intracranial pressures. Following a logical framework, the clinician may anticipate the likely effects of ventilator settings and strategies on cerebral hemodynamics, enabling a more individualized approach in setting the ventilator and planning ventilatory strategies.
+Publication Type
+  Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1164%2frccm.202409-1813SO
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39970391&id=doi:10.1164%2Frccm.202409-1813SO&issn=1073-449X&isbn=&volume=&issue=&spage=&pages=&date=2025&title=American+Journal+of+Respiratory+%26+Critical+Care+Medicine&atitle=Mechanical+Ventilation+in+Patients+with+Acute+Brain+Injuries+-+A+Pathophysiology-based+Approach.&aulast=Georgopoulos&pid=%3Cauthor%3EGeorgopoulos+D%3BTaran+S%3BBolaki+M%3BAkoumianaki+E%3C%2Fauthor%3E%3CAN%3E39970391%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<5>
+Unique Identifier
+  39242195
+Title
+  Cerebral venous pressures, sinus trans-stenosis gradients, and intracranial pressures are dramatically augmented by head position.
+Source
+  Journal of Neurointerventional Surgery.  2025 Jan 26.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Fargen KM; Midtlien JP; Margraf CR; Wiater AH; Marcet PA; Siddiqui AH; Hui F
+Author NameID
+  Midtlien, Jackson P; ORCID: http://orcid.org/0009-0004-9460-1196
+   Siddiqui, Adnan H; ORCID: http://orcid.org/0000-0002-9519-0059
+   Hui, Ferdinand; ORCID: http://orcid.org/0000-0003-3759-7886
+Authors Full Name
+  Fargen, Kyle M; Midtlien, Jackson P; Margraf, Connor R; Wiater, Angelina H; Marcet, Paul A; Siddiqui, Adnan H; Hui, Ferdinand.
+Institution
+  Fargen, Kyle M. Department of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, North Carolina, USA.
+   Midtlien, Jackson P. Department of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, North Carolina, USA jmidtlie@wakehealth.edu.
+   Margraf, Connor R. Department of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, North Carolina, USA.
+   Wiater, Angelina H. Department of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, North Carolina, USA.
+   Marcet, Paul A. Department of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, North Carolina, USA.
+   Siddiqui, Adnan H. Department of Neurosurgery, University at Buffalo, Buffalo, New York, USA.
+   Hui, Ferdinand. Department of Neurointerventional Surgery, Queen's Medical Center, Honolulu, Hawaii, USA.
+Keyword Heading
+    Intracranial Pressure
+   Standards
+   Stenosis
+   Technique
+   Vein
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  BACKGROUND: Cerebral venous pressures, sinus trans-stenosis gradients, and intracranial pressures are thought to be influenced by head position.
+
+   OBJECTIVE: To investigate the intracranial manifestations of these changes in patients with cerebral venous outflow disorders (CVD).
+
+   METHODS: A retrospective chart review was conducted on 22 consecutive adult patients who underwent diagnostic cerebral venography with rotational internal jugular vein (IJV) venography and superior sagittal sinus (SSS) pressure measurements in multiple head positions. Data on venous sinus pressures, IJV pressures, and lumbar puncture (LP) opening pressures (OP) were collected and analyzed.
+
+   RESULTS: The study found that 21 (96%) patients experienced increases in SSS pressures with head rotation, with a mean increase of 25.4%. Intracranial trans-stenosis gradients showed significant variability with head position. Additionally, LP OP measurements increased by an average of 44.3% with head rotation. Dynamic IJV stenosis was observed in all patients during rotational testing.
+
+   CONCLUSION: Head position significantly affects cerebral venous pressures, trans-stenosis gradients, and intracranial pressures in patients with CVD or intracranial hypertension. These findings highlight the need for dynamic venography in the diagnostic evaluation of these conditions to better understand their pathophysiology and improve treatment strategies. Copyright © Author(s) (or their employer(s)) 2024. No commercial re-use. See rights and permissions. Published by BMJ.
+Publication Type
+  Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1136%2fjnis-2024-022167
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39242195&id=doi:10.1136%2Fjnis-2024-022167&issn=1759-8478&isbn=&volume=&issue=&spage=jnis&pages=&date=2025&title=Journal+of+Neurointerventional+Surgery&atitle=Cerebral+venous+pressures%2C+sinus+trans-stenosis+gradients%2C+and+intracranial+pressures+are+dramatically+augmented+by+head+position.&aulast=Fargen&pid=%3Cauthor%3EFargen+KM%3BMidtlien+JP%3BMargraf+CR%3BWiater+AH%3BMarcet+PA%3BSiddiqui+AH%3BHui+F%3C%2Fauthor%3E%3CAN%3E39242195%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<6>
+Unique Identifier
+  39643504
+Title
+  Cohort analysis of carotid artery puncture injection of urokinase combined with warfarin for the treatment of cerebral venous sinus thrombosis.
+Source
+  Asian Journal of Surgery.  2024 Dec 05.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Yin Y; Long X; Huang J; Chen L; Huang Z
+Authors Full Name
+  Yin, Yanqing; Long, Xiaoao; Huang, Jincheng; Chen, Liyi; Huang, Zixiong.
+Institution
+  Yin, Yanqing. Department of Neurosurgery, Affiliated Hospital of Guangdong Medical University, Zhanjiang, 524001, China. Electronic address: zjbest1982@163.com.
+   Long, Xiaoao. Department of Neurosurgery, Affiliated Hospital of Guangdong Medical University, Zhanjiang, 524001, China.
+   Huang, Jincheng. Department of Neurosurgery, Affiliated Hospital of Guangdong Medical University, Zhanjiang, 524001, China.
+   Chen, Liyi. Department of Neurosurgery, Affiliated Hospital of Guangdong Medical University, Zhanjiang, 524001, China. Electronic address: z.jcly@163.com.
+   Huang, Zixiong. Department of Neurosurgery, Affiliated Hospital of Guangdong Medical University, Zhanjiang, 524001, China. Electronic address: 49364398@qq.com.
+Keyword Heading
+    Carotid artery puncture injection
+   Cerebral venous sinus thrombosis
+   Low-molecular-weight heparin
+   Therapeutic effect
+   Urokinase
+   Warfarin
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  PURPOSE: Cerebral venous sinus thrombosis (CVST) is a cerebrovascular disease with increased intracranial pressure from impaired cerebral venous drainage and absorption of cerebrospinal fluid. There is a lack of evidence to prove the benefits and risks of thrombolytic and anticoagulant therapies. We conducted a retrospective analysis of the therapeutic effect of carotid artery puncture injections of urokinase combined with warfarin in patients with CVST.
+
+   METHODS: Thirty-six patients with CVST who received a carotid artery puncture injection of urokinase combined with warfarin were retrospectively analyzed in the urokinase group, while 30 patients with CVST received subcutaneous low-molecular-weight heparin (LMWH) and warfarin, as the control group. Clinical parameters, imaging data, laboratory test data, treatment plans, and follow-up information were collected and compared.
+
+   RESULTS: At discharge, the GCS score was higher in the urokinase group than that in the control group. In the urokinase group, no patient died. Recanalization of the venous sinus trunk was observed in 32 patients. While two patients died in the control group, recanalization of the venous sinus trunk was achieved in 20 patients. A follow-up examination showed that recovery in the urokinase group was also better than that in the control group.
+
+   CONCLUSION: This study suggests that carotid artery puncture injection of urokinase combined with warfarin is a safe and effective option for CVST, can reduce CVST recurrence. However, this was a retrospective study with a relatively small sample size, and future studies are needed to confirm the procedure's feasibility. Copyright © 2024 Asian Surgical Association and Taiwan Society of Coloproctology. Published by Elsevier B.V. All rights reserved.
+Publication Type
+  Journal Article.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1016%2fj.asjsur.2024.11.160
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39643504&id=doi:10.1016%2Fj.asjsur.2024.11.160&issn=1015-9584&isbn=&volume=&issue=&spage=&pages=&date=2024&title=Asian+Journal+of+Surgery&atitle=Cohort+analysis+of+carotid+artery+puncture+injection+of+urokinase+combined+with+warfarin+for+the+treatment+of+cerebral+venous+sinus+thrombosis.&aulast=Yin&pid=%3Cauthor%3EYin+Y%3BLong+X%3BHuang+J%3BChen+L%3BHuang+Z%3C%2Fauthor%3E%3CAN%3E39643504%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<7>
+Unique Identifier
+  39576735
+Title
+  Balloon protection of the Labbe vein during venous sinus stenting.
+Source
+  Neuroradiology Journal. 19714009241303148, 2024 Nov 22.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Leonard-Lorant I; Koch G; Goudot M; Hasiu A; Juravle C; Harangus M; Beaujeux R; Pop R
+Author NameID
+  Harangus, Mihai; ORCID: https://orcid.org/0009-0003-8857-0031
+   Pop, Raoul; ORCID: https://orcid.org/0000-0003-4417-1496
+   Leonard-Lorant, Ian; RINGGOLD: 36604
+   Koch, Guillaume; RINGGOLD: 36604
+   Hasiu, Anca; RINGGOLD: 36604
+   Juravle, Ciprian; RINGGOLD: 36604
+   Harangus, Mihai; RINGGOLD: 36604
+   Beaujeux, Remy; RINGGOLD: 36604
+   Beaujeux, Remy; RINGGOLD: 560036
+   Pop, Raoul; RINGGOLD: 36604
+   Pop, Raoul; RINGGOLD: 560036
+Authors Full Name
+  Leonard-Lorant, Ian; Koch, Guillaume; Goudot, Mathilde; Hasiu, Anca; Juravle, Ciprian; Harangus, Mihai; Beaujeux, Remy; Pop, Raoul.
+Institution
+  Leonard-Lorant, Ian. Interventional Neuroradiology Department, Strasbourg University Hospitals, France.
+   Koch, Guillaume. Interventional Radiology Department, Strasbourg University Hospitals, France.
+   Goudot, Mathilde. Neurology Department, Emile Muller Hospital, France.
+   Hasiu, Anca. Interventional Neuroradiology Department, Strasbourg University Hospitals, France.
+   Juravle, Ciprian. Interventional Neuroradiology Department, Strasbourg University Hospitals, France.
+   Harangus, Mihai. Interventional Neuroradiology Department, Strasbourg University Hospitals, France.
+   Beaujeux, Remy. Interventional Neuroradiology Department, Strasbourg University Hospitals, France.
+   Beaujeux, Remy. Institut de Chirurgie Minime Invasive Guidee par l'Image, France.
+   Pop, Raoul. Interventional Neuroradiology Department, Strasbourg University Hospitals, France.
+   Pop, Raoul. Institut de Chirurgie Minime Invasive Guidee par l'Image, France.
+   Pop, Raoul. INSERM UMR_S1255, Universite de Strasbourg, France.
+Keyword Heading
+    Venous sinus
+   idiopathic intracranial hypertension
+   pulsatile tinnitus
+   stenting
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Background: Endovascular treatment of dural venous sinus stenosis using auto-expandable stents is progressively becoming a central part in the management of patients with idiopathic intracranial hypertension (IIH) and pulsatile tinnitus. One potential concern during stenting is impairment of venous outflow in the Labbe vein, which usually drains in close proximity to the culprit transverse sinus stenosis. Methods: We propose a technique which can counteract venous outflow impairment, consisting of temporary balloon protection of the Labbe vein during stent deployment. Results: We illustrate the use of this technique in a case of IIH with intrinsic dural sinus stenosis induced by a large arachnoid granulation situated close to the insertion of the Labbe vein. The stent was deployed under temporary balloon inflation in order to deflect the arachnoid granulation away from the vein ostium. Conclusions: In selected cases of intrinsic stenosis, temporary balloon protection can be used to avoid Labbe vein flow impairment during venous sinus stenting.
+Publication Type
+  Journal Article.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f19714009241303148
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39576735&id=doi:10.1177%2F19714009241303148&issn=1971-4009&isbn=&volume=&issue=&spage=19714009241303148&pages=19714009241303148&date=2024&title=Neuroradiology+Journal&atitle=Balloon+protection+of+the+Labbe+vein+during+venous+sinus+stenting.&aulast=Leonard-Lorant&pid=%3Cauthor%3ELeonard-Lorant+I%3BKoch+G%3BGoudot+M%3BHasiu+A%3BJuravle+C%3BHarangus+M%3BBeaujeux+R%3BPop+R%3C%2Fauthor%3E%3CAN%3E39576735%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<8>
+Unique Identifier
+  39256923
+Title
+  Analysis of cerebral venous sinus stenosis by flat panel angiographic CT (FP-CT) to guide treatment for idiopathic intracranial hypertension.
+Source
+  Interventional Neuroradiology. 15910199241267318, 2024 Sep 10.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Theiss P; Nico E; Abou-Mrad T; Tshibangu M; Madapoosi A; McGuire LS; Alaraj A
+Author NameID
+  Theiss, Peter; ORCID: https://orcid.org/0009-0005-9076-3961
+   Tshibangu, Mpuekela; ORCID: https://orcid.org/0009-0004-5838-7508
+   Madapoosi, Adrusht; ORCID: https://orcid.org/0000-0002-3601-9534
+   McGuire, Laura Stone; ORCID: https://orcid.org/0000-0001-8063-9389
+   Alaraj, Ali; ORCID: https://orcid.org/0000-0002-1491-4634
+   Theiss, Peter; RINGGOLD: 14681
+   Nico, Elsa; RINGGOLD: 14681
+   Abou-Mrad, Tatiana; RINGGOLD: 14681
+   Tshibangu, Mpuekela; RINGGOLD: 14681
+   Madapoosi, Adrusht; RINGGOLD: 14681
+   McGuire, Laura Stone; RINGGOLD: 14681
+   Alaraj, Ali; RINGGOLD: 14681
+Authors Full Name
+  Theiss, Peter; Nico, Elsa; Abou-Mrad, Tatiana; Tshibangu, Mpuekela; Madapoosi, Adrusht; McGuire, Laura Stone; Alaraj, Ali.
+Institution
+  Theiss, Peter. Department of Neurosurgery, University of Illinois at Chicago, Chicago, IL, USA.
+   Nico, Elsa. Department of Neurosurgery, University of Illinois at Chicago, Chicago, IL, USA.
+   Abou-Mrad, Tatiana. Department of Neurosurgery, University of Illinois at Chicago, Chicago, IL, USA.
+   Tshibangu, Mpuekela. Department of Neurosurgery, University of Illinois at Chicago, Chicago, IL, USA.
+   Madapoosi, Adrusht. Department of Neurosurgery, University of Illinois at Chicago, Chicago, IL, USA.
+   McGuire, Laura Stone. Department of Neurosurgery, University of Illinois at Chicago, Chicago, IL, USA.
+   Alaraj, Ali. Department of Neurosurgery, University of Illinois at Chicago, Chicago, IL, USA.
+Keyword Heading
+    Idiopathic intracranial hypertension
+   endovascular neurosurgery
+   stent
+   venous sinus stenosis
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  INTRODUCTION: Cerebral venous sinus stenting (CVSS) is an effective treatment for idiopathic intracranial hypertension (IIH) secondary to dural venous sinus stenosis. Traditional selection of patients for CVSS has been made by microcatheter manometry, but pressure measurements are often equivocal. Here we present the results of a series of cases in which venous flat-panel CT (FP-CT) was used as an adjunct to microcatheter manometry to improve decision making and precise stent placement during CVSS.
+
+   METHODS: Ten consecutive patients with IIH underwent angiography with microcatheter manometry and venous FP-CT, with CVSS if indicated by the results. Cross-sectional measurements of the narrowed sinus were obtained on FP-CT before and after stenting. After the procedure, clinical outcomes were tracked. Follow-up with quantitative MRA with sinus flow measurements was also performed, when available.
+
+   RESULTS: There was an exponential correlation between measured pressure gradient and degree of stenosis calculated using venous FP-CT. All patients with both a high degree of stenosis measured by FP-CT and a high pressure gradient across the stenosis showed a clinical benefit from stenting.
+
+   CONCLUSIONS: True measurement of the cross-sectional area of the dural sinus, made by venous phase FP-CT, has a high degree of correlation with elevated venous pressure gradient across the point of stenosis. Even in a limited series of cases, we found an exponential decrease in flow with increasing severity of stenosis. Furthermore, patients with both an elevated venous pressure gradient and critical stenosis of the sinus on FP-CT showed symptomatic improvement after stenting.
+Publication Type
+  Journal Article.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f15910199241267318
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39256923&id=doi:10.1177%2F15910199241267318&issn=1591-0199&isbn=&volume=&issue=&spage=15910199241267318&pages=15910199241267318&date=2024&title=Interventional+Neuroradiology&atitle=Analysis+of+cerebral+venous+sinus+stenosis+by+flat+panel+angiographic+CT+%28FP-CT%29+to+guide+treatment+for+idiopathic+intracranial+hypertension.&aulast=Theiss&pid=%3Cauthor%3ETheiss+P%3BNico+E%3BAbou-Mrad+T%3BTshibangu+M%3BMadapoosi+A%3BMcGuire+LS%3BAlaraj+A%3C%2Fauthor%3E%3CAN%3E39256923%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<9>
+Unique Identifier
+  39113487
+Title
+  Idiopathic intracranial hypertension pathogenesis: The jugular hypothesis.
+Source
+  Interventional Neuroradiology. 15910199241270660, 2024 Aug 08.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Fargen KM; Midtlien JP; Margraf CR; Hui FK
+Author NameID
+  Midtlien, Jackson P; ORCID: https://orcid.org/0009-0004-9460-1196
+   Hui, Ferdinand K; RINGGOLD: 24797
+Authors Full Name
+  Fargen, Kyle M; Midtlien, Jackson P; Margraf, Connor R; Hui, Ferdinand K.
+Institution
+  Fargen, Kyle M. Departments of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, NC, USA.
+   Midtlien, Jackson P. Departments of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, NC, USA.
+   Margraf, Connor R. Departments of Neurological Surgery and Radiology, Wake Forest University, Winston-Salem, NC, USA.
+   Hui, Ferdinand K. Neuroscience Institute, Division of Neurointerventional Surgery, Queen's Medical Center, Honolulu, HI, USA.
+Keyword Heading
+    Glymphatics
+   idiopathic intracranial hypertension
+   internal jugular vein
+   pseudotumor cerebri
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  In spite of expanding research, idiopathic intracranial hypertension (IIH) and its spectrum conditions remain challenging to treat. The failure to develop effective treatment strategies is largely due to poor agreement on a coherent disease pathogenesis model. Herein we provide a hypothesis of a unifying model centered around the internal jugular veins (IJV) to explain the development of IIH, which contends the following: (1) the IJV are prone to both physiological and pathological compression throughout their course, including compression near C1 and the styloid process, dynamic muscular/carotid compression from C3 to C6, and lymphatic compression; (2) severe dynamic IJV stenosis with developments of large cervical gradients is common in IIH-spectrum patients and significantly impacts intracranial venous and cerebrospinal fluid (CSF) pressures; (3) pre-existing IJV stenosis may be exacerbated by infectious/inflammatory etiologies that induce retromandibular cervical lymphatic hypertrophy; (4) extra-jugular venous collaterals dilate with chronic use but are insufficient resulting in impaired aggregate cerebral venous outflow; (5) poor IJV outflow initiates, or in conjunction with other factors, contributes to intracranial venous hypertension and congestion leading to higher CSF pressures and intracranial pressure (ICP); (6) glymphatic congestion occurs but is insufficient to compensate and this pathway becomes overwhelmed; and (7) elevated intracranial CSF pressures triggers extramural venous sinus stenosis in susceptible individuals that amplifies ICP elevation producing severe clinical manifestations. Future studies must focus on establishing norms for dynamic cerebral venous outflow and IJV physiology in the absence of disease so that we may better understand and define the diseased state.
+Publication Type
+  Journal Article.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f15910199241270660
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39113487&id=doi:10.1177%2F15910199241270660&issn=1591-0199&isbn=&volume=&issue=&spage=15910199241270660&pages=15910199241270660&date=2024&title=Interventional+Neuroradiology&atitle=Idiopathic+intracranial+hypertension+pathogenesis%3A+The+jugular+hypothesis.&aulast=Fargen&pid=%3Cauthor%3EFargen+KM%3BMidtlien+JP%3BMargraf+CR%3BHui+FK%3C%2Fauthor%3E%3CAN%3E39113487%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<10>
+Unique Identifier
+  39094581
+Title
+  Treatment of tumor-induced cerebral venous sinus stenosis: Technical note and review of the literature.
+Source
+  Interventional Neuroradiology. 15910199241267341, 2024 Aug 02.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  White TG; Chen A; Dalal S; Mehta SH; Turpin J; Papadimitriou K; Link T; Patsalides A
+Author NameID
+  White, Timothy G; ORCID: https://orcid.org/0000-0002-3604-4334
+   Chen, Adrian; ORCID: https://orcid.org/0000-0003-2311-1398
+   Turpin, Justin; ORCID: https://orcid.org/0000-0002-3686-2695
+   White, Timothy G; RINGGOLD: 24945
+   Chen, Adrian; RINGGOLD: 24945
+   Dalal, Sidd; RINGGOLD: 24945
+   Mehta, Shyle H; RINGGOLD: 24945
+   Turpin, Justin; RINGGOLD: 24945
+   Papadimitriou, Kyriakos; RINGGOLD: 24945
+   Link, Thomas; RINGGOLD: 24945
+   Patsalides, Athos; RINGGOLD: 24945
+Authors Full Name
+  White, Timothy G; Chen, Adrian; Dalal, Sidd; Mehta, Shyle H; Turpin, Justin; Papadimitriou, Kyriakos; Link, Thomas; Patsalides, Athos.
+Institution
+  White, Timothy G. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Chen, Adrian. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Dalal, Sidd. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Dalal, Sidd. Department of Neurology, North Shore University Hospital/Long Island Jewish Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Mehta, Shyle H. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Turpin, Justin. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Papadimitriou, Kyriakos. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Link, Thomas. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+   Patsalides, Athos. Department of Neurological Surgery, North Shore University Hospital/Donald and Barbara Zucker School of Medicine at Hofstra/Northwell, Manhasset, NY, USA.
+Keyword Heading
+    Cranial venous sinuses
+   elevated intracranial pressure
+   endovascular
+   meningioma
+   stent
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  INTRODUCTION: Tumors that invade or compress the venous sinuses have the potential to impair venous drainage. Rarely, this may be so severe as to induce intracranial hypertension. Other studies have previously described venous sinus stenting (VSS) for the treatment of these symptomatic lesions. In this report, we present our series of eight cases of VSS for symptomatic tumor-induced venous sinus stenosis and review the existing literature.
+
+   CASES: Eight patients with mostly intracranial tumors were found to have symptomatic venous sinus stenosis with the most common presenting symptom being elevated intracranial pressure. Six of the eight (75%) patients presented with papilledema on neuro-ophthalmological exam. The most affected locations were the transverse and sigmoid sinuses in four patients, followed by the superior sagittal sinus in three patients. All eight patients underwent VSS with no adverse events. In total, 6 out of 8 (75%) of patients had complete resolution of their symptoms, while the remaining patients experienced at least partial improvement.
+
+   CONCLUSION: Tumors that cause symptomatic venous sinus stenosis may be successfully managed with VSS to improve venous drainage. This may facilitate continued conservative management of meningiomas or allow for treatment with noninvasive means, such as stereotactic radiosurgery. Depending on the size of the target stenosis, balloon-mounted coronary stents may be a suitable option to treat these lesions.
+Publication Type
+  Journal Article.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f15910199241267341
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:39094581&id=doi:10.1177%2F15910199241267341&issn=1591-0199&isbn=&volume=&issue=&spage=15910199241267341&pages=15910199241267341&date=2024&title=Interventional+Neuroradiology&atitle=Treatment+of+tumor-induced+cerebral+venous+sinus+stenosis%3A+Technical+note+and+review+of+the+literature.&aulast=White&pid=%3Cauthor%3EWhite+TG%3BChen+A%3BDalal+S%3BMehta+SH%3BTurpin+J%3BPapadimitriou+K%3BLink+T%3BPatsalides+A%3C%2Fauthor%3E%3CAN%3E39094581%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<11>
+Unique Identifier
+  38715430
+Title
+  Occipital venous sinus stenting for idiopathic intracranial hypertension and pulsatile tinnitus: A case series. [Review]
+Source
+  Interventional Neuroradiology. 15910199241245451, 2024 May 07.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Papadimitriou K; Werner C; White TG; Golub D; Mehta SH; Turpin J; Shah K; Patsalides A
+Author NameID
+  Papadimitriou, Kyriakos; ORCID: https://orcid.org/0000-0002-6025-1755
+   White, Timothy G; ORCID: https://orcid.org/0000-0002-3604-4334
+   Golub, Danielle; ORCID: https://orcid.org/0000-0001-8732-796X
+   Turpin, Justin; ORCID: https://orcid.org/0000-0002-3686-2695
+   Shah, Kevin; ORCID: https://orcid.org/0000-0003-0896-2266
+   Papadimitriou, Kyriakos; RINGGOLD: 5799
+   Werner, Cassidy; RINGGOLD: 5799
+   White, Timothy G; RINGGOLD: 5799
+   Golub, Danielle; RINGGOLD: 5799
+   Mehta, Shyle H; RINGGOLD: 5799
+   Turpin, Justin; RINGGOLD: 5799
+   Shah, Kevin; RINGGOLD: 5799
+   Patsalides, Athos; RINGGOLD: 5799
+Authors Full Name
+  Papadimitriou, Kyriakos; Werner, Cassidy; White, Timothy G; Golub, Danielle; Mehta, Shyle H; Turpin, Justin; Shah, Kevin; Patsalides, Athos.
+Institution
+  Papadimitriou, Kyriakos. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+   Werner, Cassidy. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+   White, Timothy G. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+   Golub, Danielle. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+   Mehta, Shyle H. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+   Turpin, Justin. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+   Shah, Kevin. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+   Patsalides, Athos. Department of Neurosurgery, Northwell Health, Manhasset, NY, USA.
+Comments
+  Erratum in (EIN)
+Keyword Heading
+    Occipital sinus
+   dural venous sinus stenting
+   idiopathic intracranial hypertension
+   pulsatile tinnitus
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Venous sinus stenting for dural venous sinus outflow obstruction due to an intrinsic filling obstruction or extrinsic stenosis is an increasingly popular treatment strategy for idiopathic intracranial hypertension (IIH) and isolated pulsatile tinnitus (PT). The most common site of stenosis is the lateral venous sinus at the transverse-sigmoid junction. Approximately 10% of the population has a persistent occipital venous sinus (OVS), a variant that may be the dominant venous drainage pathway in the setting of a hypoplastic or aplastic transverse sinus. OVS stenosis has been rarely associated with IIH and isolated PT with only a handful published cases. We herein report a retrospective series of OVS stenting in five patients, four of whom presented with non-IIH PT and one with IIH.
+Publication Type
+  Journal Article. Review.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f15910199241245451
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:38715430&id=doi:10.1177%2F15910199241245451&issn=1591-0199&isbn=&volume=&issue=&spage=15910199241245451&pages=15910199241245451&date=2024&title=Interventional+Neuroradiology&atitle=Occipital+venous+sinus+stenting+for+idiopathic+intracranial+hypertension+and+pulsatile+tinnitus%3A+A+case+series.&aulast=Papadimitriou&pid=%3Cauthor%3EPapadimitriou+K%3BWerner+C%3BWhite+TG%3BGolub+D%3BMehta+SH%3BTurpin+J%3BShah+K%3BPatsalides+A%3C%2Fauthor%3E%3CAN%3E38715430%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<12>
+Unique Identifier
+  38425221
+Title
+  3D digital subtracted angiography venous roadmapping for endovascular management of dural venous stenosis.
+Source
+  Interventional Neuroradiology. 15910199241236323, 2024 Feb 29.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Zhu F; Liao L; Bracard S; Harsan O; Lopes De Medeiros L; Derelle AL; Braun M; Gory B; Anxionnat R
+Author NameID
+  Zhu, Francois; ORCID: https://orcid.org/0000-0003-3838-9608
+   Bracard, Serge; ORCID: https://orcid.org/0000-0001-9423-6660
+   Zhu, Francois; RINGGOLD: 26920
+   Liao, Liang; RINGGOLD: 26920
+   Bracard, Serge; RINGGOLD: 26920
+   Harsan, Oana; RINGGOLD: 26920
+   Lopes De Medeiros, Luana; RINGGOLD: 26920
+   Derelle, Anne-Laure; RINGGOLD: 26920
+   Braun, Marc; RINGGOLD: 26920
+   Gory, Benjamin; RINGGOLD: 26920
+   Anxionnat, Rene; RINGGOLD: 26920
+Authors Full Name
+  Zhu, Francois; Liao, Liang; Bracard, Serge; Harsan, Oana; Lopes De Medeiros, Luana; Derelle, Anne-Laure; Braun, Marc; Gory, Benjamin; Anxionnat, Rene.
+Institution
+  Zhu, Francois. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Zhu, Francois. IADI, INSERM U1254, Universite de Lorraine, Nancy, France.
+   Liao, Liang. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Liao, Liang. INRIA, LORIA, CNRS, Universite de Lorraine, Nancy, France.
+   Bracard, Serge. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Bracard, Serge. IADI, INSERM U1254, Universite de Lorraine, Nancy, France.
+   Harsan, Oana. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Lopes De Medeiros, Luana. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Derelle, Anne-Laure. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Braun, Marc. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Braun, Marc. IADI, INSERM U1254, Universite de Lorraine, Nancy, France.
+   Gory, Benjamin. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Gory, Benjamin. IADI, INSERM U1254, Universite de Lorraine, Nancy, France.
+   Anxionnat, Rene. Department of Diagnostic and Therapeutic Neuroradiology, CHRU Nancy, Nancy, France.
+   Anxionnat, Rene. IADI, INSERM U1254, Universite de Lorraine, Nancy, France.
+Keyword Heading
+    3D navigation
+   cerebral venous navigation
+   dural sinus stenting
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Stenting of the dural venous sinuses has emerged as a therapeutic option for intracranial hypertension and pulsatile tinnitus. However, venous endovascular navigation faces challenges due to lower-quality roadmaps compared to arterial navigation. This study explores the application of three-dimensional (3D) rotational venography in assessing the cerebral venous vasculature and its potential for venous navigation. The methods involve venous 3D digital subtracted angiography (DSA) in patients with dural venous stenosis, with image acquisition using a biplane angiographic system. The results highlight the enhanced spatial resolution of 3D venous imaging, providing anatomical information crucial for precise characterization of stenosis and understanding cortical venous drainage. 3D venous roadmapping is shown to improve endovascular venous navigation, offering synchronized and rotatable 3D roadmaps, providing a comprehensive approach to optimize endovascular venous interventions.
+Publication Type
+  Journal Article.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f15910199241236323
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:38425221&id=doi:10.1177%2F15910199241236323&issn=1591-0199&isbn=&volume=&issue=&spage=15910199241236323&pages=15910199241236323&date=2024&title=Interventional+Neuroradiology&atitle=3D+digital+subtracted+angiography+venous+roadmapping+for+endovascular+management+of+dural+venous+stenosis.&aulast=Zhu&pid=%3Cauthor%3EZhu+F%3BLiao+L%3BBracard+S%3BHarsan+O%3BLopes+De+Medeiros+L%3BDerelle+AL%3BBraun+M%3BGory+B%3BAnxionnat+R%3C%2Fauthor%3E%3CAN%3E38425221%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<13>
+Unique Identifier
+  32491381
+Title
+  Epiphora.
+Book Title
+  StatPearls
+Source
+  StatPearls Publishing.  2024 01.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Authors
+  Patel J; Levin A; Patel BC
+Authors Full Name
+  Patel, Jay; Levin, Ariana; Patel, Bhupendra C..
+Institution
+  Patel, Jay. University of Utah
+   Patel, Bhupendra C.. University of Utah
+Abstract
+  Patients will frequently present with "a watery eye" or "a tearing eye." Historically, this was called epiphora, but there have been recent variations in the use of different terms. Lacrimation (or lachrymation) is derived from "lacrima," Latin for tear, and essentially means "production of tears," although it is often used to describe the "shedding of tears" or to cry. Lacrimation may be basal (basic tear production), reflexive (to stimuli such as surface irritation, glare, corneal ulcer, corneal exposure), and psychic (emotional). It is thought that animals do not exhibit emotional lacrimation, although recent observations of elephant mothers responding to their dead offspring have reignited this debate. The sympathetic innervation to the lacrimal gland is thought to stimulate basal tear secretion. Basal tear production decreases with age, resulting in progressive acinar atrophy, fibrosis, and lymphocytic infiltrates. Normal basal tear production is 2 microliters per minute (10 ounces per day). It may be stated that lacrimation, whether used to imply the "production of tears" or tearing from emotion or stimuli, implies the production of tears in a normal person without and blockage of the excretory system. Epiphora English texts from at least 1475 have used epiphora to mean tearing or excessive tearing. It essentially means an abnormal overflow of tears from the eye onto the face. The cause is not specified. Lately, there has been a tendency to apply the word epiphora only to tearing caused by an obstruction. This does not have any historical accuracy, and the temptation to use it in this manner should be resisted. The word derives from ancient Greek epifora: "epi" means "on," "upon," or "in addition," and "pherein," meaning "bring" or "carry." The literal meaning of the word epiphora is "to bring upon." This symptom is known to have been described in Egypt (1500 BC) and by Hippocrates (460 BC to 370 BC). Epiphora applies to excessive tearing caused by excessive tear production or secondary to poor drainage. Epiphora is sometimes subdivided into: Gustatory epiphora ("crocodile tears" caused by aberrant nerve regeneration). Reflex epiphora (reactive tear production caused by any ocular surface trauma or stimulation). Obstructive epiphora (punctal, canalicular, lacrimal sac, or lacrimal duct occlusion). Hypersecretory epiphora is the production of excessive tears. This is very rare. Plerolacrima Patients often present with the complaint that they have "a pool of tears in the eyes that interferes with vision," but not frank epiphora. This is also sometimes seen in patients after a dacryocystorhinostomy, where the tear flow may be improved, but the obstruction is not completely corrected. Ian Francis, a classically trained and thinking surgeon, coined the term "plerolacrima" in 2002. He derived it from the Greek "plero" (meaning full) and the Latin "lacrima" (tears). He noted that it was a similar derivative to the one H. M. Traquair of Edinburgh coined in 1927: "plerocephalic edema" to indicate optic nerve edema caused by raised intracranial pressure. We feel this is a useful term that completes the types of excessive tearing or pooling of tears that bother patients and is deserving of an addition to our medical lexicon. Symptoms: Epiphora can cause blurry vision, discharge if there is a lacrimal sac infection, mucoid discharge if there is a canalicular foreign body, eyelid skin excoriation from constant wiping and laxity of the lower eyelids from constant wiping The tear film is comprised of three layers: an innermost mucin layer produced by goblet cells of the conjunctiva, which are found mostly in the fornices; an aqueous layer produced by the lacrimal glands and a minor portion from the accessory lacrimal glands of Wolfring and Krause. an outermost lipid layer produced by the meibomian glands and Zeis and Moll glands (found on the eyelid margin). The mucin layer creates a wettable surface on the cornea. The aqueous layer provides a smooth surface and hydration. The lipid layer reduces surface tension and increases tear break-up time. Tears are secreted at a basal rate as well as reflexively in response to stimuli. Dysfunction of any of these components contributes to surface disease and abnormal tearing, resulting in discomfort, altered light refraction, and blurred vision. The lacrimal system has secretory and excretory components. Normally, there is a balance between tear production and drainage. When this balance is affected, either the secretory or the excretory component may produce epiphora. The secretory lacrimal system produces tears. The main lacrimal gland is located in the lacrimal fossa of the frontal bone, divided into orbital and palpebral lobes by the lateral horn of the levator aponeurosis. Accessory lacrimal glands are located in the fornices and eyelids. The trigeminal nerve, the facial nerve, sympathetic innervation, and parasympathetic innervation stimulate tear production from the lacrimal glands. The Secretory System is composed of (fig 1):  1. The Main Lacrimal Gland:  The orbital lobe. The palpebral lobe. 2. Accessory Lacrimal Glands:  Glands of Krause. Glands of Wolfring. 3. Mucin Secretors :  Goblet cells. Glands of Manz. Crypts of Henle. 4. Oil Secretors:  Meibomian glands. Glands of Moll. Glands of Zeis. The anatomical excretory lacrimal system drains tears. Tears drain from the ocular surface via puncta in the lower and upper eyelids, into the ampulla, and then through the canaliculi. In 90% of people, the upper and lower canaliculi join to form a common canaliculus. The canaliculi drain into the lacrimal sac, followed by the nasolacrimal duct, which opens in the inferior meatus of the nose. Blockage can occur within any of these components. Both positive and negative pressure systems have been proposed as mechanisms of tear flow through the excretory lacrimal system. The anatomical excretory system (the punctum, the canaliculus, and the common canalicular opening are termed the upper lacrimal system, and the lacrimal sac and the nasolacrimal duct are termed the lower lacrimal system) is composed of (figs 2, 3): 1. The puncta. 2. The canaliculus: Vertical component 2 mm upper and 2 mm lower. Horizontal component 8 mm upper and 10 mm lower. Common canalicular opening into the lacrimal sac. 3. Lacrimal sac: 12 to 15 mm vertical height. 4 to 8 mm anteroposteriorly. 3 to 5 mm in width. One-third of the lacrimal sac is above the medial canthal tendon. 4. Nasolacrimal duct: Measures 12 to 18 mm . The nasolacrimal duct angulates 15% posteriorly and 15 to 30 degrees laterally. 5. Valves and sinuses: Valve of Bochdalek. Valve of Folz. Sinus of Maier. Valve of Rosenmuller is the angulation of the common canaliculus as it enters the lacrimal sac. Valve of Krause. Valve of Hyrtl. Valve of Hasner is the most important valve as an imperforate membrane here causes congenital nasolacrimal duct obstruction. Lacrimal sac and duct diverticula. Functional Excretory System As one blinks, the orbicularis oculi muscle contracts: the pretarsal and preseptal orbicularis muscles each have a deep medial head. The contracture causes dilatation of the lacrimal sac and a suctioning effect. The lower eyelid rides upwards, and the punctum moves inwards. Tears are drawn into the punctum, canaliculus, and lacrimal sac by this pump mechanism. This pump mechanism is disturbed in the presence of facial nerve palsy. Copyright © 2024, StatPearls Publishing LLC.
+Publication Type
+  Study Guide.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&AN=32491381
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:32491381&id=doi:&issn=&isbn=&volume=&issue=&spage=&pages=&date=2024&title=%3D%3D%3D&atitle=Epiphora.&aulast=Patel&pid=%3Cauthor%3EPatel+J%3BLevin+A%3BPatel+BC%3C%2Fauthor%3E%3CAN%3E32491381%3C%2FAN%3E%3CDT%3EStudy+Guide%3C%2FDT%3E
+
+<14>
+Unique Identifier
+  29939588
+Title
+  Intracranial Hypertension.
+Book Title
+  StatPearls
+Source
+  StatPearls Publishing.  2024 01.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Authors
+  Sharma S; Hashmi MF; Davidson CL; Kumar A
+Authors Full Name
+  Sharma, Sandeep; Hashmi, Muhammad F.; Davidson, Caroline L.; Kumar, Anil.
+Institution
+  Sharma, Sandeep. Mery Fitzgerald Hospital
+   Hashmi, Muhammad F.. National Health Service
+   Davidson, Caroline L.. University of Nebraska Medical Center
+   Kumar, Anil. Great Plains Health
+Abstract
+  Intracranial hypertension is a condition characterized by elevated pressure within the skull. The increase in pressure can exert significant stress on the brain and other intracranial structures, potentially leading to a range of neurological symptoms and complications. Intracranial hypertension's clinical manifestations vary depending on the underlying cause, severity of pressure elevation, and individual patient factors. Common symptoms may include severe headaches, visual disturbances, nausea, vomiting, tinnitus, and, in severe cases, seizures or coma. Diagnosing intracranial hypertension typically involves a combination of clinical evaluation, results of neuroimaging studies like computed tomography (CT) and magnetic resonance imaging (MRI), and intracranial pressure (ICP) measurement via invasive or noninvasive techniques. Early recognition and prompt management of this condition are essential to prevent potential complications, including permanent neurological damage and even death. Managing ICH typically involves addressing the underlying cause, optimizing cerebral perfusion, and sometimes surgical interventions to relieve pressure on the brain. Cerebrospinal Fluid and Intracranial Pressure The human skull has a fixed volume of approximately 1400 to 1700 mL. Intracranial content volume comprises 80% brain parenchyma, 10% cerebrospinal fluid, and 10% blood. The choroid plexus is the main CSF producer and regulator, secreting around 20 mL per hour, averaging 450 mL per day. Arachnoid granulations reabsorb CSF and drain it into the venous system at similar rates. Normal cerebrospinal fluid (CSF) production varies by age, with typically high production during infancy that declines and stabilizes in childhood and adulthood. CSF pressures greater than 250 mm H20 in adults and 200 mm H20 in children generally signify increased ICP. Intracranial volume is more or less constant once the sutures completely ossify. Intracranial tissue or fluid volume elevation can raise intracranial pressure, which can occur in the presence of intracranial masses, ventricular stenosis, and hematomas. A large part of treating intracranial hypertension involves mitigating the risk of increased ICP and making timely clinical decisions to prevent adverse consequences. Copyright © 2024, StatPearls Publishing LLC.
+Publication Type
+  Study Guide.
+Year of Publication
+  2024
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&AN=29939588
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:29939588&id=doi:&issn=&isbn=&volume=&issue=&spage=&pages=&date=2024&title=%3D%3D%3D&atitle=Intracranial+Hypertension.&aulast=Sharma&pid=%3Cauthor%3ESharma+S%3BHashmi+MF%3BDavidson+CL%3BKumar+A%3C%2Fauthor%3E%3CAN%3E29939588%3C%2FAN%3E%3CDT%3EStudy+Guide%3C%2FDT%3E
+
+<15>
+Unique Identifier
+  37385444
+Title
+  Chiari Malformation Type 1 and Semi-Sitting Position-A Suitable Alternative for Patients with High BMI.
+Source
+  World Neurosurgery.  2023 Jun 27.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Bastianon Santiago R; Kaye B; Hagerty V; Mandel M; Dabecco R; Ali A; Obrzut M; Botero J; Borghei-Razavi H; Adada B
+Authors Full Name
+  Bastianon Santiago, Raphael; Kaye, Brandon; Hagerty, Vivian; Mandel, Mauricio; Dabecco, Rocco; Ali, Assad; Obrzut, Michal; Botero, Juan; Borghei-Razavi, Hamid; Adada, Badih.
+Institution
+  Bastianon Santiago, Raphael. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA.
+   Kaye, Brandon. Nova Southeastern University, Dr. Kiran C. Patel College of Allopathic Medicine, Fort Lauderdale, Florida, USA.
+   Hagerty, Vivian. Department of Surgery, Florida Atlantic University, Charles E. Schmidt College of Medicine, Boca Raton, Florida, USA.
+   Mandel, Mauricio. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA.
+   Dabecco, Rocco. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA.
+   Ali, Assad. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA.
+   Obrzut, Michal. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA.
+   Botero, Juan. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA.
+   Borghei-Razavi, Hamid. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA. Electronic address: borgheh2@ccf.org.
+   Adada, Badih. Department of Neurosurgery, Cleveland Clinic Florida, Weston, Florida, USA.
+Keyword Heading
+    Body mass index
+   Chiari malformation type 1
+   Morbid obesity
+   Posterior fossa decompression
+   Semi-sitting position
+   Surgical positioning
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  OBJECTIVE: Chiari I malformation results from a mismatch between the posterior fossa bones and neural components. Management usually relies on surgical treatment. Despite being the most common assumed positioning, the prone position can be challenging in high body mass index (BMI) patients (>40 kg/m2).
+
+   METHODS: Between February 2020 and September 2021, 4 consecutive patients with class III obesity underwent posterior fossa decompression. The authors describe nuances of the positioning and perioperative details.
+
+   RESULTS: No perioperative complications were reported. These patients are at a lower risk of bleeding and increased intracranial pressure as a consequence of low intra-abdominal pressure and venous return. In this context, the semi-sitting position, with the aid of accurate monitoring for venous air embolism, seems to be an advantageous surgical position in this group of patients.
+
+   CONCLUSIONS: We present our results and technical nuances on positioning high BMI patients for posterior fossa decompression using a semi-sitting position. Copyright © 2023 Elsevier Inc. All rights reserved.
+Publication Type
+  Journal Article.
+Year of Publication
+  2023
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1016%2fj.wneu.2023.06.071
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:37385444&id=doi:10.1016%2Fj.wneu.2023.06.071&issn=1878-8750&isbn=&volume=177&issue=&spage=e433&pages=&date=2023&title=World+Neurosurgery&atitle=Chiari+Malformation+Type+1+and+Semi-Sitting+Position-A+Suitable+Alternative+for+Patients+with+High+BMI.&aulast=Bastianon+Santiago&pid=%3Cauthor%3EBastianon+Santiago+R%3BKaye+B%3BHagerty+V%3BMandel+M%3BDabecco+R%3BAli+A%3BObrzut+M%3BBotero+J%3BBorghei-Razavi+H%3BAdada+B%3C%2Fauthor%3E%3CAN%3E37385444%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<16>
+Unique Identifier
+  33176472
+Title
+  Dural venous sinus thrombosis after lumbar puncture in a patient with idiopathic intracranial hypertension.
+Source
+  European Journal of Ophthalmology. 1120672120970406, 2020 Nov 11.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  Publisher
+Authors
+  Garg A; Rajendram P; Muccilli A; Noel de Tilly L; Micieli JA
+Author NameID
+  Garg, Anubhav; ORCID: https://orcid.org/0000-0002-9172-3049
+   Micieli, Jonathan A; ORCID: https://orcid.org/0000-0003-4911-9152
+Authors Full Name
+  Garg, Anubhav; Rajendram, Phavalan; Muccilli, Alexandra; Noel de Tilly, Lyne; Micieli, Jonathan A.
+Institution
+  Garg, Anubhav. Faculty of Medicine, University of Toronto, Toronto, Ontario, Canada.
+   Rajendram, Phavalan. Division of Neurology, Department of Medicine, University of Toronto, Toronto, Ontario, Canada.
+   Muccilli, Alexandra. Division of Neurology, Department of Medicine, University of Toronto, Toronto, Ontario, Canada.
+   Noel de Tilly, Lyne. Department of Medical Imaging, Division of Neuroradiology, St. Michael's Hospital, University of Toronto, Toronto, Ontario, Canada.
+   Micieli, Jonathan A. Division of Neurology, Department of Medicine, University of Toronto, Toronto, Ontario, Canada.
+   Micieli, Jonathan A. Department of Ophthalmology and Vision Sciences, University of Toronto, Toronto, Ontario, Canada.
+   Micieli, Jonathan A. Kensington Vision and Research Centre, Toronto, Ontario, Canada.
+Keyword Heading
+    Papilloedema
+   idiopathic intracranial hypertension
+   magnetic resonance imaging
+   venous thrombosis
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  INTRODUCTION: Idiopathic intracranial hypertension (IIH) is one of the most common causes of papilloedema seen by ophthalmologists and neurologists. Patients with IIH routinely undergo lumbar puncture (LP) for diagnosis. Dural venous sinus thrombosis (DVST) is a rare complication of cerebrospinal fluid pressure (CSF)-lowering procedures such as lumbar puncture and epidural and may be an intracranial complication of IIH.
+
+   CASE DESCRIPTION: A 29-year-old obese woman was diagnosed with severe idiopathic intracranial hypertension (IIH) after she presented with new-onset headache, pulsatile tinnitus and blurred vision. Magnetic resonance imaging (MRI) and venography (MRV) were normal apart from signs of intracranial hypertension. Lumbar puncture (LP) revealed an opening pressure of 40 cm of water. Due to the severity of the papilloedema and vision loss, she was referred for a ventriculoperitoneal shunt and found to have venous sinus thrombosis involving the superior sagittal sinus on the pre-operative computed tomography (CT) head 5 days after the LP. CT venography (CTV) one day later and MRV 3 days later showed significant worsening as the thrombosis extended into the deep venous system. She was started on therapeutic heparin and her symptoms and vision improved and she did not develop any neurological complications.
+
+   CONCLUSIONS: DVST should be considered in IIH patients who have worsening papilloedema or symptoms of intracranial hypertension. Repeat venous imaging can prevent devastating consequences such as venous infarcts of haemorrhage in these patients.
+Publication Type
+  Journal Article.
+Year of Publication
+  2020
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=medp&DO=10.1177%2f1120672120970406
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:33176472&id=doi:10.1177%2F1120672120970406&issn=1120-6721&isbn=&volume=32&issue=2&spage=1120672120970406&pages=1120672120970406&date=2020&title=European+Journal+of+Ophthalmology&atitle=Dural+venous+sinus+thrombosis+after+lumbar+puncture+in+a+patient+with+idiopathic+intracranial+hypertension.&aulast=Garg&pid=%3Cauthor%3EGarg+A%3BRajendram+P%3BMuccilli+A%3BNoel+de+Tilly+L%3BMicieli+JA%3C%2Fauthor%3E%3CAN%3E33176472%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<17>
+Unique Identifier
+  40063991
+Title
+  Iatrogenic intracranial venous hypertension treated with intracranial venous stenting: illustrative case.
+Source
+  Journal of Neurosurgery Case Lessons. 9(10), 2025 Mar 10.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  PubMed-not-MEDLINE
+Authors
+  Snyder MH; Heilman CB; Malek AM
+Authors Full Name
+  Snyder, M Harrison; Heilman, Carl B; Malek, Adel M.
+Institution
+  Snyder, M Harrison. Department of Neurosurgery, Tufts Medical Center, Boston, Massachusetts.
+   Heilman, Carl B. Department of Neurosurgery, Tufts Medical Center, Boston, Massachusetts.
+   Malek, Adel M. Department of Neurosurgery, Tufts Medical Center, Boston, Massachusetts.
+Keyword Heading
+    endovascular treatment
+   idiopathic intracranial hypertension
+   intracranial pressure
+   transverse sinus stenting
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  BACKGROUND: Venous sinus injury resulting in thrombosis is a possible complication of skull base surgery and neck dissection. Although usually asymptomatic, sinus thrombosis can obstruct the dominant cranial venous outflow pathways, leading to a cycle of increased intracranial pressure secondary to venous congestion, which further compresses the remaining sinuses in a positive feedback loop. This can present with symptoms resembling idiopathic intracranial hypertension.
+
+   OBSERVATIONS: A patient underwent a left mastoidectomy for chronic mastoiditis, complicated by injury of the ipsilateral dominant sigmoid sinus, with subsequent thrombosis. The patient developed chronic severe headaches, papilledema, visual blurring, and tinnitus. Angiography revealed a contralateral arachnoid granulation causing stenosis of the remaining venous outflow tract with a pressure gradient of 18 mm Hg. Transverse sinus stenting led to normalization of the gradient and resolution of symptoms.
+
+   LESSONS: Injury of a dominant cranial venous outflow pathway led to a feedback loop that caused increased intracranial pressures and worsening contralateral transverse sinus stenosis, which was successfully treated using transverse sinus stenting. Venous congestive physiology leading to intracranial hypertension is underrecognized as a complication of venous injury in skull base surgery and responds to stenting if the patient's symptoms are refractory to conservative management or anticoagulation. https://thejns.org/doi/10.3171/CASE24781.
+Publication Type
+  Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=pmnm&DO=10.3171%2fCASE24781
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:40063991&id=doi:10.3171%2FCASE24781&issn=2694-1902&isbn=&volume=9&issue=10&spage=&pages=&date=2025&title=Journal+of+Neurosurgery+Case+Lessons&atitle=Iatrogenic+intracranial+venous+hypertension+treated+with+intracranial+venous+stenting%3A+illustrative+case.&aulast=Snyder&pid=%3Cauthor%3ESnyder+MH%3BHeilman+CB%3BMalek+AM%3C%2Fauthor%3E%3CAN%3E40063991%3C%2FAN%3E%3CDT%3EJournal+Article%3C%2FDT%3E
+
+<18>
+Unique Identifier
+  40046389
+Title
+  Oral Contraceptive-Induced Cerebral Venous Thrombosis: A Case Report.
+Source
+  Cureus. 17(2):e78407, 2025 Feb.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  PubMed-not-MEDLINE
+Authors
+  Amri SF; Alsudairy NM
+Authors Full Name
+  Amri, Shami F; Alsudairy, Najlaa M.
+Institution
+  Amri, Shami F. College of Pharmacy, Jazan University, Jazan, SAU.
+   Alsudairy, Najlaa M. Family Medicine, National Guard Hospital, Jeddah, SAU.
+Keyword Heading
+    anticoagulation
+   cerebral venous thrombosis
+   estrogen-induced thrombosis
+   hypercoagulability
+   magnetic resonance venography
+   oral contraceptive pills
+   prothrombotic state
+   stroke in young adults
+   thromboembolism
+   venous infarction
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Cerebral venous thrombosis (CVT) is a rare, potentially life-threatening condition that occurs when blood clots form in the venous sinuses of the brain, leading to impaired venous drainage, increased intracranial pressure, and neurological deficits. We discuss the case of a 32-year-old female who presented with a four-day history of worsening headache, nausea, vomiting, and right-sided weakness. She was on oral contraceptive pills (OCPs) for two years for menstrual regulation. Neuroimaging, including non-contrast CT, CT venography, and MRI with MR venography, confirmed the diagnosis of CVT involving the superior sagittal sinus and right transverse sinus, with evidence of venous infarction. Laboratory investigations showed elevated D-dimer, but thrombophilia testing was negative. The patient was immediately started on anticoagulation therapy with low-molecular-weight heparin (LMWH), later transitioned to warfarin, and received supportive care. Symptoms improved significantly within days, and follow-up imaging at three months showed partial recanalization. The patient was advised to discontinue OCPs permanently and provided counseling on alternative contraceptive methods. This report emphasizes the importance of early recognition, timely neuroimaging, and appropriate anticoagulation in the management of OCP-associated CVT. Long-term follow-up is crucial to monitor for recanalization and to reduce the risk of recurrence. Copyright © 2025, Amri et al.
+Publication Type
+  Case Reports. Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=pmnm&DO=10.7759%2fcureus.78407
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:40046389&id=doi:10.7759%2Fcureus.78407&issn=2168-8184&isbn=&volume=17&issue=2&spage=e78407&pages=e78407&date=2025&title=Cureus&atitle=Oral+Contraceptive-Induced+Cerebral+Venous+Thrombosis%3A+A+Case+Report.&aulast=Amri&pid=%3Cauthor%3EAmri+SF%3BAlsudairy+NM%3C%2Fauthor%3E%3CAN%3E40046389%3C%2FAN%3E%3CDT%3ECase+Reports%3C%2FDT%3E
+
+<19>
+Unique Identifier
+  40018499
+Title
+  Atypical Presentation of Pneumocephalus Post Ventriculoperitoneal Shunt in a Patient With a History of Endoscopic Endonasal Skull Base Approach: A Case Report.
+Source
+  Cureus. 17(1):e78123, 2025 Jan.
+VI 1
+Record Owner
+  From MEDLINE, a database of the U.S. National Library of Medicine.
+Status
+  PubMed-not-MEDLINE
+Authors
+  Alalawi RM; Th Alharthi W; Almaimani RF; Almusa AA
+Authors Full Name
+  Alalawi, Rahaf M; Th Alharthi, Waseem; Almaimani, Reem F; Almusa, Abdulaziz A.
+Institution
+  Alalawi, Rahaf M. College of Medicine, Taif University, Taif, SAU.
+   Th Alharthi, Waseem. College of Medicine, Taif University, Taif, SAU.
+   Almaimani, Reem F. College of Medicine, Batterjee Medical College for Science and Technology, Jeddah, SAU.
+   Almusa, Abdulaziz A. Neurosurgery, Prince Sultan Military Medical Hospital, Riyadh, SAU.
+Keyword Heading
+    csf leak
+   endoscopic endonasal
+   epidermoid cyst
+   hydrocephalous
+   tension pneumocephalus
+Keyword Heading Owner
+  NOTNLM
+Abstract
+  Pneumocephalus, commonly seen after trauma, surgical intervention, or meningitis, is rarely associated with ventriculoperitoneal shunt (VPS) procedures. We present a unique case of tension pneumocephalus in a 26-year-old female who experienced two distinct episodes of pneumocephalus. She presented with right-sided facial numbness, hearing loss, blurry vision, and gait disturbance. Magnetic resonance imaging (MRI) revealed a large extra-axial lesion at the right petrous apex extending to the middle cranial fossa. The patient underwent an extended endoscopic endonasal approach for tumor resection, and the pathological diagnosis revealed an epidermoid cyst. Postoperatively, she improved. However, she developed abducens nerve palsy followed by extensive pneumocephalus with intraventricular extension, necessitating skull base defect repair. Six weeks later, she presented with acute hydrocephalus secondary to meningitis from Klebsiella pneumoniae, confirmed by positive cerebrospinal fluid (CSF) cultures. She was treated with external ventricular drainage and antibiotic therapy, after which a VPS was inserted. Three days post-shunt insertion, the patient developed left-sided hemiparesis and swallowing dysfunction due to localized pneumocephalus within the tumor cavity compressing the brainstem. Following additional surgical intervention, her hemiparesis and other symptoms resolved. This case highlights the potential for tension pneumocephalus following ventriculoperitoneal shunt insertion for hydrocephalus. The siphon effects of CSF shunting can cause excessively negative intracranial pressure. Combined with a postoperative skull base defect, this can lead to air ingress through the defect (ball valve mechanism), causing pneumocephalus. Copyright © 2025, Alalawi et al.
+Publication Type
+  Case Reports. Journal Article.
+Year of Publication
+  2025
+Link to the Ovid Full Text or citation
+ https://ep.fjernadgang.kb.dk/login?url=http://ovidsp.ovid.com/ovidweb.cgi?T=JS&CSC=Y&NEWS=N&PAGE=fulltext&D=pmnm&DO=10.7759%2fcureus.78123
+Link to the External Link Resolver
+ https://soeg.kb.dk/discovery/openurl?institution=45KBDK_KGL&vid=45KBDK_KGL:KGL&?sid=OVID:medline&id=pmid:40018499&id=doi:10.7759%2Fcureus.78123&issn=2168-8184&isbn=&volume=17&issue=1&spage=e78123&pages=e78123&date=2025&title=Cureus&atitle=Atypical+Presentation+of+Pneumocephalus+Post+Ventriculoperitoneal+Shunt+in+a+Patient+With+a+History+of+Endoscopic+Endonasal+Skull+Base+Approach%3A+A+Case+Report.&aulast=Alalawi&pid=%3Cauthor%3EAlalawi+RM%3BTh+Alharthi+W%3BAlmaimani+RF%3BAlmusa+AA%3C%2Fauthor%3E%3CAN%3E40018499%3C%2FAN%3E%3CDT%3ECase+Reports%3C%2FDT%3E

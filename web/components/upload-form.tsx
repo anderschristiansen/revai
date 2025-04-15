@@ -10,17 +10,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/sonner";
 import { supabase } from "@/lib/supabase";
 import { PlusIcon, X, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CriteriaList } from "@/lib/types";
+import { updateSessionCriteria } from "@/lib/utils/supabase-utils";
 
 const formSchema = z.object({
   criteriaList: z.array(z.object({
     id: z.string(),
-    text: z.string().min(1, "Criterion text cannot be empty")
-  })).min(1, "Please provide at least one inclusion criterion")
+    text: z.string().min(1, "Criterion text cannot be empty"),
+    type: z.enum(["inclusion", "exclusion"])
+  }))
+  .min(1, "Please provide at least one criterion (inclusion or exclusion)")
 });
 
 type FileFormValues = z.infer<typeof formSchema>;
@@ -30,11 +34,11 @@ interface UploadFormProps {
 }
 
 const DEFAULT_CRITERIA: CriteriaList = [
-  { id: "1", text: "Studies must contain direct or indirect measurements of either ICP or CSF opening pressure." },
-  { id: "2", text: "Only studies performed on humans will be included; studies based on animal models will be excluded." },
-  { id: "3", text: "Studies must include interventions specifically targeting the systemic venous system for ICP management." },
-  { id: "4", text: "Studies must be published in English and have undergone peer review." },
-  { id: "5", text: "Studies focusing on patients treated for specific intracranial venous pathologies or obstructions using well-established methods (e.g., surgical shunts, stents, or thrombectomy) will be excluded." }
+  // { id: "1", text: "Studies must contain direct or indirect measurements of either ICP or CSF opening pressure.", type: "inclusion" },
+  // { id: "2", text: "Only studies performed on humans will be included; studies based on animal models will be excluded.", type: "inclusion" },
+  // { id: "3", text: "Studies must include interventions specifically targeting the systemic venous system for ICP management.", type: "inclusion" },
+  // { id: "4", text: "Studies must be published in English and have undergone peer review.", type: "inclusion" },
+  // { id: "5", text: "Studies focusing on patients treated for specific intracranial venous pathologies or obstructions using well-established methods (e.g., surgical shunts, stents, or thrombectomy) will be excluded.", type: "exclusion" }
 ];
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -122,17 +126,7 @@ export function UploadForm({ sessionId }: UploadFormProps) {
 
     try {
       // Update the criteria
-      const { error: updateError } = await supabase
-        .from('review_sessions')
-        .update({
-          criterias: form.getValues().criteriaList,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', sessionId);
-
-      if (updateError) {
-        throw new Error('Failed to update session criteria');
-      }
+      await updateSessionCriteria(sessionId, form.getValues().criteriaList);
 
       // Upload files sequentially
       let totalArticlesCount = 0;
@@ -213,13 +207,37 @@ export function UploadForm({ sessionId }: UploadFormProps) {
                 <div key={field.id} className="flex items-start gap-2">
                   <FormField
                     control={form.control}
+                    name={`criteriaList.${index}.type`}
+                    render={({ field }) => (
+                      <FormItem className="w-28">
+                        <FormControl>
+                          <Select 
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            disabled={isUploading}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="inclusion">Inclusion</SelectItem>
+                              <SelectItem value="exclusion">Exclusion</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
                     name={`criteriaList.${index}.text`}
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormControl>
                           <Textarea
                             {...field}
-                            placeholder="Enter an inclusion criterion..."
+                            placeholder="Enter a criterion..."
                             className="min-h-[80px] font-mono text-sm"
                             disabled={isUploading}
                           />
@@ -240,17 +258,30 @@ export function UploadForm({ sessionId }: UploadFormProps) {
                   </Button>
                 </div>
               ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mt-2"
-                onClick={() => append({ id: crypto.randomUUID(), text: "" })}
-                disabled={isUploading}
-              >
-                <PlusIcon className="h-4 w-4 mr-2" />
-                Add Criterion
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => append({ id: crypto.randomUUID(), text: "", type: "inclusion" })}
+                  disabled={isUploading}
+                >
+                  <PlusIcon className="h-4 w-4 mr-2" />
+                  Add Inclusion
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => append({ id: crypto.randomUUID(), text: "", type: "exclusion" })}
+                  disabled={isUploading}
+                >
+                  <PlusIcon className="h-4 w-4 mr-2" />
+                  Add Exclusion
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-2">

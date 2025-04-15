@@ -202,7 +202,7 @@ export default function SessionsPage() {
       const newSession = await insertReviewSession({
         title: "New Review Session",
         articles_count: 0,
-        criterias: [],
+        criterias: [], // Empty criteria array for now
       });
 
       router.push(`/review/${newSession.id}`);

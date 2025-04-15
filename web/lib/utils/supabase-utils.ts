@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { getCurrentUserId } from "./auth-utils";
-import type { ReviewSession, ReviewSessionView, File, Article, DecisionType, AISettings } from "@/lib/types";
+import type { ReviewSession, ReviewSessionView, File, Article, DecisionType, AISettings, CriteriaList } from "@/lib/types";
 
 export async function insertReviewSession(sessionData: Partial<Omit<ReviewSession, 'id' | 'user_id' | 'created_at' | 'updated_at'>>) {
   const userId = await getCurrentUserId();
@@ -386,4 +386,19 @@ export async function updateArticleDecision(articleId: string, decision: Decisio
     .eq("id", articleId);
 
   if (error) throw new Error(error.message);
+}
+
+/**
+ * Update session criteria
+ */
+export async function updateSessionCriteria(sessionId: string, criteria: CriteriaList) {
+  const { error } = await supabase
+    .from("review_sessions")
+    .update({
+      criterias: criteria,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", sessionId);
+
+  if (error) throw error;
 }
