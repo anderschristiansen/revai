@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ColumnDef, Table } from "@tanstack/react-table";
+import { useState, useEffect } from "react";
+import { ColumnDef, Table, Column } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
@@ -46,6 +46,37 @@ function TextWithLinks({ text }: { text: string }) {
 interface ArticlesTableProps {
   articles: Article[];
   onReviewArticle: (id: string, decision: DecisionType) => Promise<void>;
+}
+
+// Column visibility menu item with internal state
+function ColumnVisibilityItem({ column, label }: { column: Column<Article, unknown>; label: string }) {
+  const [isVisible, setIsVisible] = useState(column.getIsVisible());
+  
+  // Update our local state when visibility changes externally
+  useEffect(() => {
+    setIsVisible(column.getIsVisible());
+  }, [column]);
+  
+  return (
+    <DropdownMenuItem
+      key={column.id}
+      onClick={(e) => {
+        e.preventDefault();
+        const newVisibility = !isVisible;
+        setIsVisible(newVisibility);
+        column.toggleVisibility(newVisibility);
+      }}
+    >
+      <div className="flex w-full items-center justify-between">
+        <span className={isVisible ? "" : "opacity-40"}>
+          {label}
+        </span>
+        <div className="flex items-center space-x-2">
+          {isVisible && <CheckIcon className="h-4 w-4 ml-1" />}
+        </div>
+      </div>
+    </DropdownMenuItem>
+  );
 }
 
 export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps) {
@@ -402,15 +433,16 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
               {tableInstance?.getAllColumns()
                 .filter((column) => column.getCanHide())
                 .map((column) => (
-                  <DropdownMenuItem key={column.id} onClick={() => column.toggleVisibility(!column.getIsVisible())}>
-                    <div className={cn("mr-2", column.getIsVisible() ? "opacity-100" : "opacity-40")}>
-                      {column.id === "abstract" && "Abstract"}
-                      {column.id === "user_decision" && "User Decision"}
-                      {column.id === "ai_decision" && "AI Decision"}
-                      {column.id === "filename" && "File Name"}
-                    </div>
-                    {column.getIsVisible() ? <CheckIcon className="h-4 w-4" /> : null}
-                  </DropdownMenuItem>
+                  <ColumnVisibilityItem 
+                    key={column.id}
+                    column={column}
+                    label={
+                      column.id === "abstract" ? "Abstract" :
+                      column.id === "user_decision" ? "User Decision" :
+                      column.id === "ai_decision" ? "AI Decision" :
+                      column.id === "filename" ? "File Name" : column.id
+                    }
+                  />
                 ))}
             </DropdownMenuContent>
           </DropdownMenu>
