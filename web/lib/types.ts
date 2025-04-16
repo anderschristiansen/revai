@@ -61,9 +61,10 @@ export type ReviewSession = {
 
 export type ReviewSessionView = ReviewSession & {
   reviewed_count: number;
+  included_count: number;
   excluded_count: number;
-  pending_count: number;
   unsure_count: number;
+  pending_count: number;
   ai_evaluated_count: number;
   ai_included_count: number;
   ai_excluded_count: number;

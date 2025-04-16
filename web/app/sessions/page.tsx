@@ -66,7 +66,8 @@ export default function SessionsPage() {
 
         return {
           ...session,
-          reviewed_count: transformedArticles.filter(a => a.user_decision === "Include").length,
+          reviewed_count: transformedArticles.filter(a => a.user_decision).length,
+          included_count: transformedArticles.filter(a => a.user_decision === "Include").length,
           excluded_count: transformedArticles.filter(a => a.user_decision === "Exclude").length,
           unsure_count: transformedArticles.filter(a => a.user_decision === "Unsure").length,
           pending_count: transformedArticles.filter(a => !a.user_decision).length,
@@ -305,6 +306,7 @@ export default function SessionsPage() {
                 articles_count={session.articles_count}
                 files_processed={session.files_processed}
                 reviewed_count={session.reviewed_count}
+                included_count={session.included_count}
                 excluded_count={session.excluded_count}
                 unsure_count={session.unsure_count}
                 pending_count={session.pending_count}

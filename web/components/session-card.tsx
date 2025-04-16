@@ -19,6 +19,7 @@ export type SessionCardProps = {
   created_at: string;
   articles_count: number;
   reviewed_count?: number;
+  included_count?: number;
   excluded_count?: number;
   unsure_count?: number;
   pending_count?: number;
@@ -40,6 +41,7 @@ export function SessionCard({
   created_at,
   articles_count,
   reviewed_count = 0,
+  included_count = 0,
   excluded_count = 0,
   pending_count = 0,
   unsure_count = 0,
@@ -298,7 +300,7 @@ export function SessionCard({
                   <ReviewStats
                     total={articles_count}
                     reviewed={reviewed_count}
-                    included={articles_count - excluded_count - unsure_count - pending_count}
+                    included={included_count}
                     excluded={excluded_count}
                     unsure={unsure_count}
                     pending={pending_count}
