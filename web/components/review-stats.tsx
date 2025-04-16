@@ -67,7 +67,7 @@ export function ReviewStats({
 
   if (inCard) {
     return (
-      <Card className="overflow-hidden border hover:shadow-md transition-all h-full">
+      <Card className="overflow-hidden border hover:shadow-md transition-all h-full p-2">
         <CardContent className="p-2 relative">
           {/* Hover gradient effect */}
           <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">

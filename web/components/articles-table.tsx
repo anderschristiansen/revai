@@ -58,8 +58,8 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
   const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
     abstract: true,
     user_decision: true,
-    ai_decision: true,
-    filename: true,
+    ai_decision: false,
+    filename: false,
   });
 
   // Listen for column visibility changes from the table instance
@@ -284,6 +284,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         );
       },
       enableHiding: false,
+      maxSize: 400,
     },
     {
       accessorKey: "filename",
@@ -312,9 +313,9 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       header: "Abstract",
       cell: ({ row }) => {
         const abstract = row.getValue("abstract") as string;
-        // Limit abstract preview to 100 characters
+        // Show a reasonable amount of text without truncation
         const previewText = abstract ? 
-          (abstract.length > 100 ? abstract.substring(0, 100) + "..." : abstract) : 
+          abstract : 
           "No abstract available";
         
         return (
@@ -326,7 +327,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
               </div>
             }
           >
-            <div className="text-[14px] text-muted-foreground max-w-md truncate cursor-help">
+            <div className="text-[14px] text-muted-foreground cursor-help">
               {previewText}
             </div>
           </Tooltip>

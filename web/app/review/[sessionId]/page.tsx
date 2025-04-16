@@ -364,55 +364,58 @@ export default function ReviewPage() {
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto">
           <div className="mx-auto p-8 space-y-8">
-            <div className="flex gap-2 items-center mb-0">
-              {isEditingTitle ? (
-                <>
-                  <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
-                  <Button size="icon" variant="ghost" onClick={handleUpdateTitle}><CheckIcon className="h-4 w-4" /></Button>
-                  <Button size="icon" variant="ghost" onClick={cancelTitleEdit}><XIcon className="h-4 w-4" /></Button>
-                </>
-              ) : (
-                <>
-                  <h1 className="text-2xl font-bold">{session.title || "Systematic Review"}</h1>
-                  <Button size="icon" variant="ghost" onClick={() => setIsEditingTitle(true)}><PencilIcon className="h-4 w-4" /></Button>
-                </>
-              )}
-            </div>
-            {/* Back button and title */}
-            <div className="flex justify-between items-start">
-              <Link href="/sessions">
-                <Button variant="ghost" size="sm" className="pl-0 gap-1 text-muted-foreground hover:text-foreground">
-                  <ArrowLeftIcon className="h-4 w-4" /> Back to sessions
-                </Button>
-              </Link>
-            </div>
+            {/* Title, Back button, and Stats in one row */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+              <div className="mr-auto">
+                <Link href="/sessions">
+                  <Button variant="ghost" size="sm" className="pl-0 gap-1 text-muted-foreground hover:text-foreground">
+                    <ArrowLeftIcon className="h-4 w-4" /> Back to sessions
+                  </Button>
+                </Link>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              <ReviewStats
-                total={articles.length}
-                reviewed={reviewed}
-                included={included}
-                excluded={excluded}
-                unsure={unsure}
-                pending={articles.length - reviewed}
-                inCard
-              />
-              <AIStats
-                total={articles.length}
-                evaluated={aiReviewed}
-                included={aiIncluded}
-                excluded={aiExcluded}
-                unsure={aiUnsure}
-                isRunning={batchRunning}
-                isQueued={awaitingEvaluation}
-                inCard
-              />
+                {isEditingTitle ? (
+                  <div className="flex items-center gap-1">
+                    <Input 
+                      value={newTitle} 
+                      onChange={(e) => setNewTitle(e.target.value)} 
+                      className="min-w-[200px] w-auto"
+                    />
+                    <Button size="icon" variant="ghost" onClick={handleUpdateTitle}><CheckIcon className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onClick={cancelTitleEdit}><XIcon className="h-4 w-4" /></Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <h1 className="text-2xl font-bold">{session.title || "Systematic Review"}</h1>
+                    <Button size="icon" variant="ghost" onClick={() => setIsEditingTitle(true)}><PencilIcon className="h-4 w-4" /></Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Stats */}
+                <ReviewStats
+                  total={articles.length}
+                  reviewed={reviewed}
+                  included={included}
+                  excluded={excluded}
+                  unsure={unsure}
+                  pending={articles.length - reviewed}
+                  inCard
+                />
+                <AIStats
+                  total={articles.length}
+                  evaluated={aiReviewed}
+                  included={aiIncluded}
+                  excluded={aiExcluded}
+                  unsure={aiUnsure}
+                  isRunning={batchRunning}
+                  isQueued={awaitingEvaluation}
+                  inCard
+                />
             </div>
 
             {/* Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <div className="flex justify-between mb-4">
+              <div className="flex gap-4 mb-4">
                 <TabsList>
                   <TabsTrigger value="articles"><FileTextIcon className="h-4 w-4" /> Articles</TabsTrigger>
                   <TabsTrigger value="criteria"><ListChecks className="h-4 w-4" /> Criteria</TabsTrigger>

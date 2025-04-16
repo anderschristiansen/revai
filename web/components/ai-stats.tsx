@@ -84,7 +84,7 @@ export function AIStats({
   if (inCard) {
     return (
       <Card className={cn(
-        "overflow-hidden border hover:shadow-md transition-all h-full",
+        "overflow-hidden border hover:shadow-md transition-all h-full p-2",
         completed && "border-[#3b82f6]/30 hover:border-[#3b82f6]/70"
       )}>
         <CardContent className="p-2 relative">
