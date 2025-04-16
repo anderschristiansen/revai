@@ -104,8 +104,6 @@ export default function ReviewPage() {
               <div className="flex flex-col sm:flex-row gap-4 mb-4">
                 <TabsList className="w-full sm:w-auto gap-1">
                   <TabsTrigger value="articles" className="text-xs sm:text-sm"><FileTextIcon className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Articles</span></TabsTrigger>
-                  <TabsTrigger value="criteria" className="text-xs sm:text-sm"><ListChecks className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Criteria</span></TabsTrigger>
-                  <TabsTrigger value="files" className="text-xs sm:text-sm"><FolderIcon className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Files</span></TabsTrigger>
                   <TabsTrigger value="disagreements" className="text-xs sm:text-sm">
                     <ArrowLeftRight className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Disagreements</span>
                     {stats.disagreements > 0 && (
@@ -114,6 +112,8 @@ export default function ReviewPage() {
                       </Badge>
                     )}
                   </TabsTrigger>
+                  <TabsTrigger value="criteria" className="text-xs sm:text-sm"><ListChecks className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Criteria</span></TabsTrigger>
+                  <TabsTrigger value="files" className="text-xs sm:text-sm"><FolderIcon className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Files</span></TabsTrigger>
                 </TabsList>
 
                 <Tooltip content="Start AI evaluation">
@@ -145,6 +145,14 @@ export default function ReviewPage() {
                 />
               </TabsContent>
 
+              {/* Disagreements Tab */}
+              <TabsContent value="disagreements">
+                <DisagreementsTab 
+                  articles={articles}
+                  onArticleUpdate={setArticles}
+                />
+              </TabsContent>
+
               {/* Criteria Tab */}
               <TabsContent value="criteria">
                 <CriteriaForm 
@@ -169,14 +177,6 @@ export default function ReviewPage() {
                   sessionId={sessionId}
                   loading={loading}
                   sessionFiles={sessionFiles}
-                />
-              </TabsContent>
-              
-              {/* Disagreements Tab */}
-              <TabsContent value="disagreements">
-                <DisagreementsTab 
-                  articles={articles}
-                  onArticleUpdate={setArticles}
                 />
               </TabsContent>
             </Tabs>
