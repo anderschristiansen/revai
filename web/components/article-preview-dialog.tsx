@@ -187,7 +187,7 @@ export function ArticlePreviewDialog({
               {stats.duplicates > 0 && (
                 <TabsTrigger value="duplicates">
                   Duplicates
-                  <Badge variant="destructive" className="ml-1 h-5 w-5 p-0 flex items-center justify-center">
+                  <Badge variant="destructive" className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-white">
                     {stats.duplicates}
                   </Badge>
                 </TabsTrigger>
