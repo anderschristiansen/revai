@@ -1,10 +1,152 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: true
 ---
+# RevAI Project Cursor Rules
 
-# Your rule content
+## Project Overview
+RevAI is a Next.js web application with Supabase backend that helps users evaluate articles using AI. The project is organized as a monorepo with two primary workspaces:
+- `web`: Next.js 15.2.4 frontend with React 19
+- `supabase`: Supabase backend with edge functions
 
-- You can @ files here
-- You can use markdown but dont have to
+## Technology Stack
+
+### Frontend (web)
+- **Framework**: Next.js 15.2.4
+- **React**: React 19.0.0
+- **Styling**: TailwindCSS 4, shadcn/ui 0.9.5
+- **Form Handling**: react-hook-form 7.54.2, zod 3.24.2
+- **UI Components**: Radix UI primitives, Lucide React icons
+- **Data Visualization**: Recharts 2.15.1
+- **Authentication**: Supabase Authentication
+
+### Backend (supabase)
+- **Database**: PostgreSQL (via Supabase)
+- **API**: Supabase API
+- **Functions**: Supabase Edge Functions
+- **Storage**: Supabase Storage
+
+## Code Organization
+
+### Web Application Structure
+
+#### App Directory (`web/app/`)
+The app uses Next.js App Router architecture:
+- **pages**: Define routes with page.tsx files
+- **layouts**: Define layouts with layout.tsx files
+- **api routes**: Create API endpoints in app/api/
+- Each route should have its own directory with related components
+
+#### Component Organization (`web/components/`)
+- **UI Components**: Generic UI components in `components/ui/`
+- **Feature Components**: Feature-specific components directly in `components/`
+- **Auth Components**: Authentication-related components (login-form.tsx, signup-form.tsx, auth-provider.tsx)
+- **Theme Components**: Theme-related components (theme-toggle.tsx, theme-provider.tsx)
+
+#### State Management
+- **React Context**: Use contexts for global state in `web/contexts/`
+- **React Hooks**: Custom hooks in `web/hooks/`
+- **API Interactions**: Prefer server components and server actions for data fetching
+
+#### Utility Functions (`web/lib/`)
+- **Supabase Client**: Configured in `lib/supabase.ts`
+- **Type Definitions**: Store TypeScript interfaces and types in `lib/types.ts`
+- **Utility Functions**: Common utilities in `lib/utils/`
+- **Supabase Operations**: All Supabase database operations in `lib/utils/supabase-utils.ts`
+
+### Supabase Structure
+
+#### Edge Functions (`supabase/functions/`)
+- Each function should have its own directory
+- Example: `evaluate-articles` function for article evaluation
+- Use TypeScript for functions
+
+#### Database Migrations (`supabase/migrations/`)
+- SQL migrations are stored here
+- Follow naming convention: timestamp_description.sql
+
+## Best Practices
+
+### Code Style
+- Use TypeScript for type safety
+- Follow ESLint and Prettier configurations
+- Use named exports over default exports
+- Maintain consistent naming conventions (PascalCase for components, camelCase for functions)
+
+### Component Development
+1. Create reusable UI components in `web/components/ui/`
+2. Build feature-specific components in `web/components/`
+3. Keep components small and focused on a single responsibility
+4. Use composition over inheritance
+
+### State Management
+1. Use React Context for global state (authentication, theme)
+2. Prefer server components where possible
+3. Use React Query for client-side data fetching when needed
+4. Handle form state with react-hook-form and validate with zod
+
+### Data Fetching
+1. Use server components as the primary method for data fetching
+2. Create API endpoints in `app/api/` for client-side needs
+3. Interact with Supabase through the client in `lib/supabase.ts`
+4. Use edge functions for serverless operations
+5. All Supabase database operations should be placed in `lib/utils/supabase-utils.ts`
+
+
+### Authentication
+1. Use Supabase Authentication
+2. Protect routes with middleware.ts and protected-route.tsx component
+3. Store auth state in AuthContext
+
+### Error Handling
+1. Implement consistent error boundaries
+2. Use toast notifications for user feedback (via sonner)
+3. Log errors appropriately
+
+### Edge Functions
+1. Keep functions small and focused
+2. Use TypeScript for type safety
+3. Follow the function structure in evaluate-articles as a template
+
+## File Location Guidelines
+
+### Where to add new components:
+- **UI Components**: `web/components/ui/`
+- **Feature Components**: `web/components/`
+- **Page Components**: In the respective page directory
+
+### Where to add new API routes:
+- **API Routes**: `web/app/api/[endpoint]/route.ts`
+
+### Where to add new types:
+- **Global Types**: `web/lib/types.ts`
+- **Component-specific Types**: In the component file
+
+### Where to add new utilities:
+- **Common Utilities**: `web/lib/utils/`
+- **Specialized Utilities**: Create a new file in `web/lib/`
+- **Supabase Operations**: All database operations in `lib/utils/supabase-utils.ts`
+
+### Where to add new Supabase functions:
+- Create a new directory in `supabase/functions/`
+
+## Version Compatibility
+
+Ensure that dependencies maintain compatibility with:
+- Next.js 15.2.4
+- React 19.0.0
+- Node.js LTS
+- TypeScript 5+
+- Supabase Client 2.49.3
+
+## Testing Guidelines
+- Use Jest for unit testing
+- Use Playwright for E2E testing
+- Write tests for critical paths and components
+
+## Deployment
+- Frontend: Vercel
+- Backend: Supabase
+- Use environment variables for configuration
+- Deploy functions using `npm run functions:deploy` 
