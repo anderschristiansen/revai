@@ -535,12 +535,12 @@ export default function ReviewPage() {
                   <FileUploadForm 
                     sessionId={sessionId} 
                     onUploadComplete={(hasCriteria) => {
+                      // Don't force users to criteria tab, just show a gentle suggestion
                       if (!hasCriteria) {
-                        setActiveTab("criteria");
-                        toast.info("Please define your inclusion and exclusion criteria before reviewing articles");
-                      } else {
-                        window.location.href = `/review/${sessionId}`;
+                        toast.info("Consider defining inclusion and exclusion criteria for your review");
                       }
+                      // Always reload the page to show all articles
+                      window.location.href = `/review/${sessionId}`;
                     }}
                   />
                 )}
