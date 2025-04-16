@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,13 @@ import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/sonner";
-import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2 } from "lucide-react";
+import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2, Settings, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Article, DecisionType } from "@/lib/types";
 import { updateArticleDecision } from "@/lib/utils/supabase-utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Regex to linkify URLs
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -54,6 +55,38 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [tableInstance, setTableInstance] = useState<Table<Article> | null>(null);
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
+    abstract: true,
+    user_decision: true,
+    ai_decision: true,
+    filename: true,
+  });
+
+  // Listen for column visibility changes from the table instance
+  useEffect(() => {
+    if (!tableInstance) return;
+    
+    const visibilityState = tableInstance.getState().columnVisibility;
+    setVisibleColumns(prev => ({
+      ...prev,
+      ...visibilityState
+    }));
+    
+    // Manual updating without using the onChange subscription
+    const intervalId = setInterval(() => {
+      const newState = tableInstance.getState().columnVisibility;
+      setVisibleColumns(prev => {
+        // Only update if there are changes
+        const hasChanges = Object.keys(newState).some(key => prev[key] !== newState[key]);
+        if (hasChanges) {
+          return {...prev, ...newState};
+        }
+        return prev;
+      });
+    }, 100); // Check frequently but not too frequently
+    
+    return () => clearInterval(intervalId);
+  }, [tableInstance]);
 
   function openArticleDialog(article: Article) {
     setSelectedArticle(article);
@@ -250,6 +283,29 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           </div>
         );
       },
+      enableHiding: false,
+    },
+    {
+      accessorKey: "filename",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="whitespace-nowrap font-medium"
+        >
+          File
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const filename = row.getValue("filename") as string;
+        return (
+          <div className="text-sm text-muted-foreground">
+            {filename || "Unknown file"}
+          </div>
+        );
+      },
+      enableHiding: true,
     },
     {
       accessorKey: "abstract",
@@ -276,6 +332,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           </Tooltip>
         );
       },
+      enableHiding: true,
     },
     {
       accessorKey: "user_decision",
@@ -310,6 +367,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
       },
+      enableHiding: true,
     },
     {
       accessorKey: "ai_decision",
@@ -344,64 +402,124 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
       },
+      enableHiding: true,
     }
   ];
 
   return (
     <div>
-      <div className="flex flex-wrap gap-4 mb-4">
-        <div>
-          <Input
-            placeholder="Search articles by title..."
-            value={(tableInstance?.getColumn("title")?.getFilterValue() as string) ?? ""}
-            onChange={(e) => tableInstance?.getColumn("title")?.setFilterValue(e.target.value)}
-            className="w-[240px]"
-          />
-        </div>
-        <div>
-          <Select
-            onValueChange={(value) => {
-              if (value === "all") {
-                tableInstance?.getColumn("user_decision")?.setFilterValue(undefined);
-              } else {
-                tableInstance?.getColumn("user_decision")?.setFilterValue([value]);
-              }
-            }}
-            defaultValue="all"
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by user decision" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All user decisions</SelectItem>
-              <SelectItem value="Include">Include</SelectItem>
-              <SelectItem value="Exclude">Exclude</SelectItem>
-              <SelectItem value="Unsure">Unsure</SelectItem>
-            </SelectContent>
-          </Select>
+      <div className="flex flex-wrap gap-4 mb-4 justify-between">
+        <div className="flex flex-wrap gap-4">
+          <div>
+            <Input
+              placeholder="Search articles by title..."
+              value={(tableInstance?.getColumn("title")?.getFilterValue() as string) ?? ""}
+              onChange={(e) => tableInstance?.getColumn("title")?.setFilterValue(e.target.value)}
+              className="w-[240px]"
+            />
+          </div>
+          <div>
+            <Select
+              onValueChange={(value) => {
+                if (value === "all") {
+                  tableInstance?.getColumn("user_decision")?.setFilterValue(undefined);
+                } else {
+                  tableInstance?.getColumn("user_decision")?.setFilterValue([value]);
+                }
+              }}
+              defaultValue="all"
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by user decision" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All user decisions</SelectItem>
+                <SelectItem value="Include">Include</SelectItem>
+                <SelectItem value="Exclude">Exclude</SelectItem>
+                <SelectItem value="Unsure">Unsure</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Select
+              onValueChange={(value) => {
+                if (value === "all") {
+                  tableInstance?.getColumn("ai_decision")?.setFilterValue(undefined);
+                } else {
+                  tableInstance?.getColumn("ai_decision")?.setFilterValue([value]);
+                }
+              }}
+              defaultValue="all"
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by AI decision" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All AI decisions</SelectItem>
+                <SelectItem value="Include">Include</SelectItem>
+                <SelectItem value="Exclude">Exclude</SelectItem>
+                <SelectItem value="Unsure">Unsure</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
         <div>
-          <Select
-            onValueChange={(value) => {
-              if (value === "all") {
-                tableInstance?.getColumn("ai_decision")?.setFilterValue(undefined);
-              } else {
-                tableInstance?.getColumn("ai_decision")?.setFilterValue([value]);
-              }
-            }}
-            defaultValue="all"
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by AI decision" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All AI decisions</SelectItem>
-              <SelectItem value="Include">Include</SelectItem>
-              <SelectItem value="Exclude">Exclude</SelectItem>
-              <SelectItem value="Unsure">Unsure</SelectItem>
-            </SelectContent>
-          </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" /> Columns
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {tableInstance?.getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuItem
+                    key={column.id}
+                    className="flex items-center px-2 py-2 cursor-default"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    <label
+                      htmlFor={`toggle-${column.id}`}
+                      className="flex items-center gap-2 w-full cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <input
+                        id={`toggle-${column.id}`}
+                        type="checkbox"
+                        className="mr-1"
+                        checked={visibleColumns[column.id] || false}
+                        onChange={(e) => {
+                          // Directly handle toggle here
+                          const newVisibility = e.target.checked;
+                          column.toggleVisibility(newVisibility);
+                          setVisibleColumns(prev => ({
+                            ...prev,
+                            [column.id]: newVisibility
+                          }));
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      />
+                      <span>
+                        {column.id === "user_decision" ? "User Decision" :
+                         column.id === "ai_decision" ? "AI Decision" :
+                         column.id === "filename" ? "File" :
+                         column.id.charAt(0).toUpperCase() + column.id.slice(1)}
+                      </span>
+                    </label>
+                  </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       
@@ -409,13 +527,11 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         columns={columns}
         data={articles}
         initialSorting={[{ id: "title", desc: false }]}
+        initialColumnVisibility={visibleColumns}
         pageSize={20}
         pageSizeOptions={[10, 20, 50, 100]}
         getRowClassName={() => "hover:bg-muted/5 transition-colors cursor-pointer"}
         onRowClick={(row) => {
-          // For type safety, we're not using the event parameter directly
-          // The DataTable component itself will check if the click was on an
-          // element with class 'quick-action-buttons' and won't trigger onRowClick
           openArticleDialog(row.original);
         }}
         onTableInstanceChange={setTableInstance}
@@ -427,8 +543,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
         modal
         onOpenChange={(open) => {
           if (!open) {
-            setIsDialogOpen(false);
-            setTimeout(() => setSelectedArticle(null), 300);
+            closeDialog();
           } else {
             setIsDialogOpen(true);
           }
@@ -455,6 +570,11 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                     <div className="bg-muted/60 px-2 py-0.5 rounded text-muted-foreground font-mono text-xs">
                       {selectedArticle.id}
                     </div>
+                    {selectedArticle.filename && (
+                      <div className="bg-muted/60 px-2 py-0.5 rounded text-muted-foreground text-xs">
+                        {selectedArticle.filename}
+                      </div>
+                    )}
                     {selectedArticle.user_decision && (
                       <Badge
                         variant="outline"

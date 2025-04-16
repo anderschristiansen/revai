@@ -113,12 +113,24 @@ export async function getArticles(fileIds: string[]) {
 
   const { data, error } = await supabase
     .from("articles")
-    .select("*")
+    .select(`
+      *,
+      files:file_id (
+        filename
+      )
+    `)
     .in("file_id", fileIds)
     .order("id");
 
   if (error) throw error;
-  return data as Article[];
+  
+  // Transform the response to include filename directly in the article object
+  const articlesWithFilename = data.map(article => ({
+    ...article,
+    filename: article.files?.filename || 'Unknown file'
+  }));
+  
+  return articlesWithFilename as Article[];
 }
 
 export async function updateSessionTitle(sessionId: string, newTitle: string) {

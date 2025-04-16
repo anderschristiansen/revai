@@ -26,6 +26,7 @@ export interface FileWithArticles extends File {
 export type Article = {
   id: string;
   file_id: string;
+  filename: string;
   title: string;
   abstract: string;
   full_text: string;
