@@ -1,0 +1,76 @@
+/* Responsive styles for mobile devices */
+
+@media (max-width: 640px) {
+  /* Improve table scrolling */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Make action buttons more accessible on touch devices */
+  .article-action-buttons {
+    opacity: 0.7;
+    visibility: visible;
+  }
+
+  /* Truncate long text on mobile */
+  .mobile-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  /* More compact UI on small screens */
+  .mobile-compact {
+    padding: 0.5rem !important;
+  }
+
+  /* Full width buttons on mobile */
+  .mobile-full-width {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Better spacing for accordion items on mobile */
+  .mobile-stack > * + * {
+    margin-top: 0.5rem;
+  }
+
+  /* Make tooltips work better on mobile */
+  .tooltip-override[data-state="open"] {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Improve tabs on mobile */
+  [data-slot="tabs-list"] {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  [data-slot="tabs-trigger"] {
+    flex: 1;
+    min-width: 60px;
+    padding: 0.5rem 0.25rem;
+  }
+  
+  /* Improve abstract display on mobile */
+  [data-slot="cell"] [data-column="abstract"] div {
+    max-width: 150px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Touch device detection - this uses a media query that targets touch devices */
+@media (hover: none) {
+  .touch-visible {
+    opacity: 0.7 !important;
+    visibility: visible !important;
+  }
+} 

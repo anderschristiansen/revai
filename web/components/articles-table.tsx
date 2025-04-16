@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,11 +8,10 @@ import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/sonner";
-import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2, Settings, ChevronDown } from "lucide-react";
+import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2, Settings, ChevronDown, Check as CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Article, DecisionType } from "@/lib/types";
 import { updateArticleDecision } from "@/lib/utils/supabase-utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
@@ -55,47 +54,15 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [tableInstance, setTableInstance] = useState<Table<Article> | null>(null);
-  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
-    abstract: true,
-    user_decision: true,
-    ai_decision: false,
-    filename: false,
-  });
-
-  // Listen for column visibility changes from the table instance
-  useEffect(() => {
-    if (!tableInstance) return;
-    
-    const visibilityState = tableInstance.getState().columnVisibility;
-    setVisibleColumns(prev => ({
-      ...prev,
-      ...visibilityState
-    }));
-    
-    // Manual updating without using the onChange subscription
-    const intervalId = setInterval(() => {
-      const newState = tableInstance.getState().columnVisibility;
-      setVisibleColumns(prev => {
-        // Only update if there are changes
-        const hasChanges = Object.keys(newState).some(key => prev[key] !== newState[key]);
-        if (hasChanges) {
-          return {...prev, ...newState};
-        }
-        return prev;
-      });
-    }, 100); // Check frequently but not too frequently
-    
-    return () => clearInterval(intervalId);
-  }, [tableInstance]);
-
-  function openArticleDialog(article: Article) {
-    setSelectedArticle(article);
-    setIsDialogOpen(true);
-  }
 
   function closeDialog() {
     setIsDialogOpen(false);
     setSelectedArticle(null);
+  }
+
+  function openArticleDialog(article: Article) {
+    setSelectedArticle(article);
+    setIsDialogOpen(true);
   }
 
   async function handleArticleDecision(decision: DecisionType, articleId?: string, showToast = true) {
@@ -234,7 +201,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
                       </div>
                     </div>
                     <div className="text-xs text-muted-foreground max-h-[100px] overflow-y-auto pt-1 border-t">
-                      <p className="pt-2">{abstract?.substring(0, 200)}{abstract?.length > 200 ? "..." : ""}</p>
+                      <p className="pt-2">{abstract?.substring(0, 100)}{abstract?.length > 100 ? "..." : ""}</p>
                     </div>
                   </div>
                 }
@@ -246,7 +213,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
             </div>
             
             {/* Quick Action Buttons */}
-            <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/90 dark:bg-background/90 backdrop-blur-sm p-1 rounded shadow-sm border quick-action-buttons" onClick={(e) => e.stopPropagation()}>
+            <div className="absolute right-2 top-2 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 touch-visible flex gap-1 bg-white/90 dark:bg-background/90 backdrop-blur-sm p-1 rounded shadow-sm border" onClick={(e) => e.stopPropagation()}>
               <Tooltip content="Include">
                 <Button 
                   variant="ghost" 
@@ -313,9 +280,10 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
       header: "Abstract",
       cell: ({ row }) => {
         const abstract = row.getValue("abstract") as string;
-        // Show a reasonable amount of text without truncation
-        const previewText = abstract ? 
-          abstract : 
+        
+        // Create a truncated version for display
+        const truncatedText = abstract ? 
+          abstract.substring(0, 100) + (abstract.length > 100 ? "..." : "") : 
           "No abstract available";
         
         return (
@@ -327,8 +295,8 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
               </div>
             }
           >
-            <div className="text-[14px] text-muted-foreground cursor-help">
-              {previewText}
+            <div className="text-[14px] text-muted-foreground cursor-help line-clamp-2 sm:line-clamp-3 max-w-[200px] sm:max-w-xs">
+              {truncatedText}
             </div>
           </Tooltip>
         );
@@ -409,69 +377,23 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
 
   return (
     <div>
-      <div className="flex flex-wrap gap-4 mb-4 justify-between">
-        <div className="flex flex-wrap gap-4">
-          <div>
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <div className="flex items-center gap-2">
             <Input
-              placeholder="Search articles by title..."
+              placeholder="Search articles..."
               value={(tableInstance?.getColumn("title")?.getFilterValue() as string) ?? ""}
               onChange={(e) => tableInstance?.getColumn("title")?.setFilterValue(e.target.value)}
-              className="w-[240px]"
+              className="max-w-xs"
             />
           </div>
-          <div>
-            <Select
-              onValueChange={(value) => {
-                if (value === "all") {
-                  tableInstance?.getColumn("user_decision")?.setFilterValue(undefined);
-                } else {
-                  tableInstance?.getColumn("user_decision")?.setFilterValue([value]);
-                }
-              }}
-              defaultValue="all"
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by user decision" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All user decisions</SelectItem>
-                <SelectItem value="Include">Include</SelectItem>
-                <SelectItem value="Exclude">Exclude</SelectItem>
-                <SelectItem value="Unsure">Unsure</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           
-          <div>
-            <Select
-              onValueChange={(value) => {
-                if (value === "all") {
-                  tableInstance?.getColumn("ai_decision")?.setFilterValue(undefined);
-                } else {
-                  tableInstance?.getColumn("ai_decision")?.setFilterValue([value]);
-                }
-              }}
-              defaultValue="all"
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by AI decision" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All AI decisions</SelectItem>
-                <SelectItem value="Include">Include</SelectItem>
-                <SelectItem value="Exclude">Exclude</SelectItem>
-                <SelectItem value="Unsure">Unsure</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        
-        <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Settings className="h-4 w-4 mr-2" /> Columns
-                <ChevronDown className="ml-2 h-4 w-4" />
+              <Button variant="outline" className="gap-1.5">
+                <Settings className="h-4 w-4" />
+                <span className="hidden sm:inline">View options</span>
+                <ChevronDown className="h-4 w-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -480,65 +402,31 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
               {tableInstance?.getAllColumns()
                 .filter((column) => column.getCanHide())
                 .map((column) => (
-                  <DropdownMenuItem
-                    key={column.id}
-                    className="flex items-center px-2 py-2 cursor-default"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    <label
-                      htmlFor={`toggle-${column.id}`}
-                      className="flex items-center gap-2 w-full cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <input
-                        id={`toggle-${column.id}`}
-                        type="checkbox"
-                        className="mr-1"
-                        checked={visibleColumns[column.id] || false}
-                        onChange={(e) => {
-                          // Directly handle toggle here
-                          const newVisibility = e.target.checked;
-                          column.toggleVisibility(newVisibility);
-                          setVisibleColumns(prev => ({
-                            ...prev,
-                            [column.id]: newVisibility
-                          }));
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      />
-                      <span>
-                        {column.id === "user_decision" ? "User Decision" :
-                         column.id === "ai_decision" ? "AI Decision" :
-                         column.id === "filename" ? "File" :
-                         column.id.charAt(0).toUpperCase() + column.id.slice(1)}
-                      </span>
-                    </label>
+                  <DropdownMenuItem key={column.id} onClick={() => column.toggleVisibility(!column.getIsVisible())}>
+                    <div className={cn("mr-2", column.getIsVisible() ? "opacity-100" : "opacity-40")}>
+                      {column.id === "abstract" && "Abstract"}
+                      {column.id === "user_decision" && "User Decision"}
+                      {column.id === "ai_decision" && "AI Decision"}
+                      {column.id === "filename" && "File Name"}
+                    </div>
+                    {column.getIsVisible() ? <CheckIcon className="h-4 w-4" /> : null}
                   </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        
+        <div className="rounded-md border overflow-x-auto">
+          <DataTable 
+            columns={columns}
+            data={articles}
+            onTableInstanceChange={setTableInstance}
+            onRowClick={(row) => openArticleDialog(row.original)}
+          />
+        </div>
       </div>
-      
-      <DataTable
-        columns={columns}
-        data={articles}
-        initialSorting={[{ id: "title", desc: false }]}
-        initialColumnVisibility={visibleColumns}
-        pageSize={20}
-        pageSizeOptions={[10, 20, 50, 100]}
-        getRowClassName={() => "hover:bg-muted/5 transition-colors cursor-pointer"}
-        onRowClick={(row) => {
-          openArticleDialog(row.original);
-        }}
-        onTableInstanceChange={setTableInstance}
-      />
 
-      {/* Article Details Dialog */}
+      {/* Article Detail Dialog */}
       <Dialog
         open={isDialogOpen}
         modal
@@ -550,7 +438,7 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
           }
         }}
       >
-        <DialogContent className="max-w-7xl flex flex-col max-h-[90vh]">
+        <DialogContent className="max-w-7xl flex flex-col max-h-[90vh] sm:p-6 p-3">
           <DialogDescription className="sr-only">
             Article review dialog showing details and allowing the user to include, exclude, or mark as unsure
           </DialogDescription>
