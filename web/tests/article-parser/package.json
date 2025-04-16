@@ -1,0 +1,14 @@
+{
+  "name": "article-parser-tests",
+  "version": "1.0.0",
+  "description": "Tests for the article parser module",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --loader ts-node/esm test-parser.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.0"
+  }
+} 
