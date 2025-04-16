@@ -121,13 +121,14 @@ export default function ReviewPage() {
                     onClick={startEvaluation} 
                     disabled={evaluating || batchRunning || awaitingEvaluation}
                     className="transition-all duration-200 w-full sm:w-auto mobile-full-width"
+                    variant="outline"
                   >
                     {batchRunning ? (
-                      <Lottie animationData={coffeeAnimation} className="h-5 w-5" />
+                      <Lottie animationData={coffeeAnimation} className="h-4 w-4" />
                     ) : awaitingEvaluation ? (
-                      <Clock8Icon className="h-4 w-4 mr-2 text-amber-500 animate-pulse" />
+                      <Clock8Icon className="h-3.5 w-3.5 mr-1.5 text-amber-500 animate-pulse" />
                     ) : (
-                      <BotIcon className="h-4 w-4 mr-2" />
+                      <BotIcon className="h-3.5 w-3.5 mr-1.5" />
                     )}
                     {evaluating ? "Starting..." : 
                     batchRunning ? "Brewing..." : 
