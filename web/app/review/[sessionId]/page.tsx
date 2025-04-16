@@ -2,25 +2,25 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { notFound, useParams } from "next/navigation";
-import Link from "next/link";import Lottie from "lottie-react";
+import Link from "next/link";
+import Lottie from "lottie-react";
 import coffeeAnimation from "@/lib/lottie/coffee-animation.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tooltip } from "@/components/ui/tooltip";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ArticlesTable } from "@/components/articles-table";
-import { UploadForm } from "@/components/upload-form";
+import { FileUploadForm } from "@/components/file-upload-form";
+import { CriteriaForm } from "@/components/criteria-form";
 import { ReviewStats } from "@/components/review-stats";
 import { AIStats } from "@/components/ai-stats";
 import { toast } from "@/components/ui/sonner";
-import { ArrowLeftIcon, PencilIcon, CheckIcon, XIcon, FileTextIcon, ListChecks, FolderIcon, BotIcon, Clock8Icon, PlusIcon, MenuIcon, Loader2 } from "lucide-react";
+import { ArrowLeftIcon, PencilIcon, CheckIcon, XIcon, FileTextIcon, ListChecks, FolderIcon, BotIcon, Clock8Icon, MenuIcon, Loader2 } from "lucide-react";
 import { useSupabaseRealtime, useSessionStatusRealtime } from "@/hooks/use-supabase-realtime";
 
-import { getSession, getFiles, getArticles, updateSessionTitle, updateArticleUserDecision, updateSessionCriteria } from "@/lib/utils/supabase-utils";
+import { getSession, getFiles, getArticles, updateSessionTitle, updateArticleUserDecision } from "@/lib/utils/supabase-utils";
 import type { ReviewSession, Article, CriteriaList, File as SessionFile } from "@/lib/types";
 
 export default function ReviewPage() {
@@ -31,14 +31,11 @@ export default function ReviewPage() {
   const [criteria, setCriteria] = useState<CriteriaList>([]);
   const [loading, setLoading] = useState(true);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [isEditingCriteria, setIsEditingCriteria] = useState(false);
-  const [editedCriteria, setEditedCriteria] = useState<CriteriaList>([]);
   const [newTitle, setNewTitle] = useState("");
   const [evaluating, setEvaluating] = useState(false);
   const [batchRunning, setBatchRunning] = useState(false);
   const [activeTab, setActiveTab] = useState("articles");
   const [awaitingEvaluation, setAwaitingEvaluation] = useState(false);
-  const [savingCriteria, setSavingCriteria] = useState(false);
 
   // --- Load Session ---
   const loadSession = useCallback(async () => {
@@ -204,81 +201,6 @@ export default function ReviewPage() {
       setEvaluating(false);
     }
   }
-
-  // Add a function to add new criteria
-  const addCriterion = (type: 'inclusion' | 'exclusion') => {
-    setEditedCriteria(prev => [
-      ...prev,
-      { id: crypto.randomUUID(), text: "", type }
-    ]);
-  };
-
-  // Add a function to remove criteria
-  const removeCriterion = (id: string) => {
-    setEditedCriteria(prev => prev.filter(c => c.id !== id));
-  };
-
-  // Add a function to update criteria text
-  const updateCriterionText = (id: string, text: string) => {
-    setEditedCriteria(prev => 
-      prev.map(c => c.id === id ? { ...c, text } : c)
-    );
-  };
-
-  // Add a function to update criteria type
-  const updateCriterionType = (id: string, type: 'inclusion' | 'exclusion') => {
-    setEditedCriteria(prev => 
-      prev.map(c => c.id === id ? { ...c, type } : c)
-    );
-  };
-
-  // Add a function to save criteria
-  const saveCriteria = async () => {
-    // Check that all criteria have text
-    if (editedCriteria.some(c => !c.text.trim())) {
-      toast.error("All criteria must have text");
-      return;
-    }
-    
-    // Ensure at least one criterion exists (either inclusion or exclusion)
-    if (editedCriteria.length === 0) {
-      toast.error("You must provide at least one criterion (inclusion or exclusion)");
-      return;
-    }
-
-    try {
-      setSavingCriteria(true);
-      
-      await updateSessionCriteria(sessionId, editedCriteria);
-      
-      setCriteria(editedCriteria);
-      setIsEditingCriteria(false);
-      toast.success("Criteria updated");
-      
-      // If there are AI-evaluated articles, suggest re-running evaluation
-      const hasEvaluatedArticles = articles.some(a => a.ai_decision);
-      if (hasEvaluatedArticles) {
-        toast.info("Criteria changed. Consider re-running AI evaluation to update results based on new criteria.");
-      }
-    } catch (error) {
-      console.error("Error updating criteria:", error);
-      toast.error("Could not update criteria");
-    } finally {
-      setSavingCriteria(false);
-    }
-  };
-
-  // Add a function to cancel criteria editing
-  const cancelCriteriaEdit = () => {
-    setEditedCriteria(criteria);
-    setIsEditingCriteria(false);
-  };
-
-  // Start editing criteria
-  const startEditingCriteria = () => {
-    setEditedCriteria([...criteria]);
-    setIsEditingCriteria(true);
-  };
 
   // --- Stats ---
   const reviewed = articles.filter(a => a.user_decision).length;
@@ -542,126 +464,19 @@ export default function ReviewPage() {
 
               {/* Criteria Tab */}
               <TabsContent value="criteria">
-                <div className="space-y-6">
-                  {isEditingCriteria ? (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Edit Criteria</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        {editedCriteria.map((criterion) => (
-                          <div key={criterion.id} className="flex items-start gap-2">
-                            <Select
-                              value={criterion.type}
-                              onValueChange={(value) => updateCriterionType(criterion.id, value as 'inclusion' | 'exclusion')}
-                            >
-                              <SelectTrigger className="w-28">
-                                <SelectValue placeholder="Type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="inclusion">Inclusion</SelectItem>
-                                <SelectItem value="exclusion">Exclusion</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <Textarea
-                              value={criterion.text}
-                              onChange={(e) => updateCriterionText(criterion.id, e.target.value)}
-                              placeholder="Enter a criterion..."
-                              className="flex-1 min-h-[80px] font-mono text-sm"
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 mt-2"
-                              onClick={() => removeCriterion(criterion.id)}
-                            >
-                              <XIcon className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ))}
-                        <div className="flex gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => addCriterion('inclusion')}
-                          >
-                            <PlusIcon className="h-4 w-4 mr-2" />
-                            Add Inclusion
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => addCriterion('exclusion')}
-                          >
-                            <PlusIcon className="h-4 w-4 mr-2" />
-                            Add Exclusion
-                          </Button>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          onClick={cancelCriteriaEdit}
-                          disabled={savingCriteria}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={saveCriteria}
-                          disabled={savingCriteria}
-                        >
-                          {savingCriteria ? (
-                            <>Saving...</>
-                          ) : (
-                            <>Save Criteria</>
-                          )}
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ) : (
-                    <>
-                      <div className="flex justify-between items-center">
-                        <h2 className="text-lg font-medium">Inclusion & Exclusion Criteria</h2>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={startEditingCriteria}
-                        >
-                          <PencilIcon className="h-4 w-4 mr-2" />
-                          Edit Criteria
-                        </Button>
-                      </div>
-                      <Card>
-                        <CardHeader><CardTitle>Inclusion Criteria</CardTitle></CardHeader>
-                        <CardContent>
-                          {criteria.filter(c => c.type === 'inclusion').length > 0 ? (
-                            <ul className="list-disc pl-4 space-y-2">
-                              {criteria.filter(c => c.type === 'inclusion').map(c => <li key={c.id}>{c.text}</li>)}
-                            </ul>
-                          ) : (
-                            <p className="text-muted-foreground">No inclusion criteria defined.</p>
-                          )}
-                        </CardContent>
-                      </Card>
-                      
-                      <Card>
-                        <CardHeader><CardTitle>Exclusion Criteria</CardTitle></CardHeader>
-                        <CardContent>
-                          {criteria.filter(c => c.type === 'exclusion').length > 0 ? (
-                            <ul className="list-disc pl-4 space-y-2">
-                              {criteria.filter(c => c.type === 'exclusion').map(c => <li key={c.id}>{c.text}</li>)}
-                            </ul>
-                          ) : (
-                            <p className="text-muted-foreground">No exclusion criteria defined.</p>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </>
-                  )}
-                </div>
+                <CriteriaForm 
+                  sessionId={sessionId} 
+                  criteria={criteria}
+                  onCriteriaUpdated={(newCriteria) => {
+                    setCriteria(newCriteria);
+                    
+                    // If there are AI-evaluated articles, suggest re-running evaluation
+                    const hasEvaluatedArticles = articles.some(a => a.ai_decision);
+                    if (hasEvaluatedArticles) {
+                      toast.info("Criteria changed. Consider re-running AI evaluation to update results based on new criteria.");
+                    }
+                  }}
+                />
               </TabsContent>
 
               {/* Files Tab */}
@@ -717,7 +532,17 @@ export default function ReviewPage() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <UploadForm sessionId={sessionId} />
+                  <FileUploadForm 
+                    sessionId={sessionId} 
+                    onUploadComplete={(hasCriteria) => {
+                      if (!hasCriteria) {
+                        setActiveTab("criteria");
+                        toast.info("Please define your inclusion and exclusion criteria before reviewing articles");
+                      } else {
+                        window.location.href = `/review/${sessionId}`;
+                      }
+                    }}
+                  />
                 )}
               </TabsContent>
             </Tabs>
