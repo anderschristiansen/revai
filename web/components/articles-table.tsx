@@ -1,19 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ColumnDef, Table, Column } from "@tanstack/react-table";
+import { useState } from "react";
+import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tooltip } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/sonner";
-import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2, Settings, ChevronDown, Check as CheckIcon } from "lucide-react";
+import { Bot, FileText, ArrowUpDown, CheckCircle, XCircle, HelpCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Article, DecisionType } from "@/lib/types";
 import { updateArticleDecision } from "@/lib/utils/supabase-utils";
-import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Regex to linkify URLs
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -48,43 +46,11 @@ interface ArticlesTableProps {
   onReviewArticle: (id: string, decision: DecisionType) => Promise<void>;
 }
 
-// Column visibility menu item with internal state
-function ColumnVisibilityItem({ column, label }: { column: Column<Article, unknown>; label: string }) {
-  const [isVisible, setIsVisible] = useState(column.getIsVisible());
-  
-  // Update our local state when visibility changes externally
-  useEffect(() => {
-    setIsVisible(column.getIsVisible());
-  }, [column]);
-  
-  return (
-    <DropdownMenuItem
-      key={column.id}
-      onClick={(e) => {
-        e.preventDefault();
-        const newVisibility = !isVisible;
-        setIsVisible(newVisibility);
-        column.toggleVisibility(newVisibility);
-      }}
-    >
-      <div className="flex w-full items-center justify-between">
-        <span className={isVisible ? "" : "opacity-40"}>
-          {label}
-        </span>
-        <div className="flex items-center space-x-2">
-          {isVisible && <CheckIcon className="h-4 w-4 ml-1" />}
-        </div>
-      </div>
-    </DropdownMenuItem>
-  );
-}
-
 export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps) {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [tableInstance, setTableInstance] = useState<Table<Article> | null>(null);
 
   function closeDialog() {
     setIsDialogOpen(false);
@@ -409,51 +375,13 @@ export function ArticlesTable({ articles, onReviewArticle }: ArticlesTableProps)
   return (
     <div>
       <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Input
-              placeholder="Search articles..."
-              value={(tableInstance?.getColumn("title")?.getFilterValue() as string) ?? ""}
-              onChange={(e) => tableInstance?.getColumn("title")?.setFilterValue(e.target.value)}
-              className="max-w-xs"
-            />
-          </div>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-1.5">
-                <Settings className="h-4 w-4" />
-                <span className="hidden sm:inline">View options</span>
-                <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {tableInstance?.getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
-                  <ColumnVisibilityItem 
-                    key={column.id}
-                    column={column}
-                    label={
-                      column.id === "abstract" ? "Abstract" :
-                      column.id === "user_decision" ? "User Decision" :
-                      column.id === "ai_decision" ? "AI Decision" :
-                      column.id === "filename" ? "File Name" : column.id
-                    }
-                  />
-                ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        
-        <div className="rounded-md border overflow-x-auto">
+        <div className="rounded-md overflow-x-auto">
           <DataTable 
             columns={columns}
             data={articles}
-            onTableInstanceChange={setTableInstance}
             onRowClick={(row) => openArticleDialog(row.original)}
+            filterColumn="title"
+            filterPlaceholder="Search articles..."
           />
         </div>
       </div>
