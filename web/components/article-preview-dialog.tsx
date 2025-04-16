@@ -47,6 +47,7 @@ export function ArticlePreviewDialog({
   const [activeTab, setActiveTab] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(null);
+  const [visibleFiles, setVisibleFiles] = useState<Record<string, boolean>>({});
 
   // Group articles by file
   const articlesByFile = useMemo(() => {
@@ -60,14 +61,31 @@ export function ArticlePreviewDialog({
     return grouped;
   }, [articles]);
 
+  // Initialize file visibility (all visible by default)
+  useEffect(() => {
+    const initialVisibility: Record<string, boolean> = {};
+    Object.keys(articlesByFile).forEach(fileName => {
+      initialVisibility[fileName] = true;
+    });
+    setVisibleFiles(initialVisibility);
+  }, [articlesByFile]);
+
   // Calculate statistics
   const stats = useMemo(() => {
     const total = articles.length;
     const duplicates = articles.filter(a => a.isDuplicate).length;
     const selected = Object.entries(selectedArticles).filter(([, isSelected]) => isSelected).length;
     
-    return { total, duplicates, selected };
-  }, [articles, selectedArticles]);
+    // Add count of visible articles
+    const visibleTotal = Object.entries(articlesByFile).reduce((count, [fileName, fileArticles]) => {
+      if (visibleFiles[fileName]) {
+        return count + fileArticles.length;
+      }
+      return count;
+    }, 0);
+    
+    return { total, duplicates, selected, visibleTotal };
+  }, [articles, selectedArticles, articlesByFile, visibleFiles]);
 
   const getArticleKey = useCallback((article: ParsedArticle) => {
     return `${article.sourceFile}-${article.hash || article.title}`;
@@ -130,11 +148,31 @@ export function ArticlePreviewDialog({
     return !!selectedArticles[getArticleKey(article)];
   }, [selectedArticles, getArticleKey]);
 
-  // Filter articles based on active tab and search query
-  const getFilteredArticles = useCallback((fileArticles: ParsedArticle[]) => {
+  // Toggle visibility of a file
+  const toggleFileVisibility = (fileName: string) => {
+    setVisibleFiles(prev => ({
+      ...prev,
+      [fileName]: !prev[fileName]
+    }));
+  };
+
+  // Toggle visibility of all files
+  const toggleAllFilesVisibility = (value: boolean) => {
+    const newVisibility: Record<string, boolean> = {};
+    Object.keys(articlesByFile).forEach(fileName => {
+      newVisibility[fileName] = value;
+    });
+    setVisibleFiles(newVisibility);
+  };
+
+  // Filter articles based on active tab, search query, and file visibility
+  const getFilteredArticles = useCallback((fileArticles: ParsedArticle[], fileName: string) => {
+    // First check file visibility
+    if (!visibleFiles[fileName]) return [];
+    
     let filtered = fileArticles;
     
-    // First filter by tab
+    // Then filter by tab
     if (activeTab === "all") filtered = fileArticles;
     else if (activeTab === "duplicates") filtered = filtered.filter(a => a.isDuplicate);
     else if (activeTab === "selected") filtered = filtered.filter(a => isArticleSelected(a));
@@ -149,12 +187,12 @@ export function ArticlePreviewDialog({
     }
     
     return filtered;
-  }, [activeTab, searchQuery, isArticleSelected]);
+  }, [activeTab, searchQuery, isArticleSelected, visibleFiles]);
 
   // Check if any file has articles that match the current filter
   const hasFilteredArticles = useMemo(() => {
-    return Object.values(articlesByFile).some(fileArticles => 
-      getFilteredArticles(fileArticles).length > 0
+    return Object.entries(articlesByFile).some(([fileName, fileArticles]) => 
+      getFilteredArticles(fileArticles, fileName).length > 0
     );
   }, [articlesByFile, getFilteredArticles]);
 
@@ -162,10 +200,15 @@ export function ArticlePreviewDialog({
   const totalSearchResults = useMemo(() => {
     if (!searchQuery.trim()) return 0;
     
-    return Object.values(articlesByFile).reduce((count, fileArticles) => {
-      return count + getFilteredArticles(fileArticles).length;
+    return Object.entries(articlesByFile).reduce((count, [fileName, fileArticles]) => {
+      return count + getFilteredArticles(fileArticles, fileName).length;
     }, 0);
   }, [articlesByFile, getFilteredArticles, searchQuery]);
+
+  // Count visible files
+  const visibleFileCount = useMemo(() => {
+    return Object.values(visibleFiles).filter(isVisible => isVisible).length;
+  }, [visibleFiles]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -173,7 +216,7 @@ export function ArticlePreviewDialog({
         <DialogHeader>
           <DialogTitle>Preview Articles</DialogTitle>
           <DialogDescription>
-            {stats.total} article{stats.total !== 1 ? 's' : ''} found
+            {stats.visibleTotal} of {stats.total} article{stats.total !== 1 ? 's' : ''} visible
             {stats.duplicates > 0 && ` • ${stats.duplicates} potential duplicate${stats.duplicates !== 1 ? 's' : ''}`}
             {` • ${stats.selected} selected`}
           </DialogDescription>
@@ -215,6 +258,44 @@ export function ArticlePreviewDialog({
           </div>
         </div>
 
+        {/* File filters */}
+        <div className="mb-3 border rounded-md p-3 bg-accent/5">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-sm font-medium">File Filters</h3>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => toggleAllFilesVisibility(true)}
+                disabled={visibleFileCount === Object.keys(articlesByFile).length}
+              >
+                Show All Files
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => toggleAllFilesVisibility(false)}
+                disabled={visibleFileCount === 0}
+              >
+                Hide All Files
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {Object.keys(articlesByFile).map(fileName => (
+              <Badge 
+                key={fileName}
+                variant={visibleFiles[fileName] ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => toggleFileVisibility(fileName)}
+              >
+                {fileName.split('/').pop()} ({articlesByFile[fileName].length})
+                {visibleFiles[fileName] ? " ✓" : ""}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
         <div className="relative mb-4">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -248,6 +329,11 @@ export function ArticlePreviewDialog({
                   <CheckCircle2 className="h-10 w-10 mb-2 opacity-20" />
                   <p>No selected articles</p>
                 </>
+              ) : visibleFileCount === 0 ? (
+                <>
+                  <AlertCircle className="h-10 w-10 mb-2 opacity-20" />
+                  <p>No files selected for display</p>
+                </>
               ) : (
                 <>
                   <Search className="h-10 w-10 mb-2 opacity-20" />
@@ -258,7 +344,10 @@ export function ArticlePreviewDialog({
           ) : (
             <div className="space-y-6">
               {Object.entries(articlesByFile).map(([fileName, fileArticles]) => {
-                const filteredArticles = getFilteredArticles(fileArticles);
+                // Skip if file is not visible
+                if (!visibleFiles[fileName]) return null;
+                
+                const filteredArticles = getFilteredArticles(fileArticles, fileName);
                 if (filteredArticles.length === 0) return null;
                 
                 return (
